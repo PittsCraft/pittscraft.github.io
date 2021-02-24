@@ -1,15 +1,17 @@
-+++ 
-draft = true
++++
+draft = false
 date = 2020-11-09T20:38:09+01:00
 title = "Attestation 2s iOS "
 description = ""
-slug = ""
+slug = "attestation-ios"
 authors = ["Pitt"]
-tags = ["iOS", "combine", "SwiftUI", "confinement", "covid"]
-categories = []
+tags = ["iOS", "Combine", "SwiftUI", "confinement", "covid"]
+categories = ["Application mobile"]
 externalLink = ""
 series = []
 +++
+
+![Icône de l'application - RIP](/images/attestation_2s/icon.png)
 
 Il m'est arrivé plusieurs fois d'oublier mon attestation de sortie (c'est mal), de la générer au volant en panique (c'est très mal), de prendre du retard en tapant le formulaire avant de partir... Loin de moi l'idée de débattre du bien-fondé du confinement et de ses modalités, cependant j'étais confronté à un inconfort mineur. Et comme tout bon ingé, j'ai cherché et évalué des solutions complètement superflues - toutefois avec un indiscutable sérieux et un professionnalisme inébranlable.
 
