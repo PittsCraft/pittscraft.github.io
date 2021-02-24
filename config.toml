@@ -1,12 +1,12 @@
 ##########################################
 # Site Settings
 
-baseURL = "https://example.com/"
-title = "Hugo Theme MemE"
-languageCode = "en"
+baseURL = "https://pittscraft.com/"
+title = "Pitt's Craft"
+languageCode = "fr-fr"
 hasCJKLanguage = false
 # Copyright information (Markdown supported)
-copyright = "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en)"
+copyright = ""
 
 # Name of theme
 theme = "meme"
@@ -15,7 +15,7 @@ theme = "meme"
 newContentEditor = ""
 
 # i18n
-defaultContentLanguage = "en"
+defaultContentLanguage = "fr"
 defaultContentLanguageInSubdir = false
 
 # Pluralize titles in lists?
@@ -25,7 +25,7 @@ pluralizeListTitles = false
 summaryLength = 42
 
 # Enable Emoji emoticons support?
-enableEmoji = false
+enableEmoji = true
 
 # Text to display for footnote return links
 footnoteReturnLinkContents = "↩"
@@ -58,7 +58,7 @@ uglyURLs = false
 
 # Modified date
 [frontmatter]
-    lastmod = ["lastmod", ":git", ":fileModTime", ":default"]
+    lastmod = ["lastmod", ":default"]
 
 # Markdown renderer
 [markup]
@@ -83,7 +83,7 @@ uglyURLs = false
     [markup.highlight]
         codeFences = true
         guessSyntax = false
-        lineNos = true
+        lineNos = false
         lineNumbersInTable = true
         noClasses = false
     [markup.tableOfContents]
@@ -94,17 +94,17 @@ uglyURLs = false
 # Author’s information
 [author]
     # Name
-    name = "reuixiy"
+    name = "Pitt"
     # Email
-    email = "reuixiy@gmail.com"
+    email = "pitt@pittscraft.com"
     # Motto or introduction
-    motto = "Viva La Vida"
+    motto = ""
     # Avatar
     avatar = "/icons/apple-touch-icon.png"
     # Personal website, default: baseURL
-    website = "https://io-oi.me/"
+    website = "https://pittscraft.com/about/"
     # Twitter
-    twitter = "reuixiy"
+    # twitter = "reuixiy"
 
 # Related content
 [related]
@@ -345,7 +345,7 @@ uglyURLs = false
     # Note: used for HTML head meta, JSON-LD,
     #       Open Graph, Atom, RSS
 
-    siteCreatedTime = "1969-07-20T20:17:43+00:00"
+    siteCreatedTime = "2020-11-09T20:17:43+00:00"
     # ATTENTION: keep this format, change
     #            the number
 
@@ -1218,18 +1218,18 @@ uglyURLs = false
 
     # Leave it empty("") if you don’t want
     # the icon
-    iconBetweenYearAndAuthor = "heart"
+    iconBetweenYearAndAuthor = ""
     iconColor = "#f06292"
     # Enable heartbeat animation?
     iconAnimation = true
 
     # Display links to Hugo and MemE?
-    displayPoweredBy = true
+    displayPoweredBy = false
 
     displaySiteCopyright = true
 
     # Custom Footer (Markdown supported)
-    customFooter = ""
+    customFooter = "Little Pouillé EURL"
 
     displayBusuanziSiteUVAndPV = false
     busuanziSiteUVText = "Site UV"
@@ -1265,8 +1265,8 @@ uglyURLs = false
 
     enableHighlight = true
 
-    enableOverflowY = true
-    maxHeight = 20
+    enableOverflowY = false
+    maxHeight = 80
     # Unit: em
 
     enableCopy = true
@@ -1299,7 +1299,7 @@ uglyURLs = false
     # Note: render only in production
     #       environment
 
-    enableForceHTTPS = false
+    enableForceHTTPS = true
     # Note: use JavaScript for redirection.
     #       You can enable this if your
     #       server does not support forced
@@ -1322,7 +1322,7 @@ uglyURLs = false
     ######################################
     # Instant Page
 
-    enableInstantPage = true
+    enableInstantPage = false
     # Note: https://github.com/instantpage/instant.page
 
 
