@@ -10,7 +10,7 @@ De l'idée à la ligne de code, les choix sont innombrables et de natures varié
 
 Distinguer ceux qui importent et les qualifier efficacement est aussi déterminant que l'expertise technique.
 
-Toujours motivé par la recherche de la solution la plus pertinente dans des contextes variés, des plus communs aux plus complexes, contactez-moi pour me parler de vos projets :
+Toujours motivé par la recherche de la solution la plus pertinente dans des contextes des plus communs aux plus complexes, contactez-moi pour me parler de vos projets :
 
 - par email [pitt@pittscraft.com](mailto:pitt@pittscraft.com)
 - par téléphone (ou Signal, Whatsapp, Telegram) au [+33 (0)6 62 98 24 38](tel:+33662982438)
