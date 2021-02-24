@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr"><title type="text">Pitt's Craft</title><subtitle type="html">MemE is a powerful and highly customizable GoHugo theme for personal blogs.</subtitle><updated>2021-02-24T15:22:11+00:00</updated><id>https://pittscraft.com/</id><link rel="alternate" type="text/html" href="https://pittscraft.com/"/><link rel="self" type="application/atom+xml" href="https://pittscraft.com/atom.xml"/><author><name>Pitt</name><uri>https://pittscraft.com/</uri><email>pitt@pittscraft.com</email></author><generator uri="https://gohugo.io/" version="0.80.0">Hugo</generator><entry><title type="text">SwiftUI &amp; Combine Feedback #2 : property wrapper pour UserDefaults et @Published</title><link rel="alternate" type="text/html" href="https://pittscraft.com/posts/swiftui_combine2/"/><id>https://pittscraft.com/posts/swiftui_combine2/</id><updated>2020-12-10T14:14:35+01:00</updated><published>2020-12-10T14:14:35+01:00</published><author><name>Pitt</name><uri>https://pittscraft.com/about/</uri><email>pitt@pittscraft.com</email></author><summary type="html">J&amp;rsquo;avais déjà croisé un exemple d&amp;rsquo;implémentation de property wrapper et devant leur simplicité, je m&amp;rsquo;étais mis en tête de créer un property wrapper accélérant le stockage de valeurs dans les UserDefaults.
+Il se trouve que dans mes expérimentations autour de Combine j&amp;rsquo;avais bien envie de créer un wrapper publiant les nouvelles valeurs seulement après les avoirs stockées (voir ici).</summary><content type="html">&lt;p>J&amp;rsquo;avais déjà croisé un exemple d&amp;rsquo;implémentation de property wrapper et devant leur simplicité, je m&amp;rsquo;étais mis en tête de créer un property wrapper accélérant le stockage de valeurs dans les &lt;code>UserDefaults&lt;/code>.&lt;/p>
+&lt;p>Il se trouve que dans mes expérimentations autour de &lt;code>Combine&lt;/code> j&amp;rsquo;avais bien envie de créer un wrapper publiant les nouvelles valeurs seulement après les avoirs stockées (&lt;a href="https://pittscraft.com/posts/swiftui_combine1">voir ici&lt;/a>).&lt;/p>
+&lt;p>Et puis j&amp;rsquo;ai finalement voulu faire tout en même temps !&lt;/p>
+&lt;h2 id="quest-ce-donc-quun-property-wrapper-">Qu&amp;rsquo;est-ce donc qu&amp;rsquo;un property wrapper ?&lt;/h2>
+&lt;p>Un property wrapper très simple s&amp;rsquo;écrit de cette manière :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">Print&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">ss&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">val&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Setting &amp;#39;&lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="n">val&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#39;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">newValue&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Returning &amp;#39;&lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="n">val&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#39;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">val&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>et s&amp;rsquo;utilise ensuite ainsi :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">class&lt;/span> &lt;span class="nc">SomeClass&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Print&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">myString&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;Coucou copaing !&amp;#34;&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">doThings&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">myString&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;Bye friend&amp;#34;&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">something&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">myString&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="n">SomeClass&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">doThings&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>ce qui imprimera&lt;/p>
+&lt;pre>&lt;code>&amp;gt; Setting 'Bye friend'
+&amp;gt; Getting 'Bye friend'
+&lt;/code>&lt;/pre>&lt;p>ce qui est plutôt nul.&lt;/p>
+&lt;p>Ceci-dit, si on décidait de faire des choses plus intéressantes que des print, on pourrait bien se faciliter la vie !&lt;/p>
+&lt;h2 id="got-userdefaults-">Got UserDefaults ?&lt;/h2>
+&lt;h3 id="stocker-des-propriétés-dans-les-userdefaults">Stocker des propriétés dans les UserDefaults&lt;/h3>
+&lt;p>Voilà un usage fréquent et intéressant.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="nc">UserDefaultsBacked&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">defaultValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">defaultValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">key&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storage&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="n">defaultValue&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">setValue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Et une implémentation un peu naïve comme celle ci-dessus peut faire l&amp;rsquo;affaire.&lt;/p>
+&lt;p>&lt;strong>Un petit warning&lt;/strong> quand même, on n&amp;rsquo;oublie pas que chaque &lt;em>setValue&lt;/em> sur une clé de &lt;code>UserDefaults&lt;/code> réécrit le dictionnaire complet. On utilisera donc tout ça en connaissance de cause, et n&amp;rsquo;oublions pas qu&amp;rsquo;on peut aussi réduire leur taille en n&amp;rsquo;utilisant pas systématiquement le &lt;code>.standard&lt;/code>.&lt;/p>
+&lt;p>On peut noter la présence de nouveaux arguments du constructeur, la &lt;code>key&lt;/code> et le &lt;code>storage&lt;/code>. Ils peuvent être fournis via la déclaration de l&amp;rsquo;annotation, ou doivent l&amp;rsquo;être pour ceux qui n&amp;rsquo;ont pas de valeur par défaut comme la key.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">UserDefaultsBacked&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;int-key&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1">// Smells like Java&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">someInt&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mi">8&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">UserDefaultsBacked&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;my-data&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;DBName&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">someData&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Data&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="kd">struct&lt;/span> &lt;span class="nc">SomeStruct&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">prop&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;Yup&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">UserDefaultsBacked&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;my-struct&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">myStruct&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">SomeStruct&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="c1">// Wait... What ?&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="stocker-uniquement-les-types-compatibles">Stocker uniquement les types compatibles&lt;/h3>
+&lt;p>Ce wrapper fonctionnera très bien avec tous les types supportés par les &lt;code>UserDefaults&lt;/code> mais attendez-vous à de bons crashes pour tous les autres cas, comme &lt;code>SomeStruct&lt;/code>.&lt;/p>
+&lt;p>Restreignons-donc déjà l&amp;rsquo;usage aux bonnes valeurs grâce à un &lt;em>flag protocol&lt;/em> :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">public&lt;/span> &lt;span class="kd">protocol&lt;/span> &lt;span class="nc">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">String&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Int&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Double&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Float&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Date&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Array&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Element&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Dictionary&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Key&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">struct&lt;/span> &lt;span class="nc">UserDefaultsBacked&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">defaultValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">defaultValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">key&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storage&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="n">defaultValue&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">setValue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ok, on a maintenant un property wrapper sélectif et une belle erreur de compilation dans le cas où le type ne se conforme pas à &lt;code>UserDefaultsStorable&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">UserDefaultsBacked&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;my-struct&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">myStruct&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">SomeStruct&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="c1">// Error: Initializer &amp;#39;init(wrappedValue:_:storage)&amp;#39; requires that &amp;#39;SomeStruct&amp;#39; conform to &amp;#39;UserDefaultsStorable&amp;#39;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="stocker-les-codables">Stocker les Codables&lt;/h3>
+&lt;p>Bien mais &lt;code>SomeStruct&lt;/code> n&amp;rsquo;est pas bien mystérieux, ce serait bien sympa de pouvoir le stocker aussi. En fait, tout codable est a priori stockable puisque &lt;code>Data&lt;/code> l&amp;rsquo;est. Seulement pour éviter de se faire la conversion à chaque accès, profitons donc de notre wrapper.&lt;/p>
+&lt;p>Généralisons : on peut avoir à mapper les données dans un sens et dans l&amp;rsquo;autre pour pouvoir les stocker. L&amp;rsquo;interface de &lt;code>UserDefaults&lt;/code> utilise le très générique &lt;code>Any?&lt;/code>, on va donc définir les mappers :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">typealias&lt;/span> &lt;span class="n">StoringMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">typealias&lt;/span> &lt;span class="n">StoreReadingMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Puis:&lt;/p>
+&lt;ul>
+&lt;li>définir des propriétés de ce type dans notre wrapper.&lt;/li>
+&lt;li>définir un constructeur privé aveugle qui prend de bonne fois n&amp;rsquo;importe quel type de propriété avec des mappers&lt;/li>
+&lt;li>définir des constructeurs publics stricts sur le type qui vont fournir des mappers au constructeur privé&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">UserDefaultsBacked&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">defaultValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span> &lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">escaping&lt;/span> &lt;span class="n">StoringMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;,&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">escaping&lt;/span> &lt;span class="n">StoreReadingMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">initValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storedValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">object&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">initValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storedValue&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="n">defaultValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">initValue&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">key&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storage&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storingMapper&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storingMapper&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storeReadingMapper&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storeReadingMapper&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$0&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="n">defaultValue&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">setValue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Mais pour mes &lt;code>Codable&lt;/code>s les mappers ne sont pas si évidents.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">public&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Encodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">mapForStorage&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">do&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">JSONEncoder&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Couldn&amp;#39;t encode &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Ci-dessus la fonction d&amp;rsquo;encodage, avec absolument pas de check sur le cas où l&amp;rsquo;objet est également stockable nativement, car la discrimination s&amp;rsquo;effectuera en amont. Bon, c&amp;rsquo;est l&amp;rsquo;équivalent de &lt;code>try? JSONEncoder().encode(self)&lt;/code> mais avec une trace pour ne pas être complètement dans le brouillard en cas de problème. Evidemment on préfèrera certainement donner de meilleures options de traçage, et certains se sentent mal (à raison) de ne pas &lt;code>throw&lt;/code> quoi que ce soit, mais ce n&amp;rsquo;est pas le débat ici. Et puis comme on dit parfois : &amp;ldquo;Quand tout va bien, tout va bien !&amp;rdquo;.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="c1">/// Simple type opening using a static function to allow JSON decoding with erased types conforming to `Decodable` protocol&lt;/span>
+&lt;span class="n">fileprivate&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Decodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">openedJSONDecode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">using&lt;/span> &lt;span class="n">decoder&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">JSONDecoder&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">from&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kr">throws&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="kc">Self&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">decoder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">decode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;em>Joyeusement pompé de &lt;a href="https://stackoverflow.com/questions/54963038/codable-conformance-with-erased-types">ce post SO&lt;/a>&lt;/em>&lt;/p>
+&lt;p>Tiens je parlais dans mon poste précédent de type erasure, mais saviez vous que l&amp;rsquo;inverse est le &lt;em>type opening&lt;/em> ? Eh bien pareil, je me suis couché moins bête. Et pour tous ceux qui ont déjà joué avec un &lt;code>JSONDecoder&lt;/code> dans des contextes génériques un peu poussés, la feinte ci-dessus est plutôt cool à retenir : une fonction statique a toujours accès au type concret, ce qui satisfait le compilo.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">public&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Decodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">mapOutOfStorage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">_&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="kc">Self&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">guard&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">data&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Data&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">do&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="kc">Self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">openedJSONDecode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">using&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">JSONDecoder&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Couldn&amp;#39;t decode &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="nb">String&lt;/span>&lt;span class="si">(&lt;/span>&lt;span class="n">describing&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="si">))&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// Very opinionated choice to ignore thrown errors&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Et voilà, sur tout type se conformant à &lt;code>Decodable&lt;/code> on a désormais cette fonction &lt;code>mapOutOfStorage&lt;/code>.&lt;/p>
+&lt;p>Je rappelle que &lt;code>typealias Codable = Decodable &amp;amp; Encodable&lt;/code>, donc pour tout type &lt;code>Codable&lt;/code> on a nos deux mappers \o/&lt;/p>
+&lt;p>Rajoutons donc ce petit constructeur à notre property wrapper &lt;code>UserDefaultsBacked&lt;/code> :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift"> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Codable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapForStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapOutOfStorage&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Nice, et maintenant qu&amp;rsquo;est ce qui se passe si je déclare quelque chose comme :&lt;/p>
+&lt;pre>&lt;code>@UserDefaultsBacked(&amp;quot;myKey&amp;quot;)
+var myInt = 0
+// Error: Ambiguous use of 'init(wrappedValue:_:storage:sendAfterStore:)'
+&lt;/code>&lt;/pre>&lt;p>Eh bien les &lt;code>Int&lt;/code> étant &lt;code>Codable&lt;/code> mais aussi &lt;code>UserDefaultsStorable&lt;/code>, le compilateur ne saura quel constructeur choisir. Deux solutions : enlever l&amp;rsquo;ambiguité en changeant la signature d&amp;rsquo;un des constructeurs (ce qui est un peu minable, même simplement d&amp;rsquo;y avoir pensé), ou donner un constructeur qui match encore mieux, avec &lt;code>where Value : Codable &amp;amp; UserDefaultsStorable&lt;/code>. Encore un bon trick, vous êtes bienvenus.&lt;/p>
+&lt;h3 id="checkpoint">Checkpoint&lt;/h3>
+&lt;p>Voici un petit bilan :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="c1">/// Any type implementing this protocol can be stored natively in UserDefaults&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">protocol&lt;/span> &lt;span class="nc">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> Declare proper flag protocol conformance for all types natively compatible with UserDefaults storage
+&lt;/span>&lt;span class="cm">*/&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">String&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Int&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Double&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Float&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Date&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Array&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Element&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Dictionary&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Key&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="c1">/// `Encodable` mapping for storage&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Encodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">mapForStorage&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">do&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">JSONEncoder&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Couldn&amp;#39;t encode &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">/// Simple type opening using a static function to allow JSON decoding with erased types conforming to `Decodable` protocol&lt;/span>
+&lt;span class="n">fileprivate&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Decodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="c1">// Useful trick from https://stackoverflow.com/questions/54963038/codable-conformance-with-erased-types&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">openedJSONDecode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">using&lt;/span> &lt;span class="n">decoder&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">JSONDecoder&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">from&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kr">throws&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="kc">Self&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">decoder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">decode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">/// `Decodable` mapping for reading from storage&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Decodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">mapOutOfStorage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">_&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="kc">Self&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">guard&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">data&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Data&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">do&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="kc">Self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">openedJSONDecode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">using&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">JSONDecoder&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Couldn&amp;#39;t decode &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="nb">String&lt;/span>&lt;span class="si">(&lt;/span>&lt;span class="n">describing&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="si">))&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// Very opinionated choice to almost ignore thrown errors&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">UserDefaultsBacked&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">defaultValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">escaping&lt;/span> &lt;span class="n">StoringMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;,&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">escaping&lt;/span> &lt;span class="n">StoreReadingMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">defaultValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">key&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storage&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storingMapper&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storingMapper&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storeReadingMapper&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storeReadingMapper&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$0&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Codable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapForStorage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapOutOfStorage&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Codable&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="n">defaultValue&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">setValue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;em>Fun fact&lt;/em> : j&amp;rsquo;ai retrouvé le même flag protocol sur un post (je l&amp;rsquo;ai plus sous la main là), puis vu des implémentations proches pour les &lt;code>Codable&lt;/code>, mais tout ça bien sûr après avoir réinventé la roue. Et même si on dit souvent ça péjorativement, dans une démarche d&amp;rsquo;apprentissage ça a tout son sens de regarder les solutions seulement ensuite. Et en plus c&amp;rsquo;était vachement moins bien fait, &lt;a href="https://swiftsenpai.com/swift/create-the-perfect-userdefaults-wrapper-using-property-wrapper/">genre là&lt;/a> pas de type checking, aucune cohabitation entre les &lt;code>Codable&lt;/code> et les types natifs&amp;hellip; Nan mais jvous jure&amp;hellip;&lt;/p>
+&lt;p>Et puis de toute façon je voulais aussi m&amp;rsquo;occuper de faire &amp;hellip;&lt;/p>
+&lt;h2 id="un-publisher-un-peu-custom">Un publisher un peu custom&lt;/h2>
+&lt;p>Lorsqu&amp;rsquo;on utilise SwiftUI et Combine simplement, on va naturellement devoir taper des expression comme &lt;code>$myState&lt;/code> ou &lt;code>$myObject.prop&lt;/code>. Une fois passée mon aversion forte pour le PHP, j&amp;rsquo;ai creusé rapidement pour constater que ce n&amp;rsquo;était qu&amp;rsquo;une syntaxe un peu flippante pour accéder à la valeur projetée d&amp;rsquo;une wrapped property.&lt;/p>
+&lt;h3 id="projected-value-">Projected value ?&lt;/h3>
+&lt;p>En bref, n&amp;rsquo;importe quel property wrapper peut déclarer une &lt;code>var projectedValue: SomeType {...}&lt;/code> dont le type n&amp;rsquo;est pas nécessairement le même que celui de sa &lt;code>wrappedValue&lt;/code>. Et cette &lt;code>projectedValue&lt;/code> est accessible grâce au dollar américain (comme tellement de choses).&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">Print&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">val&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Setting &amp;#39;&lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="n">val&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#39;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">newValue&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Returning &amp;#39;&lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="n">val&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#39;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">val&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">projectedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Int&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;42&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="mi">8&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Print&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">myString&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;5&amp;#34;&lt;/span>
+&lt;span class="n">myString&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;40&amp;#34;&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Coucou &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="err">$&lt;/span>&lt;span class="n">myString&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>printera donc&lt;/p>
+&lt;pre>&lt;code>&amp;gt; Setting '40'
+&amp;gt; 42
+&amp;gt; Coucou 8
+&lt;/code>&lt;/pre>&lt;p>Aaah, je pense que j&amp;rsquo;ai fait le pire exemple qui soit, &amp;ldquo;service !&amp;rdquo; comme on dit dans l&amp;rsquo;est.&lt;/p>
+&lt;p>Bref, ce &lt;code>$&lt;/code> n&amp;rsquo;a en théorie pas forcément grand chose à voir avec Combine excepté qu&amp;rsquo;on l&amp;rsquo;y utilise en permanence.&lt;/p>
+&lt;h3 id="quelques-notions-de-combine">Quelques notions de Combine&lt;/h3>
+&lt;p>Typiquement, le property wrapper &lt;code>Published&lt;/code> a pour type projeté &lt;strong>la struct&lt;/strong> &lt;code>Published&amp;lt;Value&amp;gt;.Publisher&lt;/code> (&lt;a href="https://developer.apple.com/documentation/combine/published/publisher">doc&lt;/a>) qui respecte notamment le &lt;strong>protocole&lt;/strong> &lt;code>Publisher&lt;/code> (et bien plus, &lt;a href="https://developer.apple.com/documentation/combine/publisher">doc&lt;/a>), et peut donc envoyer des &lt;code>Value&lt;/code> à des &lt;code>Subscriber&lt;/code>.&lt;/p>
+&lt;p>Donc quand j&amp;rsquo;accède à un &lt;code>@Published var myString: String&lt;/code> via &lt;code>$myString&lt;/code> j&amp;rsquo;obtiens en gros une propriété dont je peux écouter les valeurs successives.&lt;/p>
+&lt;p>Et quand je fais du SwiftUI ainsi : &lt;code>.sheet(isPresented: $vm.router.showSheet, ...)&lt;/code>, je passe donc un &lt;code>Publisher&lt;/code> à la fonction &lt;code>sheet&lt;/code> qui se fera un plaisir d&amp;rsquo;écouter si on doit où non présenter cette &lt;code>sheet&lt;/code>.&lt;/p>
+&lt;p>&lt;strong>Rappel :&lt;/strong> lorsqu&amp;rsquo;on utilise &lt;code>sink&lt;/code> pour écouter les valeurs d&amp;rsquo;une var &lt;code>@Published&lt;/code> via son &lt;code>Publisher&lt;/code>, on reçoit la nouvelle valeur alors que la &lt;code>wrappedValue&lt;/code> est encore l&amp;rsquo;ancienne valeur. Et je voudrais contourner ça dans certains cas (voir &lt;a href="https://pittscraft.com/posts/swiftui_combine1">mon post précédent&lt;/a>).&lt;/p>
+&lt;p>Maintenant, ce qui m&amp;rsquo;intéresserait ce serait d&amp;rsquo;avoir ça, un &lt;code>Publisher&lt;/code> que je pourrais contrôler finement pour lui envoyer des valeurs.
+Eh bien Combine nous fournit gracieusement le protocole &lt;code>Subject&lt;/code> qui hérite de &lt;code>Publisher&lt;/code> et qui présente de surcroit une fonction &lt;code>send(_:)&lt;/code> permettant d&amp;rsquo;envoyer des valeurs à publier. Ses implémentations sont :&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>CurrentValueSubject&lt;/code> qui détient une valeur courante&lt;/li>
+&lt;li>&lt;code>PassthroughSubject&lt;/code> qui au contraire ne retient rien&lt;/li>
+&lt;/ul>
+&lt;p>On devrait s&amp;rsquo;en sortir avec ça !&lt;/p>
+&lt;h3 id="didset-publisher-property-wrapper">DidSet Publisher property wrapper&lt;/h3>
+&lt;p>Pour reproduire le comportement de &lt;code>@Published&lt;/code> on pourrait écrire comme ça comme ça.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">BasicPublished&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">subject&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Never&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">wrappedValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">projectedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Never&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">subject&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Le problème étant que lorsque le &lt;code>send&lt;/code> va provoquer l&amp;rsquo;exécution de toutes les closures des subscribers, &lt;code>subject.value&lt;/code> aura toujours l&amp;rsquo;ancienne valeur.&lt;/p>
+&lt;p>Assez simple &lt;strong>du coup&lt;/strong> d&amp;rsquo;y remédier :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">DidSetPublished&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">val&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">subject&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Never&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">wrappedValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">newValue&lt;/span>
+&lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">val&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">projectedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Never&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">subject&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>(je crois que cette implémentation &lt;a href="https://stackoverflow.com/questions/58403338/is-there-an-alternative-to-combines-published-that-signals-a-value-change-afte">vient de là&lt;/a>, et je crois aussi qu&amp;rsquo;il serait plus pertinent d&amp;rsquo;utiliser &lt;code>PassthroughSubject&lt;/code> &lt;em>a priori&lt;/em>)&lt;/p>
+&lt;h2 id="tout-ensemble">Tout ensemble&lt;/h2>
+&lt;p>Vous le saviez, mon but ultime était ~la conquête de la Suède en lama~ de combiner tout ça. Pas juste pour le fun, mais parce que dans mon archi, à un moment, j&amp;rsquo;avais besoin d&amp;rsquo;une propriété &lt;code>Codable&lt;/code> (un enum) stockée dans les &lt;code>UserDefaults&lt;/code> et qui ne publierait son changement de valeur qu&amp;rsquo;après l&amp;rsquo;avoir affecté à sa &lt;code>wrappedValue&lt;/code>.&lt;/p>
+&lt;p>Et puis d&amp;rsquo;autres besoins avec des variations : pas de stockage mais publication après affectation, stockage natif mais publication avant affectation&amp;hellip;&lt;/p>
+&lt;p>J&amp;rsquo;aurais bien pu contourner tout ça, ou encore essayer de faire fonctionner des &lt;a href="https://noahgilmore.com/blog/nesting-property-wrappers/">wrappers imbriqués&lt;/a>, mais je voulais me frotter à cette implémentation spécifique.&lt;/p>
+&lt;p>Et voilà, je vous colle juste l&amp;rsquo;ensemble là dessous, chaque détail étant expliqué dans les parties précédente (enfin faut savoir quelques trucs en amont quand même, oui).&lt;/p>
+&lt;p>N&amp;rsquo;oubliez pas que la perf n&amp;rsquo;est &lt;strong>pas&lt;/strong> l&amp;rsquo;objectif de ce wrapper (du tout).&lt;/p>
+&lt;p>Je vous suggère d&amp;rsquo;ailleurs de jeter un oeil à l&amp;rsquo;implémentation de &lt;code>Published&lt;/code> &lt;a href="https://github.com/OpenCombine/OpenCombine/blob/7286336b28585a594bb4769a680f6f03e375b6ba/Sources/OpenCombine/Published.swift">chez OpenCombine&lt;/a>, qui est particulièrement élégante (ya un enum &amp;lt;3).&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="c1">//&lt;/span>
+&lt;span class="c1">// SmartPublished.swift&lt;/span>
+&lt;span class="c1">// attestation&lt;/span>
+&lt;span class="c1">//&lt;/span>
+&lt;span class="c1">// Created by Pierre Mardon on 01/01/1970. Trust me.&lt;/span>
+&lt;span class="c1">//&lt;/span>
+&lt;span class="kd">import&lt;/span> &lt;span class="nc">Foundation&lt;/span>
+&lt;span class="kd">import&lt;/span> &lt;span class="nc">Combine&lt;/span>
+&lt;span class="c1">/// We need functions to map values before storing them to user defaults&lt;/span>
+&lt;span class="n">fileprivate&lt;/span> &lt;span class="kd">typealias&lt;/span> &lt;span class="n">StoringMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="c1">/// We need functions to map values read from user defaults storage to an expected type&lt;/span>
+&lt;span class="n">fileprivate&lt;/span> &lt;span class="kd">typealias&lt;/span> &lt;span class="n">StoreReadingMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="c1">/// Any type implementing this protocol can be stored natively in UserDefaults&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">protocol&lt;/span> &lt;span class="nc">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> Declare proper flag protocol conformance for all types natively compatible with UserDefaults storage
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">String&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Int&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Double&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Float&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Date&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Array&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Element&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="kd">extension&lt;/span> &lt;span class="nc">Dictionary&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Key&lt;/span> &lt;span class="p">==&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;span class="c1">/// `Encodable` mapping for storage&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Encodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">mapForStorage&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">do&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">JSONEncoder&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">encode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Couldn&amp;#39;t encode &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="si">)&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">/// Simple type opening using a static function to allow JSON decoding with erased types conforming to `Decodable` protocol&lt;/span>
+&lt;span class="n">fileprivate&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Decodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="c1">// Useful trick from https://stackoverflow.com/questions/54963038/codable-conformance-with-erased-types&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">openedJSONDecode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">using&lt;/span> &lt;span class="n">decoder&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">JSONDecoder&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">from&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Data&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kr">throws&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="kc">Self&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">decoder&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">decode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="c1">/// `Decodable` mapping for reading from storage&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">extension&lt;/span> &lt;span class="nc">Decodable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">static&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">mapOutOfStorage&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">_&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="kc">Self&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">guard&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">data&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Data&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="k">do&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="kc">Self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">openedJSONDecode&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">using&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">JSONDecoder&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">catch&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="bp">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Couldn&amp;#39;t decode &lt;/span>&lt;span class="si">\(&lt;/span>&lt;span class="nb">String&lt;/span>&lt;span class="si">(&lt;/span>&lt;span class="n">describing&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="si">))&lt;/span>&lt;span class="s">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">error&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="c1">// Very opinionated choice to almost ignore thrown errors&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="kc">nil&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="cm">/**
+&lt;/span>&lt;span class="cm"> Property wrapper that provides some common use cases options.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> Do NOT use for heavy performance demanding components.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> - `UserDefaults` storage is activated when a `key` is provided for all natively handled types and `Codable` ones
+&lt;/span>&lt;span class="cm"> - option `sendAfterStore` makes the subject send the value only after it has effectively been affected to the property itself: WARNING this is not recommended for UI bindings. Disabled by default.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> Usage:
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> @SmartPublished(&amp;#34;someKey&amp;#34;)
+&lt;/span>&lt;span class="cm"> var myProp = &amp;#34;Bonjoir !&amp;#34;
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm"> The string property will be backed in UserDefaults.standard for the key &amp;#34;someKey&amp;#34;. It will be effectively stored only if the value of the var is affected after its initialization, until then UserDefaults entry will stay
+&lt;/span>&lt;span class="cm"> untouched.
+&lt;/span>&lt;span class="cm"> The initial value of the property will be `&amp;#34;Bonjoir !&amp;#34;` if there&amp;#39;s not value in the store.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm"> @SmartPublished(&amp;#34;myCodableValueUserDefaultsKey&amp;#34;)
+&lt;/span>&lt;span class="cm"> var myProp = someValueOfCodableType
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> The codables are stored the same way except they are JSON encoded if they&amp;#39;re not natively handled by UserDefaults.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm"> @SmartPublished(sendAfterStore = true)
+&lt;/span>&lt;span class="cm"> var myProp = 8
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> $myProp.sink {
+&lt;/span>&lt;span class="cm"> print(&amp;#34;property: \(myProp), received: \($0)&amp;#34;)
+&lt;/span>&lt;span class="cm"> }
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> myProp = 1
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> Will print `property: 1, received: 1`, while with `@Published` or `sendAfterStore = false` it would be `property: 8, received: 1`.
+&lt;/span>&lt;span class="cm"> It is not recommended to use this `sendAfterStore = true` for UI-bound properties.
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm"> @SmartPublished
+&lt;/span>&lt;span class="cm"> \```
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> Why would you do that, just use `@Published` then!
+&lt;/span>&lt;span class="cm">
+&lt;/span>&lt;span class="cm"> */&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">propertyWrapper&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">class&lt;/span> &lt;span class="nc">SmartPublished&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">subject&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Never&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">val&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Any&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Any&lt;/span>&lt;span class="p">?)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">escaping&lt;/span> &lt;span class="n">StoringMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;,&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">escaping&lt;/span> &lt;span class="n">StoreReadingMapper&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">&amp;gt;)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">initValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">value&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">storedValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">object&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">initValue&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storedValue&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">initValue&lt;/span>
+&lt;span class="n">subject&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">initValue&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">key&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storage&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storage&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sendAfterStore&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">sendAfterStore&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storingMapper&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storingMapper&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">storeReadingMapper&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">storeReadingMapper&lt;/span>
+&lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">val&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">nil&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$0&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">?,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Codable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapForStorage&lt;/span>&lt;span class="p">()},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapOutOfStorage&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">_&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">?,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">UserDefaults&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">where&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Codable&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="n">UserDefaultsStorable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">storage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$0&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kr">convenience&lt;/span> &lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">value&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="kc">nil&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">standard&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">sendAfterStore&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span>&lt;span class="p">},&lt;/span>
+&lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$0&lt;/span> &lt;span class="k">as&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="n">Value&lt;/span>&lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">wrappedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Value&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">set&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="n">sendAfterStore&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">setValue&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storingMapper&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">val&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">newValue&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="o">!&lt;/span>&lt;span class="n">sendAfterStore&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">subject&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">newValue&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">if&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">key&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">storeReadingMapper&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">storage&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">value&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">forKey&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">key&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">??&lt;/span> &lt;span class="n">val&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">val&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">public&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">projectedValue&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">CurrentValueSubject&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Never&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kr">get&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">subject&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>N&amp;rsquo;hésitez pas à me contacter pour toute remarque, insulte ou éloge, mon email est dans le footer ;)&lt;/p></content><category scheme="https://pittscraft.com/categories/application-mobile/" term="Application mobile" label="Application mobile"/><category scheme="https://pittscraft.com/tags/ios/" term="iOS" label="iOS"/><category scheme="https://pittscraft.com/tags/combine/" term="Combine" label="Combine"/><category scheme="https://pittscraft.com/tags/swiftui/" term="SwiftUI" label="SwiftUI"/></entry><entry><title type="text">SwiftUI &amp; Combine Feedback #1 : architecture et grains de sable</title><link rel="alternate" type="text/html" href="https://pittscraft.com/posts/swiftui_combine1/"/><id>https://pittscraft.com/posts/swiftui_combine1/</id><updated>2020-12-09T14:14:35+01:00</updated><published>2020-12-09T14:14:35+01:00</published><author><name>Pitt</name><uri>https://pittscraft.com/about/</uri><email>pitt@pittscraft.com</email></author><summary type="html">Après mon premier petit TP autour de SwiftUI et Combine pour générer mes attestations de déplacement ~à la barbe de la maréchaussée~ à la volée voire en retard, j&amp;rsquo;ai profité de l&amp;rsquo;adaptation au second format d&amp;rsquo;attestation pour faire des explorations un peu plus poussées de mon architecture autour de Combine.</summary><content type="html">&lt;p>Après &lt;a href="https://pittscraft.com/posts/attestation-ios">mon premier petit TP&lt;/a> autour de SwiftUI et Combine pour générer mes attestations de déplacement ~à la barbe de la maréchaussée~ à la volée voire en retard, j&amp;rsquo;ai profité de l&amp;rsquo;adaptation au second format d&amp;rsquo;attestation pour faire des explorations un peu plus poussées de mon architecture autour de Combine.&lt;/p>
+&lt;p>J&amp;rsquo;en sors une petite liste de considérations techniques que j&amp;rsquo;espère d&amp;rsquo;intérêt, et voici les premières !&lt;/p>
+&lt;h1 id="architecture-mvvm">Architecture: MVVM+&lt;/h1>
+&lt;p>Pour une petite app comme celle-ci, je m&amp;rsquo;autorise des entorses à nombre de principes stricts &lt;em>overkill&lt;/em> que je n&amp;rsquo;estime pas pertinents ici, avec des gains principalement en concision et lisibilité.
+Le &lt;a href="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-vue_mod%C3%A8le">MVVM&lt;/a> est tout à fait indiqué pour un cloisonnement minimal, et en l&amp;rsquo;occurence ça ressemblait à ça&lt;/p>
+&lt;p>&lt;img src="https://pittscraft.com/images/swiftui1/MVVM.png" alt="Image description">&lt;/p>
+&lt;p>Avec des injection par construction et donc cette instanciation initiale :&lt;/p>
+&lt;pre>&lt;code>let store = Store(context: moContext)
+let model = MainViewModel(store: store, router: Router())
+return MainView(model: model)
+&lt;/code>&lt;/pre>&lt;p>On peut remarquer le petit &lt;code>Router&lt;/code> qui s&amp;rsquo;est avéré fort utile pour éviter trop de plomberie. Son rôle est juste de publier des propriétés destinées à contrôler et rendre compte de la navigation. Il ne fait donc clairement pas partie du modèle ni des vues, et j&amp;rsquo;ai du mal à le considérer comme un modèle de vue étant donnée sa nature transverse.&lt;/p>
+&lt;p>Tant qu&amp;rsquo;il ne dépasse pas ce rôle de navigation, ne stocke qu&amp;rsquo;un minimum de données transitoires au besoin (immuables de préférence, la struct d&amp;rsquo;une personne à éditer par exemple), ça reste très lisible et on évite les chaînages de &lt;code>@Published&lt;/code> orthodoxes.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">enum&lt;/span> &lt;span class="nc">ActiveSheet&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="n">attestationPresentation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">PersonStruct&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">addPerson&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">edit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">PersonStruct&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">enum&lt;/span> &lt;span class="nc">ActiveAlert&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="n">confirmAttestation&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">detail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">reason&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Reason&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">class&lt;/span> &lt;span class="nc">Router&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">showSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">showAlert&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="kd">private&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kr">set&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">activeSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">ActiveSheet&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">addPerson&lt;/span>
+&lt;span class="kd">private&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kr">set&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">activeAlert&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">ActiveAlert&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">confirmAttestation&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">showAttestationCreationAlert&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">activeAlert&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">confirmAttestation&lt;/span>
+&lt;span class="n">showAlert&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">startAddPerson&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">activeSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">addPerson&lt;/span>
+&lt;span class="n">showSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">startEdit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">PersonStruct&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">activeSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">edit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">person&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">showSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">showReasonDetail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">_&lt;/span> &lt;span class="n">reason&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Reason&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">activeAlert&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">detail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">reason&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">reason&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">showAlert&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">showAttestationView&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">PersonStruct&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">activeSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">attestationPresentation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">person&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">showSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">closeSheet&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">showSheet&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Plutôt concis, ça vaut clairement le coup plutôt que de perdre ces quelques variables dans des chemins trop tortueux.&lt;/p>
+&lt;p>Tous mes proches le savent, les enums Swift &lt;a href="https://www.dailymotion.com/video/x2xl6r8">c&amp;rsquo;est ma grande passion&lt;/a>. Et ceux du petit routeur ci-dessus me permettent de faire des fonctions SwiftUI bien compactes :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift"> &lt;span class="kd">func&lt;/span> &lt;span class="nf">alert&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">Alert&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">switch&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">router&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">activeAlert&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">confirmAttestation&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Alert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">coldFeetTitle&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">message&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">coldFeetMessage&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="n">primaryButton&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="k">default&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Je certifie&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">generateNewAttestation&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">},&lt;/span> &lt;span class="n">secondaryButton&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">cancel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Annuler&amp;#34;&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">detail&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">reason&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">reason&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">Alert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">reason&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">niceString&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="n">message&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">reason&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">detail&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;span class="n">dismissButton&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="k">default&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Ok&amp;#34;&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">func&lt;/span> &lt;span class="nf">sheet&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="n">AnyView&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">switch&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">router&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">activeSheet&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">attestationPresentation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kd">let&lt;/span> &lt;span class="nv">person&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">AnyView&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AttestationView&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vm&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">attestationViewModel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">person&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">addPerson&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">AnyView&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AddOrEditPersonSheet&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vm&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">addPersonViewModel&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="k">case&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">edit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kd">let&lt;/span> &lt;span class="nv">person&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;span class="k">return&lt;/span> &lt;span class="n">AnyView&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">AddOrEditPersonSheet&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">vm&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">editPersonViewModel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">person&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">person&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Et enfin, le &lt;code>body&lt;/code> de ma &lt;code>View&lt;/code> principale sera très concis :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift"> &lt;span class="kd">var&lt;/span> &lt;span class="nv">body&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">some&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">NavigationView&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">VStack&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">alignment&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">center&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">spacing&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">MainListsView&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">model&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mainListsViewModel&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">environment&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="err">\&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">editMode&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="err">$&lt;/span>&lt;span class="n">editMode&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="n">BottomMenu&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">model&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">bottomMenuViewModel&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="n">sheet&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">isPresented&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">$&lt;/span>&lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">router&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">showSheet&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">onDismiss&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">checkShouldShowPinnedAttestation&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">},&lt;/span> &lt;span class="n">content&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">sheet&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="n">navigationBarTitle&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">displayMode&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">inline&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="n">navigationBarItems&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">leading&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">navigationBarLeadingItem&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">trailing&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">EditButton&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">editMode&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">$&lt;/span>&lt;span class="n">editMode&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">.&lt;/span>&lt;span class="n">alert&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">isPresented&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">$&lt;/span>&lt;span class="n">vm&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">router&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">showAlert&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">content&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">alert&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>(&lt;a href="https://stackoverflow.com/questions/58837007/multiple-sheetispresented-doesnt-work-in-swiftui">on peut comprendre&lt;/a> d&amp;rsquo;ailleurs pourquoi je sépare le &lt;code>showSheet&lt;/code> et &lt;code>showAlert&lt;/code> des enums, au lieu de déclarer des &lt;code>.none&lt;/code>)&lt;/p>
+&lt;p>La vue principale est la principale consommatrice du routeur, cependant de multiples vues viennent agir dessus.&lt;/p>
+&lt;p>Evidemment, cette architecture est adaptée à ce projet particulier, ne cherchez pas à reproduire ça à la maison.&lt;/p>
+&lt;h1 id="les-petits-trucs-pénibles">Les petits trucs pénibles&lt;/h1>
+&lt;h2 id="type-erasure">Type erasure&lt;/h2>
+&lt;p>Ci-dessus, vous pouvez voir que j&amp;rsquo;utilise &lt;code>AnyView(...)&lt;/code> pour renvoyer un type consistant de &lt;code>View&lt;/code>. Pour tous ceux qui ont joué un peu en profondeur avec les protocoles et génériques en Swift, on atteint vite des obstacles mystérieux particulièrement brainboiling.&lt;/p>
+&lt;p>Heureusement on observe un effort de type erasure dans les bibliothèques système avec ces &lt;code>AnyView&lt;/code>, &lt;code>AnyCancellable&lt;/code>&amp;hellip;&lt;/p>
+&lt;p>&lt;img src="https://pittscraft.com/images/swiftui1/Capture-decran-2020-12-09-a-15.35.03.png" alt="Complétion sur &amp;ldquo;Any&amp;rdquo; dans XCode">&lt;/p>
+&lt;p>Ainsi que de nouveaux mots clé mystérieux comme &lt;code>some&lt;/code> qui est la réponse directe à la sentence :&lt;/p>
+&lt;blockquote>
+&lt;p>Protocols &amp;lsquo;WouldBeSoNice&amp;rsquo; can only be used as a generic constraint because it has Self or associated type requirements&lt;/p>
+&lt;/blockquote>
+&lt;p>Si ça vous intéresse je vous conseille &lt;a href="https://learnappmaking.com/some-swift-opaque-types-how-to/">ce petit article&lt;/a>.&lt;/p>
+&lt;p>Ceci-dit, même si ça disparaît vite, je pense que c&amp;rsquo;est un frein assez considérable notamment pour des débutants.&lt;/p>
+&lt;h2 id="observer-des-objets-imbriqués">Observer des objets imbriqués&lt;/h2>
+&lt;p>Un &lt;code>ViewModel&lt;/code> en mode Combine doit avoir cette allure :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">class&lt;/span> &lt;span class="nc">MyViewModel&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">someProperty&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s">&amp;#34;Coucou copaing !&amp;#34;&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Le wrapper &lt;code>@Published&lt;/code> est tout à fait adaptée aux structs puisque toute mutation d&amp;rsquo;une struct est un changement de valeur. Mais les classes si elles sont faites pour être mutées ne remonteront point l&amp;rsquo;évènement au wrapper.&lt;/p>
+&lt;p>Or pour observer une propriété imbriquée au deuxième niveau dans SwiftUI, comme &lt;code>.sheet(isPresented: $vm.router.showSheet) {…}&lt;/code>, on peut essayer :&lt;/p>
+&lt;ul>
+&lt;li>d&amp;rsquo;observer le routeur qui serait une &lt;strong>struct&lt;/strong> et de prendre sa valeur &lt;code>showSheet&lt;/code>&lt;/li>
+&lt;li>avec le routeur en &lt;code>ObservableObject&lt;/code>, observer directement &lt;code>showSheet&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>Eh bien aucune des deux options ne fonctionne directement depuis une vue SwiftUI.
+Ce petit &lt;code>$&lt;/code> qui désigne la &lt;code>projectedValue&lt;/code> d&amp;rsquo;une propriété encapsulée par un &lt;code>@Published&lt;/code> ou un &lt;code>@State&lt;/code> n&amp;rsquo;est pas magique, et ça ne fonctionne qu&amp;rsquo;au premier niveau, c&amp;rsquo;est à dire un &lt;code>@Published&lt;/code> propriété d&amp;rsquo;un &lt;code>ObservableObject&lt;/code>.&lt;/p>
+&lt;p>Et la feinte officielle n&amp;rsquo;est pas bien glorieuse :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">class&lt;/span> &lt;span class="nc">MyViewModel&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">router&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Router&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">cancellables&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Set&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">AnyCancellable&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">router&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Router&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">router&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">router&lt;/span>
+&lt;span class="n">router&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">objectWillChange&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sink&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="kr">weak&lt;/span> &lt;span class="kc">self&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="kc">_&lt;/span> &lt;span class="k">in&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">?.&lt;/span>&lt;span class="n">objectWillChange&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">send&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="p">}.&lt;/span>&lt;span class="n">store&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">in&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">&amp;amp;&lt;/span>&lt;span class="n">cancellables&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">deinit&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">cancellables&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">forEach&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="nv">$0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">cancel&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Il-y-a des variantes plus concises au prix de sacrifices discutables, mais voilà le principe. A chaque fois que le routeur va changer, on va propager l&amp;rsquo;évènement pour indiquer à l&amp;rsquo;UI de se rafraîchir. C&amp;rsquo;est un peu large, un peu &amp;ldquo;Mario fait du Combine&amp;rdquo;, mais ne soyons pas obtus, si ça roule après tout&amp;hellip;&lt;/p>
+&lt;p>Une bonne alternative est de mettre tout ça à plat dans la vue :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">struct&lt;/span> &lt;span class="nc">MyView&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">ObservedObject&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">vm&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">MainViewModel&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">body&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">some&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{...}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>deviendrait&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">struct&lt;/span> &lt;span class="nc">MyView&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">ObservedObject&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">vm&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">MyViewModel&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">ObservedObject&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">router&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Router&lt;/span>
+&lt;span class="kd">var&lt;/span> &lt;span class="nv">body&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">some&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{...}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>C&amp;rsquo;est plus élégant je trouve, mais imaginons que j&amp;rsquo;ai 8 entités un peu complexes à embarquer dans mon VM, ça commence alors à foisonner plus que de raison.&lt;/p>
+&lt;p>Autre point en passant, impossible de sécuriser l&amp;rsquo;instance embarquée du routeur dans le view-model avec un &lt;code>private(set)&lt;/code> modifier dans la première version. C&amp;rsquo;est de l&amp;rsquo;ordre du TOC - c&amp;rsquo;est bien d&amp;rsquo;en être conscient - mais ça me gène 😅&lt;/p>
+&lt;h2 id="propager-des-published-model---vm---view">Propager des @Published, Model -&amp;gt; VM -&amp;gt; View&lt;/h2>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">class&lt;/span> &lt;span class="nc">Store&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">private&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kr">set&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">someUrl&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">URL&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">class&lt;/span> &lt;span class="nc">MyViewModel&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">private&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kr">set&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">someUrl&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">URL&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">store&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Store&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">store&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="err">$&lt;/span>&lt;span class="n">someUrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">assign&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">to&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="o">&amp;amp;&lt;/span>&lt;span class="err">$&lt;/span>&lt;span class="n">someUrl&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Mais c&amp;rsquo;est très raisonnable, super ! Oui mais iOS14+ seulement.&lt;/p>
+&lt;p>Et voici la version iOS 13 :&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="kd">class&lt;/span> &lt;span class="nc">Store&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">private&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kr">set&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">someUrl&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">URL&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">class&lt;/span> &lt;span class="nc">MyViewModel&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">ObservableObject&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="p">@&lt;/span>&lt;span class="n">Published&lt;/span>
+&lt;span class="kd">private&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kr">set&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">someUrl&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">URL&lt;/span>&lt;span class="p">?&lt;/span>
+&lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">cancellables&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Set&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">AnyCancellable&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;span class="kd">init&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">store&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Store&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">store&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="err">$&lt;/span>&lt;span class="n">someUrl&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sink&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="kr">weak&lt;/span> &lt;span class="kc">self&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">url&lt;/span> &lt;span class="k">in&lt;/span>
+&lt;span class="kc">self&lt;/span>&lt;span class="p">?.&lt;/span>&lt;span class="n">someUrl&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">url&lt;/span>
+&lt;span class="p">}.&lt;/span>&lt;span class="n">store&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">in&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">&amp;amp;&lt;/span>&lt;span class="n">cancellables&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="kd">deinit&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="n">cancellables&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">forEach&lt;/span>&lt;span class="p">({&lt;/span> &lt;span class="nv">$0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">cancel&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>* &lt;em>whip sound&lt;/em> *&lt;/p>
+&lt;p>Pas mal hein ?&lt;/p>
+&lt;p>* &lt;em>whip sound&lt;/em> *&lt;/p>
+&lt;h2 id="sink-twice">Sink twice&lt;/h2>
+&lt;p>&lt;em>silence génant&lt;/em>&lt;/p>
+&lt;p>Quand on observe un sujet avec &lt;code>sink&lt;/code>, sachez que la valeur qui vous est passée en closure est celle qui &lt;strong>va&lt;/strong> être attribuée, comme lorsqu&amp;rsquo;on utilise &lt;code>willSet&lt;/code> sur une propriété (quelques détails &lt;a href="https://stackoverflow.com/questions/58403338/is-there-an-alternative-to-combines-published-that-signals-a-value-change-afte">ici&lt;/a>).&lt;/p>
+&lt;p>Pas de problème pour l&amp;rsquo;update d&amp;rsquo;UI, c&amp;rsquo;est fait pour. Mais pour les autres besoins, comme par exemple quand on a des mécanismes complexes intermédiaires qui ne se résument pas à fusionner deux valeurs publiées, la meilleure chose à faire est encore de créer son publisher.&lt;/p>
+&lt;p>Et même si j&amp;rsquo;aurais encore beaucoup à dire autour de ce sujet, je réserve à un futur article une petite contribution autour de ce sujet, des property wrappers et consorts.&lt;/p>
+&lt;p>N&amp;rsquo;hésitez pas à m&amp;rsquo;écrire si vous avez un avis quelconque sur ce que j&amp;rsquo;ai écrit, mon email est (?) dans le footer ;)&lt;/p></content><category scheme="https://pittscraft.com/categories/application-mobile/" term="Application mobile" label="Application mobile"/><category scheme="https://pittscraft.com/tags/ios/" term="iOS" label="iOS"/><category scheme="https://pittscraft.com/tags/combine/" term="Combine" label="Combine"/><category scheme="https://pittscraft.com/tags/swiftui/" term="SwiftUI" label="SwiftUI"/></entry><entry><title type="text">Attestation 2s iOS</title><link rel="alternate" type="text/html" href="https://pittscraft.com/posts/attestation-ios/"/><id>https://pittscraft.com/posts/attestation-ios/</id><updated>2020-11-09T20:38:09+01:00</updated><published>2020-11-09T20:38:09+01:00</published><author><name>Pitt</name><uri>https://pittscraft.com/about/</uri><email>pitt@pittscraft.com</email></author><summary type="html">Il m&amp;rsquo;est arrivé plusieurs fois d&amp;rsquo;oublier mon attestation de sortie (c&amp;rsquo;est mal), de la générer au volant en panique (c&amp;rsquo;est très mal), de prendre du retard en tapant le formulaire avant de partir&amp;hellip; Loin de moi l&amp;rsquo;idée de débattre du bien-fondé du confinement et de ses modalités, cependant j&amp;rsquo;étais confronté à un inconfort mineur.</summary><content type="html">&lt;p>&lt;img src="https://pittscraft.com/images/attestation_2s/icon.png" alt="Icône de l&amp;rsquo;application - RIP">&lt;/p>
+&lt;p>Il m&amp;rsquo;est arrivé plusieurs fois d&amp;rsquo;oublier mon attestation de sortie (c&amp;rsquo;est mal), de la générer au volant en panique (c&amp;rsquo;est très mal), de prendre du retard en tapant le formulaire avant de partir&amp;hellip; Loin de moi l&amp;rsquo;idée de débattre du bien-fondé du confinement et de ses modalités, cependant j&amp;rsquo;étais confronté à un inconfort mineur. Et comme tout bon ingé, j&amp;rsquo;ai cherché et évalué des solutions complètement superflues - toutefois avec un indiscutable sérieux et un professionnalisme inébranlable.&lt;/p>
+&lt;h2 id="la-voie-des-anciens">La voie des anciens&lt;/h2>
+&lt;p>&lt;em>Imprimer des attestations préremplies et ne laisser que le motif, la date, l&amp;rsquo;heure et la signature à remplir.&lt;/em>&lt;/p>
+&lt;p>Oui ça marche, mais la matérialisation est une contrainte forte. Si on oublie de remplir son attestation (c&amp;rsquo;est mal) et qu&amp;rsquo;on prend la voiture on n&amp;rsquo;a pas de moyen de gérer la situation sans un 180° bien crissant (ce qui est certes classe mais dangereux).&lt;/p>
+&lt;p>On me dit dans l&amp;rsquo;oreillette qu&amp;rsquo;on peut tout à fait écrire une attestation à la main sur papier libre&amp;hellip; Oui mais bon, change pas de sujet, j&amp;rsquo;ai pas de stylo ni de papier sur moi, voilà, et puis niveau ergonomie, c&amp;rsquo;est so &lt;em>les millénaires passés&lt;/em> l&amp;rsquo;écriture&amp;hellip;&lt;/p>
+&lt;h2 id="la-voie-officielle-1-web">La voie officielle #1 (web)&lt;/h2>
+&lt;p>J&amp;rsquo;ai essayé de faire avec la page web gouvernementale. Et franchement, c&amp;rsquo;est correct sur ordinateur avec le bon équipement logiciel. J&amp;rsquo;utilise personnellement un navigateur Chromium avec le plugin de mon gestionnaire de mots de passe &lt;a href="https://www.dashlane.com/fr">Dashlane&lt;/a>. Le seul inconfort évident est la lecture des motifs du déplacement. J&amp;rsquo;ai commencé à faire un petit plugin Chrome pour retravailler ça avant de me raviser rapidement : les plugins ne fonctionnent pas sur les navigateurs Chromium iOS et la génération sur portable est bien plus pratique.&lt;/p>
+&lt;h2 id="la-voie-officielle-2-tousanticovid">La voie officielle #2 (TousAntiCovid)&lt;/h2>
+&lt;p>On monte en qualité avec le générateur intégré à l&amp;rsquo;application &lt;a href="https://www.gouvernement.fr/info-coronavirus/tousanticovid">TousAntiCovid&lt;/a>. Il est possible de faire retenir mes coordonnées par l&amp;rsquo;appli et les motifs ont un titre en gras qui permet d&amp;rsquo;y voir un peu plus clair. Cependant je ne suis pas intéressé par la fonctionnalité de traçage de cette application. Donc je n&amp;rsquo;ai pas apprécié quand j&amp;rsquo;ai dû impérativement autoriser l&amp;rsquo;app à utiliser le bluetooth à la première ouverture. Et puis en regardant ça, je commençais à avoir ma petite idée de l&amp;rsquo;appli idéale donc toutes les petites frictions du parcours pour générer mon autorisation me faisaient tiquer. Ca fait quand même pas mal d&amp;rsquo;étapes après ouverture de l&amp;rsquo;application :&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>scroll tout en bas&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>tap sur &lt;em>Attestation de déplacement&lt;/em>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>tap sur &lt;em>Nouvelle attestation&lt;/em>&lt;/strong>&lt;/li>
+&lt;li>entrer mes données - ok ça s&amp;rsquo;enregistre on ne le compte pas&lt;/li>
+&lt;li>tap (optionnel) sur l&amp;rsquo;heure pour régler l&amp;rsquo;heure de ma sortie - je n&amp;rsquo;ai jamais touché à la date jusque là&lt;/li>
+&lt;li>&lt;strong>tap pour choisir le motif de déplacement (qui ne s&amp;rsquo;enregistre pas)&lt;/strong>&lt;/li>
+&lt;li>sur mon iPhone, il faut 3 hauteurs d&amp;rsquo;écran pour lire intégralement la liste des motifs, on ajoute donc souvent un scroll ou deux&lt;/li>
+&lt;li>&lt;strong>tap sur le motif&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>tap sur &lt;em>Générer&lt;/em>&lt;/strong>&lt;/li>
+&lt;li>&lt;strong>alerte de confirmation : tap sur &lt;em>Je certifie&lt;/em>&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>Donc dans le cas idéal (je pars maintenant, c&amp;rsquo;est bien moi qui gènère l&amp;rsquo;attestation et je suis la dernière personne à avoir utilisé le générateur sur cet appareil, et mon motif est mon caractère laborieux) j&amp;rsquo;ai donc &lt;strong>7 actions&lt;/strong> avant d&amp;rsquo;obtenir le QR Code tant convoité. &lt;strong>C&amp;rsquo;est beaucoup.&lt;/strong>&lt;/p>
+&lt;h2 id="la-voie-des-ptits-malins-app-ios-raccourcis">La voie des ptits malins (app iOS Raccourcis)&lt;/h2>
+&lt;p>Certaines boîtes comme &lt;a href="https://www.luko.eu/blog/confinement-astuce-remplir-attestation-derogatoire-automatiquement">Luko&lt;/a> ou &lt;a href="https://newzik.com/fr/attestation-covid/">Newzik&lt;/a> vous proposent de générer un lien qui contient vos données, et qui mène à un générateur automatique qui affiche l&amp;rsquo;attestation générée avec l&amp;rsquo;heure de sortie actuelle.&lt;/p>
+&lt;p>L&amp;rsquo;idée est notamment d&amp;rsquo;utiliser un raccourci déclenché par Siri par exemple pour commander son attestation à la voix ou encore la faire ouvrir automatiquement dès qu&amp;rsquo;on quitte son domicile. On n&amp;rsquo;est pas loin de la solution idéale, seulement je ne peux pas générer une attestation à la bourre.&lt;/p>
+&lt;p>Ceci-dit, ce lien est un bon exemple de ce qu&amp;rsquo;on peut faire rapidement pour se faciliter la vie. Quelques bookmarks, un peu de configuration et pour les gens pas trop technophobes on s&amp;rsquo;en sort.&lt;/p>
+&lt;h2 id="lapp-de-mes-rêves">L&amp;rsquo;app de mes rêves&lt;/h2>
+&lt;h3 id="cahier-des-charges">Cahier des charges&lt;/h3>
+&lt;p>L&amp;rsquo;app de mes rêves&lt;/p>
+&lt;ul>
+&lt;li>dans le meilleur des cas, nécessite &lt;strong>une seule action&lt;/strong> pour générer une attestation&lt;/li>
+&lt;li>si le motif change, une à deux actions supplémentaires sont tolérables.&lt;/li>
+&lt;li>demande le plus rarement possible des actions supplémentaires.&lt;/li>
+&lt;li>permet à ma compagne de faire son attestation sur mon téléphone sans effacer mes données préremplies&lt;/li>
+&lt;li>gère &lt;em>très efficacement&lt;/em> mon cas pathologique d&amp;rsquo;oubli. Elle doit donc me permettre de générer mon attestation lorsque je me rends compte après 20 minutes de trajet que j&amp;rsquo;ai oublié mon attestation : pour être dans les clous, &lt;strong>mon heure de sortie doit alors être 20 minutes dans le passé&lt;/strong>&lt;/li>
+&lt;li>n&amp;rsquo;embarque aucune autre fonctionnalité non souhaitée&lt;/li>
+&lt;li>n&amp;rsquo;envoie aucune donnée à qui que ce soit (pas de tracking publicitaire ou autre)&lt;/li>
+&lt;li>n&amp;rsquo;utilise aucune bibliothèque tierce non maîtrisée à 100%&lt;/li>
+&lt;/ul>
+&lt;p>Je me suis auto-défié, et au bout d&amp;rsquo;une petite journée de développement j&amp;rsquo;avais un prototype fonctionnel, ce qui m&amp;rsquo;a encouragé à continuer. Au bout de trois jours de développement j&amp;rsquo;avais une app présentable, les aspects légaux étaient confirmés, et la plupart des raffinements majeurs étaient implémentés.&lt;/p>
+&lt;h3 id="réalisation-">Réalisation !&lt;/h3>
+&lt;p>Je suis bien content d&amp;rsquo;annoncer que j&amp;rsquo;ai respecté *presque* tous les points de l&amp;rsquo;app de mes rêves. Seule entorse, comme il faut quand même être un peu sérieux, j&amp;rsquo;ai ajouté une confirmation de véracité des données à la génération de l&amp;rsquo;attestation, on a donc deux actions pour générer l&amp;rsquo;attestation.&lt;/p>
+&lt;p>Tout comme pour la solution de génération par liens, j&amp;rsquo;ai récupéré &lt;a href="https://github.com/LAB-MI/attestation-deplacement-derogatoire-q4-2020">le code publié par le ministère de l&amp;rsquo;intérieur&lt;/a> pour générer les PDFs en inspectant son intégralité, en extrayant uniquement les parties nécessaires, puis en le modifiant pour son intégration dans l&amp;rsquo;app.&lt;/p>
+&lt;p>Je ne vais pas vous cacher que je n&amp;rsquo;aurais pas fait cette application juste pour me faciliter les sorties. Je voulais également expérimenter &lt;a href="https://developer.apple.com/xcode/swiftui/">SwiftUI&lt;/a>, la bibliothèque déclarative d&amp;rsquo;interface utilisateur d&amp;rsquo;Apple qui me tend les bras depuis plusieurs années, et c&amp;rsquo;était une bonne occasion.&lt;/p>
+&lt;p>Et voici le résultat :&lt;/p>
+&lt;p>&lt;img src="https://pittscraft.com/images/attestation_2s/attestation_2s.gif" alt="Deux taps pour une attestation">&lt;/p>
+&lt;h4 id="vue-principale">Vue principale&lt;/h4>
+&lt;p>&lt;img src="https://pittscraft.com/images/attestation_2s/main_view.jpeg" alt="Vue principale">&lt;/p>
+&lt;p>Ici on peut :&lt;/p>
+&lt;ul>
+&lt;li>ajouter / supprimer / réordonner les personnes&lt;/li>
+&lt;li>sélectionner un ou plusieurs motifs de sortie&lt;/li>
+&lt;li>sélectionner la date de sortie en temps relatif par rapport à l&amp;rsquo;heure actuelle : les boutons du Stepper (+ / -) ajoutent ou retirent 10 minutes&lt;/li>
+&lt;li>et surtout aller vers l&amp;rsquo;attestation !&lt;/li>
+&lt;/ul>
+&lt;h4 id="vue-dédition-de-personne">Vue d&amp;rsquo;édition de personne&lt;/h4>
+&lt;p>&lt;img src="https://pittscraft.com/images/attestation_2s/person_form.png" alt="Formulaire de personne">&lt;/p>
+&lt;p>Un simple formulaire tout bête :)&lt;/p>
+&lt;h4 id="présentation-de-lattestation">Présentation de l&amp;rsquo;attestation&lt;/h4>
+&lt;p>&lt;img src="https://pittscraft.com/images/attestation_2s/attestation_presentation.png" alt="Image description">&lt;/p>
+&lt;p>Très simple, on peut juste :&lt;/p>
+&lt;ul>
+&lt;li>partager le PDF&lt;/li>
+&lt;li>épingler l&amp;rsquo;attestation : dans ce cas la présentation en carte ne se laisse pas fermer comme d&amp;rsquo;habitude par swipe vertical, la croix de fermeture disparaît, et au cas où l&amp;rsquo;utilisateur ferme l&amp;rsquo;app, l&amp;rsquo;attestation sera restaurée à la réouverture&lt;/li>
+&lt;/ul>
+&lt;h4 id="temps-de-génération-de-lattestation--3s">Temps de génération de l&amp;rsquo;attestation : 3s&lt;/h4>
+&lt;p>Dans mon usage quotidien, avec ma (vraie) identité de remplie, je mets environ 3s à remplir mon attestation entre l&amp;rsquo;ouverture de l&amp;rsquo;app, le choix ou la vérification du motif et le réglage ou la vérification de l&amp;rsquo;heure. Oui je suis lent, mais mon objectif est atteint, je peux sans risque générer mon attestation dans des situation d&amp;rsquo;urgence et d&amp;rsquo;oubli \o/&lt;/p>
+&lt;p>&lt;img src="https://pittscraft.com/images/attestation_2s/30min_earlier.png" alt="Cas d&amp;rsquo;oubli - c&amp;rsquo;est mal">&lt;/p>
+&lt;h3 id="app-store-">App Store ?&lt;/h3>
+&lt;p>Eh bien malgré ma gestion paranoïaque des données utilisateur, il semble que ce ne soit pas suffisant pour Apple qui (je pense) n&amp;rsquo;autorise simplement aucune app avec cette fonctionnalité sauf celle du gouvernement.&lt;/p>
+&lt;blockquote>
+&lt;p>We found in our review that your app provides services or requires sensitive user information related to the COVID-19 pandemic. Since the COVID-19 pandemic is a public health crisis, services and information related to it are considered to be part of the healthcare industry. In addition, the seller and company names associated with your app are not from a recognized institution, such as a governmental entity, hospital, insurance company, non-governmental organization, or university.&lt;/p>
+&lt;p>Per section 5.1.1 (ix) of the App Store Review Guidelines, apps that provide services or collect sensitive user information in highly-regulated fields, such as healthcare, should be submitted by a legal entity that provides these services, and not by an individual developer.&lt;/p>
+&lt;/blockquote>
+&lt;p>J&amp;rsquo;ai évidemment fait appel mais je ne pense pas qu&amp;rsquo;ils cèderont, tant pis, je ne partagerai donc mon app qu&amp;rsquo;avec mes proches (du moins ceux qui possèdent un iPhone) !&lt;/p>
+&lt;h3 id="développement--retour-dxp">Développement : retour d&amp;rsquo;XP&lt;/h3>
+&lt;h4 id="swiftui--combine">SwiftUI + Combine&lt;/h4>
+&lt;p>Tout d&amp;rsquo;abord SwiftUI est très agréable à utiliser. On a évidemment les traditionnelles errances de XCode 12, que ce soit niveau compilation, complétion, aperçu de l&amp;rsquo;UI&amp;hellip; Mais il convient de saluer la prouesse qu&amp;rsquo;est l&amp;rsquo;implémentation de ce framework, un très bon exemple de DSL sur Swift, qui s&amp;rsquo;y prête particulièrement bien.&lt;/p>
+&lt;div class="highlight">&lt;pre class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="ln"> 1&lt;/span>&lt;span class="kd">struct&lt;/span> &lt;span class="nc">AddEditPersonSheet&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln"> 2&lt;/span>
+&lt;span class="ln"> 3&lt;/span> &lt;span class="c1">// Local state&lt;/span>
+&lt;span class="ln"> 4&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">State&lt;/span>
+&lt;span class="ln"> 5&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">tappedOkButton&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">false&lt;/span>
+&lt;span class="ln"> 6&lt;/span>
+&lt;span class="ln"> 7&lt;/span> &lt;span class="c1">// The ViewModel data and callbacks / Yeah I should have created a struct for this&lt;/span>
+&lt;span class="ln"> 8&lt;/span> &lt;span class="p">@&lt;/span>&lt;span class="n">Binding&lt;/span>
+&lt;span class="ln"> 9&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">editingPerson&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">EditingPerson&lt;/span>
+&lt;span class="ln">10&lt;/span> &lt;span class="kd">let&lt;/span> &lt;span class="nv">isCreation&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">Bool&lt;/span>
+&lt;span class="ln">11&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">cancelAddPerson&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Void&lt;/span>
+&lt;span class="ln">12&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">endAddOrEditPerson&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">()&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Void&lt;/span>
+&lt;span class="ln">13&lt;/span>
+&lt;span class="ln">14&lt;/span> &lt;span class="c1">// No constructor (structs are cool)&lt;/span>
+&lt;span class="ln">15&lt;/span>
+&lt;span class="ln">16&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">title&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">17&lt;/span> &lt;span class="n">isCreation&lt;/span> &lt;span class="p">?&lt;/span> &lt;span class="s">&amp;#34;Créer&amp;#34;&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;Modifier&amp;#34;&lt;/span>
+&lt;span class="ln">18&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">19&lt;/span>
+&lt;span class="ln">20&lt;/span> &lt;span class="kd">private&lt;/span> &lt;span class="kd">func&lt;/span> &lt;span class="nf">isEmpty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="kc">_&lt;/span> &lt;span class="n">str&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="nb">String&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">-&amp;gt;&lt;/span> &lt;span class="nb">Bool&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">21&lt;/span> &lt;span class="n">str&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">trimmingCharacters&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">in&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">whitespacesAndNewlines&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="bp">isEmpty&lt;/span>
+&lt;span class="ln">22&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">23&lt;/span>
+&lt;span class="ln">24&lt;/span> &lt;span class="kd">var&lt;/span> &lt;span class="nv">body&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">some&lt;/span> &lt;span class="n">View&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">25&lt;/span> &lt;span class="n">NavigationView&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">26&lt;/span> &lt;span class="n">Form&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">ss&lt;/span>
+&lt;span class="ln">27&lt;/span> &lt;span class="n">Section&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">header&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Identité&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">28&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">tappedOkButton&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="bp">isEmpty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">editingPerson&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">firstName&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">29&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Prénom manquant&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">foregroundColor&lt;/span>&lt;span class="p">(.&lt;/span>&lt;span class="n">red&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">30&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">31&lt;/span> &lt;span class="n">TextField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Prénom&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">text&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">$&lt;/span>&lt;span class="n">editingPerson&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">firstName&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">textContentType&lt;/span>&lt;span class="p">(.&lt;/span>&lt;span class="n">givenName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">32&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="n">tappedOkButton&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="bp">isEmpty&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">editingPerson&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">lastName&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">33&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Nom manquant&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">foregroundColor&lt;/span>&lt;span class="p">(.&lt;/span>&lt;span class="n">red&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">34&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">35&lt;/span> &lt;span class="n">TextField&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Nom&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">text&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="err">$&lt;/span>&lt;span class="n">editingPerson&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">lastName&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">textContentType&lt;/span>&lt;span class="p">(.&lt;/span>&lt;span class="n">familyName&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">36&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">37&lt;/span> &lt;span class="c1">// ... other sections&lt;/span>
+&lt;span class="ln">38&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">39&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">navigationBarItems&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">leading&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Button&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">cancelAddPerson&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">40&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Annuler&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">41&lt;/span> &lt;span class="p">},&lt;/span> &lt;span class="n">trailing&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Button&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">action&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">42&lt;/span> &lt;span class="n">withAnimation&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">43&lt;/span> &lt;span class="n">tappedOkButton&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="kc">true&lt;/span>
+&lt;span class="ln">44&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">editingPerson&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isValid&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">45&lt;/span> &lt;span class="n">endAddOrEditPerson&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;span class="ln">46&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">47&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">48&lt;/span> &lt;span class="p">})&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="ln">49&lt;/span> &lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;Enregistrer&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">50&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">disabled&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">tappedOkButton&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">editingPerson&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isValid&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;span class="ln">51&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">navigationBarTitle&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Text&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">displayMode&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">.&lt;/span>&lt;span class="n">inline&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">52&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">53&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;span class="ln">54&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;em>Pas de critiques les puristes, j&amp;rsquo;ai fait du monolingue et du gros inline volontairement.&lt;/em>&lt;/p>
+&lt;p>&lt;em>&lt;strong>Développement rapide :&lt;/strong>&lt;/em> Grâce à cette approche DSL, on se retrouve avec du code à l&amp;rsquo;imbrication proche de l&amp;rsquo;UI, facilement intelligible, avec de très bons comportements par défaut. Comme c&amp;rsquo;était mon premier test j&amp;rsquo;ai forcément un peu ramé, mais j&amp;rsquo;aurais pris bien plus de 3 jours de développement pour une petite app complète, fonctionnelle et propre si j&amp;rsquo;avais dû rapprendre UIKit ou pire : HTML + CSS.&lt;/p>
+&lt;p>&lt;em>&lt;strong>Le couplage avec &lt;a href="https://developer.apple.com/documentation/combine">Combine&lt;/a>&lt;/strong>&lt;/em> permet de s&amp;rsquo;engager sur le chemin des state-driven apps. Pour avoir pas mal joué avec &lt;a href="https://fr.reactjs.org/">React&lt;/a> + &lt;a href="https://redux.js.org/">Redux&lt;/a>, je ne peux que vous inciter à adopter ce paradigme. Evidemment, quand on n&amp;rsquo;a jamais fait que de la programmation impérative, beaucoup de petites choses peuvent être frustrantes au premier abord. Mais ça dégraisse tellement !
+Et pour ceux qui ont déjà eu des interrogations philosophiques sur les architectures logicielles en iOS - entre MVC = Massive View Controller par exemple) et le trop souvent overkill &lt;a href="https://mutualmobile.com/resources/meet-viper-fast-agile-non-lethal-ios-architecture-framework">VIPER&lt;/a> -, SwiftUI + Combine incitent très naturellement à dérouler le code en MVVM, apportant enfin une alternative moderne et structurante.&lt;/p>
+&lt;p>&lt;em>&lt;strong>RIP UIKit ? :&lt;/strong>&lt;/em> Bien sûr que non, SwiftUI est principalement une surcouche d&amp;rsquo;UIKit qui a encore de beaux jours devant lui. On peut d&amp;rsquo;ailleurs palier assez facilement l&amp;rsquo;absence de nombreux composants essentiels de SwiftUI en encapsulant une &lt;code>UIView&lt;/code>, comme j&amp;rsquo;ai dû le faire pour le lecteur PDF et la webview qui appelle le code de génération du document PDF.&lt;/p>
+&lt;p>C&amp;rsquo;est tout, ce fut un bon petit défi sympa et enrichissant !&lt;/p>
+&lt;p>J&amp;rsquo;espère avoir l&amp;rsquo;occasion de récrire sur Swift qui reste un de mes langages préférés, mais pour le moment je replonge dans mes projets TypeScript qui se positionne franchement pas mal non plus et a l&amp;rsquo;avantage d&amp;rsquo;être largement adopté en dehors du petit monde Apple.&lt;/p></content><category scheme="https://pittscraft.com/categories/application-mobile/" term="Application mobile" label="Application mobile"/><category scheme="https://pittscraft.com/tags/ios/" term="iOS" label="iOS"/><category scheme="https://pittscraft.com/tags/combine/" term="Combine" label="Combine"/><category scheme="https://pittscraft.com/tags/swiftui/" term="SwiftUI" label="SwiftUI"/><category scheme="https://pittscraft.com/tags/confinement/" term="confinement" label="confinement"/><category scheme="https://pittscraft.com/tags/covid/" term="covid" label="covid"/></entry></feed>
