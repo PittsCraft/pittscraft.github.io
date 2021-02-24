@@ -104,7 +104,7 @@ uglyURLs = false
     # Personal website, default: baseURL
     website = "https://pittscraft.com/about/"
     # Twitter
-    # twitter = "reuixiy"
+    twitter = "Pitt51279043"
 
 # Related content
 [related]
@@ -349,7 +349,7 @@ uglyURLs = false
     # ATTENTION: keep this format, change
     #            the number
 
-    siteTwitter = "reuixiy"
+    siteTwitter = "Pitt51279043"
     # Note: used for Twitter Cards
 
 
