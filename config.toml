@@ -1,6 +1,6 @@
 ##########################################
 # Site Settings
-
+publishDir = "docs"
 baseURL = "https://pittscraft.com/"
 title = "Pitt's Craft"
 languageCode = "fr"

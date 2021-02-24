@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
-    <title type="text">Pitt&#39;s Craft</title>
-    <subtitle type="html">MemE is a powerful and highly customizable GoHugo theme for personal blogs.</subtitle>
-    <updated>2021-02-24T16:23:51&#43;01:00</updated>
-    <id>https://pittscraft.com/</id>
-    <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
-    <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
-    <author>
-            <name>Pitt</name>
-            <uri>https://pittscraft.com/</uri>
-            
-                <email>pitt@pittscraft.com</email>
-            </author>
-    
-    <generator uri="https://gohugo.io/" version="0.80.0">Hugo</generator>
-        <entry>
-            <title type="text">SwiftUI &amp; Combine Feedback #2 : property wrapper pour UserDefaults et @Published</title>
-            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/swiftui_combine2/" />
-            <id>https://pittscraft.com/posts/swiftui_combine2/</id>
-            <updated>2020-12-10T14:14:35&#43;01:00</updated>
-            <published>2020-12-10T14:14:35&#43;01:00</published>
-            <author>
-                    <name>Pitt</name>
-                    <uri>https://pittscraft.com/about/</uri>
-                    <email>pitt@pittscraft.com</email>
-                    </author>
-            <summary type="html">J&amp;rsquo;avais déjà croisé un exemple d&amp;rsquo;implémentation de property wrapper et devant leur simplicité, je m&amp;rsquo;étais mis en tête de créer un property wrapper accélérant le stockage de valeurs dans les UserDefaults.
-Il se trouve que dans mes expérimentations autour de Combine j&amp;rsquo;avais bien envie de créer un wrapper publiant les nouvelles valeurs seulement après les avoirs stockées (voir ici).</summary>
-            
-                <content type="html">&lt;p&gt;J&amp;rsquo;avais déjà croisé un exemple d&amp;rsquo;implémentation de property wrapper et devant leur simplicité, je m&amp;rsquo;étais mis en tête de créer un property wrapper accélérant le stockage de valeurs dans les &lt;code&gt;UserDefaults&lt;/code&gt;.&lt;/p&gt;
+
+
+
+
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Pitt&#39;s Craft</title>
+        <link>https://pittscraft.com/</link>
+        <description>MemE is a powerful and highly customizable GoHugo theme for personal blogs.</description>
+        <generator>Hugo 0.80.0 https://gohugo.io/</generator>
+        
+            <language>fr</language>
+        
+        
+            <managingEditor>pitt@pittscraft.com (Pitt)</managingEditor>
+        
+        
+            <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
+        
+        
+        <lastBuildDate>Wed, 24 Feb 2021 16:29:24 &#43;0100</lastBuildDate>
+        
+            <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
+        
+        
+            <item>
+                <title>SwiftUI &amp; Combine Feedback #2 : property wrapper pour UserDefaults et @Published</title>
+                <link>https://pittscraft.com/posts/swiftui_combine2/</link>
+                <guid isPermaLink="true">https://pittscraft.com/posts/swiftui_combine2/</guid>
+                <pubDate>Thu, 10 Dec 2020 14:14:35 &#43;0100</pubDate>
+                
+                    <author>pitt@pittscraft.com (Pitt)</author>
+                
+                
+                
+                    <description>&lt;p&gt;J&amp;rsquo;avais déjà croisé un exemple d&amp;rsquo;implémentation de property wrapper et devant leur simplicité, je m&amp;rsquo;étais mis en tête de créer un property wrapper accélérant le stockage de valeurs dans les &lt;code&gt;UserDefaults&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Il se trouve que dans mes expérimentations autour de &lt;code&gt;Combine&lt;/code&gt; j&amp;rsquo;avais bien envie de créer un wrapper publiant les nouvelles valeurs seulement après les avoirs stockées (&lt;a href=&#34;https://pittscraft.com/posts/swiftui_combine1&#34;&gt;voir ici&lt;/a&gt;).&lt;/p&gt;
 &lt;p&gt;Et puis j&amp;rsquo;ai finalement voulu faire tout en même temps !&lt;/p&gt;
 &lt;h2 id=&#34;quest-ce-donc-quun-property-wrapper-&#34;&gt;Qu&amp;rsquo;est-ce donc qu&amp;rsquo;un property wrapper ?&lt;/h2&gt;
@@ -672,62 +678,59 @@ Eh bien Combine nous fournit gracieusement le protocole &lt;code&gt;Subject&lt;/
     &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;N&amp;rsquo;hésitez pas à me contacter pour toute remarque, insulte ou éloge, mon email est dans le footer ;)&lt;/p&gt;
-</content>
-            
-            
-            
-            
-            
+</description>
+                
+                
+                
+                
                 
                     
                         
                             
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/categories/application-mobile/">Application mobile</category>
+                                
                             
+                        
+                    
+                        
                             
-                                <category scheme="https://pittscraft.com/categories/application-mobile/" term="Application mobile" label="Application mobile" />
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/ios/">iOS</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/combine/">Combine</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/swiftui/">SwiftUI</category>
+                                
                             
                         
                     
                 
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/ios/" term="iOS" label="iOS" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/combine/" term="Combine" label="Combine" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/swiftui/" term="SwiftUI" label="SwiftUI" />
-                            
-                        
-                    
+            </item>
+        
+            <item>
+                <title>SwiftUI &amp; Combine Feedback #1 : architecture et grains de sable</title>
+                <link>https://pittscraft.com/posts/swiftui_combine1/</link>
+                <guid isPermaLink="true">https://pittscraft.com/posts/swiftui_combine1/</guid>
+                <pubDate>Wed, 09 Dec 2020 14:14:35 &#43;0100</pubDate>
                 
-            
-        </entry>
-    
-        <entry>
-            <title type="text">SwiftUI &amp; Combine Feedback #1 : architecture et grains de sable</title>
-            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/swiftui_combine1/" />
-            <id>https://pittscraft.com/posts/swiftui_combine1/</id>
-            <updated>2020-12-09T14:14:35&#43;01:00</updated>
-            <published>2020-12-09T14:14:35&#43;01:00</published>
-            <author>
-                    <name>Pitt</name>
-                    <uri>https://pittscraft.com/about/</uri>
-                    <email>pitt@pittscraft.com</email>
-                    </author>
-            <summary type="html">Après mon premier petit TP autour de SwiftUI et Combine pour générer mes attestations de déplacement ~à la barbe de la maréchaussée~ à la volée voire en retard, j&amp;rsquo;ai profité de l&amp;rsquo;adaptation au second format d&amp;rsquo;attestation pour faire des explorations un peu plus poussées de mon architecture autour de Combine.</summary>
-            
-                <content type="html">&lt;p&gt;Après &lt;a href=&#34;https://pittscraft.com/posts/attestation-ios&#34;&gt;mon premier petit TP&lt;/a&gt; autour de SwiftUI et Combine pour générer mes attestations de déplacement ~à la barbe de la maréchaussée~ à la volée voire en retard, j&amp;rsquo;ai profité de l&amp;rsquo;adaptation au second format d&amp;rsquo;attestation pour faire des explorations un peu plus poussées de mon architecture autour de Combine.&lt;/p&gt;
+                    <author>pitt@pittscraft.com (Pitt)</author>
+                
+                
+                
+                    <description>&lt;p&gt;Après &lt;a href=&#34;https://pittscraft.com/posts/attestation-ios&#34;&gt;mon premier petit TP&lt;/a&gt; autour de SwiftUI et Combine pour générer mes attestations de déplacement ~à la barbe de la maréchaussée~ à la volée voire en retard, j&amp;rsquo;ai profité de l&amp;rsquo;adaptation au second format d&amp;rsquo;attestation pour faire des explorations un peu plus poussées de mon architecture autour de Combine.&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;en sors une petite liste de considérations techniques que j&amp;rsquo;espère d&amp;rsquo;intérêt, et voici les premières !&lt;/p&gt;
 &lt;h1 id=&#34;architecture-mvvm&#34;&gt;Architecture: MVVM+&lt;/h1&gt;
 &lt;p&gt;Pour une petite app comme celle-ci, je m&amp;rsquo;autorise des entorses à nombre de principes stricts &lt;em&gt;overkill&lt;/em&gt; que je n&amp;rsquo;estime pas pertinents ici, avec des gains principalement en concision et lisibilité.
@@ -942,62 +945,59 @@ Ce petit &lt;code&gt;$&lt;/code&gt; qui désigne la &lt;code&gt;projectedValue&l
 &lt;p&gt;Pas de problème pour l&amp;rsquo;update d&amp;rsquo;UI, c&amp;rsquo;est fait pour. Mais pour les autres besoins, comme par exemple quand on a des mécanismes complexes intermédiaires qui ne se résument pas à fusionner deux valeurs publiées, la meilleure chose à faire est encore de créer son publisher.&lt;/p&gt;
 &lt;p&gt;Et même si j&amp;rsquo;aurais encore beaucoup à dire autour de ce sujet, je réserve à un futur article une petite contribution autour de ce sujet, des property wrappers et consorts.&lt;/p&gt;
 &lt;p&gt;N&amp;rsquo;hésitez pas à m&amp;rsquo;écrire si vous avez un avis quelconque sur ce que j&amp;rsquo;ai écrit, mon email est (?) dans le footer ;)&lt;/p&gt;
-</content>
-            
-            
-            
-            
-            
+</description>
+                
+                
+                
+                
                 
                     
                         
                             
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/categories/application-mobile/">Application mobile</category>
+                                
                             
+                        
+                    
+                        
                             
-                                <category scheme="https://pittscraft.com/categories/application-mobile/" term="Application mobile" label="Application mobile" />
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/ios/">iOS</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/combine/">Combine</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/swiftui/">SwiftUI</category>
+                                
                             
                         
                     
                 
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/ios/" term="iOS" label="iOS" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/combine/" term="Combine" label="Combine" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/swiftui/" term="SwiftUI" label="SwiftUI" />
-                            
-                        
-                    
+            </item>
+        
+            <item>
+                <title>Attestation 2s iOS</title>
+                <link>https://pittscraft.com/posts/attestation-ios/</link>
+                <guid isPermaLink="true">https://pittscraft.com/posts/attestation-ios/</guid>
+                <pubDate>Mon, 09 Nov 2020 20:38:09 &#43;0100</pubDate>
                 
-            
-        </entry>
-    
-        <entry>
-            <title type="text">Attestation 2s iOS</title>
-            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/attestation-ios/" />
-            <id>https://pittscraft.com/posts/attestation-ios/</id>
-            <updated>2020-11-09T20:38:09&#43;01:00</updated>
-            <published>2020-11-09T20:38:09&#43;01:00</published>
-            <author>
-                    <name>Pitt</name>
-                    <uri>https://pittscraft.com/about/</uri>
-                    <email>pitt@pittscraft.com</email>
-                    </author>
-            <summary type="html">Il m&amp;rsquo;est arrivé plusieurs fois d&amp;rsquo;oublier mon attestation de sortie (c&amp;rsquo;est mal), de la générer au volant en panique (c&amp;rsquo;est très mal), de prendre du retard en tapant le formulaire avant de partir&amp;hellip; Loin de moi l&amp;rsquo;idée de débattre du bien-fondé du confinement et de ses modalités, cependant j&amp;rsquo;étais confronté à un inconfort mineur.</summary>
-            
-                <content type="html">&lt;p&gt;&lt;img src=&#34;https://pittscraft.com/images/attestation_2s/icon.png&#34; alt=&#34;Icône de l&amp;rsquo;application - RIP&#34;&gt;&lt;/p&gt;
+                    <author>pitt@pittscraft.com (Pitt)</author>
+                
+                
+                
+                    <description>&lt;p&gt;&lt;img src=&#34;https://pittscraft.com/images/attestation_2s/icon.png&#34; alt=&#34;Icône de l&amp;rsquo;application - RIP&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Il m&amp;rsquo;est arrivé plusieurs fois d&amp;rsquo;oublier mon attestation de sortie (c&amp;rsquo;est mal), de la générer au volant en panique (c&amp;rsquo;est très mal), de prendre du retard en tapant le formulaire avant de partir&amp;hellip; Loin de moi l&amp;rsquo;idée de débattre du bien-fondé du confinement et de ses modalités, cependant j&amp;rsquo;étais confronté à un inconfort mineur. Et comme tout bon ingé, j&amp;rsquo;ai cherché et évalué des solutions complètement superflues - toutefois avec un indiscutable sérieux et un professionnalisme inébranlable.&lt;/p&gt;
 &lt;h2 id=&#34;la-voie-des-anciens&#34;&gt;La voie des anciens&lt;/h2&gt;
 &lt;p&gt;&lt;em&gt;Imprimer des attestations préremplies et ne laisser que le motif, la date, l&amp;rsquo;heure et la signature à remplir.&lt;/em&gt;&lt;/p&gt;
@@ -1137,58 +1137,59 @@ Et pour ceux qui ont déjà eu des interrogations philosophiques sur les archite
 &lt;p&gt;&lt;em&gt;&lt;strong&gt;RIP UIKit ? :&lt;/strong&gt;&lt;/em&gt; Bien sûr que non, SwiftUI est principalement une surcouche d&amp;rsquo;UIKit qui a encore de beaux jours devant lui. On peut d&amp;rsquo;ailleurs palier assez facilement l&amp;rsquo;absence de nombreux composants essentiels de SwiftUI en encapsulant une &lt;code&gt;UIView&lt;/code&gt;, comme j&amp;rsquo;ai dû le faire pour le lecteur PDF et la webview qui appelle le code de génération du document PDF.&lt;/p&gt;
 &lt;p&gt;C&amp;rsquo;est tout, ce fut un bon petit défi sympa et enrichissant !&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;espère avoir l&amp;rsquo;occasion de récrire sur Swift qui reste un de mes langages préférés, mais pour le moment je replonge dans mes projets TypeScript qui se positionne franchement pas mal non plus et a l&amp;rsquo;avantage d&amp;rsquo;être largement adopté en dehors du petit monde Apple.&lt;/p&gt;
-</content>
-            
-            
-            
-            
-            
+</description>
+                
+                
+                
+                
                 
                     
                         
                             
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/categories/application-mobile/">Application mobile</category>
+                                
                             
+                        
+                    
+                        
                             
-                                <category scheme="https://pittscraft.com/categories/application-mobile/" term="Application mobile" label="Application mobile" />
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/ios/">iOS</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/combine/">Combine</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/swiftui/">SwiftUI</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/confinement/">confinement</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/covid/">covid</category>
+                                
                             
                         
                     
                 
-                    
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/ios/" term="iOS" label="iOS" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/combine/" term="Combine" label="Combine" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/swiftui/" term="SwiftUI" label="SwiftUI" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/confinement/" term="confinement" label="confinement" />
-                            
-                        
-                            
-                            
-                            
-                                <category scheme="https://pittscraft.com/tags/covid/" term="covid" label="covid" />
-                            
-                        
-                    
-                
-            
-        </entry>
-    
-</feed>
+            </item>
+        
+    </channel>
+</rss>
