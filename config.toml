@@ -515,7 +515,7 @@ uglyURLs = false
     ######################################
     # Dark Mode
 
-    enableDarkMode = true
+    enableDarkMode = false
 
     defaultTheme = "light"
     # Note: light or dark

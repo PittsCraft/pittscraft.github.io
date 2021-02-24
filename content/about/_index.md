@@ -6,7 +6,7 @@ draft: false
 
 Je suis architecte logiciel généraliste et algorithmicien curieux.
 
-De l'idée à la ligne de code, les choix sont innombrables et de natures variées.
+De l'idée à la ligne de code, les choix sont innombrables et variés.
 
 Distinguer ceux qui importent et les qualifier efficacement est aussi déterminant que l'expertise technique.
 
