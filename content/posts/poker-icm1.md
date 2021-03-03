@@ -165,16 +165,6 @@ Pour comparer les résultats, la simulation de Gambler’s Ruin nous donnait :
 
 On retrouve un biais classique de l’ICM qui est de sous-estimer la valeur des plus gros stack et de surestimer les plus petits, tout en restant très correct pour les autres.
 
-
-## Etat de l’art et ajustement d’ICM
-
-L’ICM est reconnu comme un modèle plutôt fiable. Il donne des valeurs très satisfaisantes dans la majorité des cas. Cependant les joueurs lui reconnaissent de grandes faiblesses sur les très petits et très gros stacks (comme vu ci-dessus), dans le cas de blinds très élevées ou encore autour de la bulle - ce moment lors duquel il ne reste qu’un joueur à éliminer avant d’être certain que tous joueurs restant remportent un prix.
-
-Il existe déjà des variantes de l’ICM. Celle que je décris est le modèle de Malmuth-Harville, alors que le modèle de Malmuth-Weitzman procède similairement en estimant les probabilités d’être éliminé en premier (plutôt que de terminer premier).
-
-Ensuite dans les correctifs connus on a la technique [FGS](https://www.icmpoker.com/en/blog/how-fgs-future-game-simulation-calculator-works/) (Future Game Simulation) qui ajuste la valeur ICM selon des simulations de mains futures simplifiées.
-
-
 ## Récapitulatif
 
 Prenons un tout petit peu de recul. Pourquoi a-t-on besoin de cet ICM déjà ?
@@ -183,19 +173,19 @@ Parce que lorsqu’on cherche une stratégie optimale, on doit estimer la valeur
 
 On préfèrerait savoir calculer les espérances de classement selon le modèle du Gambler’s Ruin, hélas il est beaucoup plus compliqué d’avoir une performance correcte dans ce calcul (ceci dit à ce sujet, j’ai dans ma pile de lectures quelques papiers que j’explorerai je l’espère un de ces jours[^gamblers-ruin-papers]).
 
-La fonction d’évaluation est un outil sur lequel on va soit entrainer des IA, soit faire des analyses stratégiques avec des joueurs réels, mais elle ne représente pas l’espérance concrète des joueurs la plupart du temps. Et c’est d’ailleurs en général ce qu’on souhaite, car essayer de se rapprocher des valeurs concrète c’est essayer de revenir à la résolution du tournoi entier.
+La fonction d’évaluation est un outil sur lequel on va soit entrainer des IA, soit faire des analyses stratégiques avec des joueurs réels, mais elle ne représente pas l’espérance concrète des joueurs la plupart du temps. Et c’est d’ailleurs en général ce qu’on souhaite, car essayer de se rapprocher des valeurs concrète c’est essayer de revenir à la résolution du tournoi entier en utilisant stratégies calculées sur la base de la fonction d'évaluation... Et c'est l'Ouroboros.
 
-Pourtant, la fonction d’évaluation est un compromis qu’on souhaite toujours faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser cet fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affecté par le choix de cette fonction. On peut d'ailleurs aussi arbitrairement considérer que le niveau des joueurs fait partie des données d'entrée de la fonction. Cependant on a tendance à reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d'évaluation générique.
+Pourtant, la fonction d’évaluation est un compromis qu’on souhaite toujours faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser ce fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affecté par le choix de cette fonction. On peut d'ailleurs arbitrairement considérer que le niveau des joueurs fait partie des données d'entrée de la fonction. Cependant on a tendance à reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d'évaluation générique.
 
 ## Conclusion
 
 La question *“Faut-il jouer toutes les mains EV+ ICM en tournoi?”* prise littéralement a une réponse immédiate : non, il-y-a même des ajustements que l’on sait bénéfiques.
-Tout d’abord il est fort probable qu’une meilleure approximation du classement du Gambler’s Ruin donnerait de meilleurs résultats.
+Tout d’abord il est fort probable qu’une meilleure approximation du classement du Gambler’s Ruin donnerait de meilleurs résultats, ensuite s'il était possible de calculer une fonction d'évaluation prenant en compte les asymétries du poker (tables de jeu et tours de parole) on augmenterait certainement encore la fiabilité de l'évaluation.
 
-Cependant après cette question vient la suivante : peut-on trouver un meilleur modèle que l’ICM **calculable efficacement** ? Expérimentalement par exemple, pourrait on appliquer des techniques modernes de machine learning pour trouver une fonction d’évaluation qui surpasse l’ICM ? Et comment faire tout ça en pratique et pour un grand nombre de joueurs sachant que le calcul de l’ICM a une complexité factorielle ?
+Mais après cette question vient la suivante : peut-on trouver un meilleur modèle que l’ICM **calculable efficacement** ? Expérimentalement par exemple, pourrait on appliquer des techniques modernes de machine learning pour trouver une fonction d’évaluation qui surpasse l’ICM ? Et comment faire tout ça en pratique et pour un grand nombre de joueurs sachant que le calcul de l’ICM a une complexité **factorielle** ?
 
 
-Des réponses dans un prochain billet !
+Des débuts de réponses dans un prochain billet !
 
 ***
 
