@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
     <title type="text">Pitt&#39;s Craft</title>
     <subtitle type="html">MemE is a powerful and highly customizable GoHugo theme for personal blogs.</subtitle>
-    <updated>2021-03-03T15:21:27&#43;01:00</updated>
+    <updated>2021-03-03T15:22:27&#43;01:00</updated>
     <id>https://pittscraft.com/</id>
     <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
     <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
@@ -16,6 +16,222 @@
             </author>
     
     <generator uri="https://gohugo.io/" version="0.80.0">Hugo</generator>
+        <entry>
+            <title type="text">Poker : MTT et ICM - la question</title>
+            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/poker_mtt_icm_question/" />
+            <id>https://pittscraft.com/posts/poker_mtt_icm_question/</id>
+            <updated>2021-03-03T14:14:35&#43;01:00</updated>
+            <published>2021-03-03T14:14:35&#43;01:00</published>
+            <author>
+                    <name>Pitt</name>
+                    <uri>https://pittscraft.com/about/</uri>
+                    <email>pitt@pittscraft.com</email>
+                    </author>
+            <summary type="html">Comme beaucoup, j’ai eu ma période “poker”. Elle s’est très vite traduite chez moi par la conception d’outils divers d’aide et d’analyse de jeu (parce que je suis trop mauvais), et a donné naissance à cette petite bibliothèque Java. J’ai tiré beaucoup de cette expérience, que ce soit en théorie des jeux, en algorithmique théorique et pratique, en intelligence artificielle ou même en architecture logicielle.</summary>
+            
+                <content type="html">&lt;p&gt;Comme beaucoup, j’ai eu ma période “poker”. Elle s’est très vite traduite chez moi par la conception d’outils divers d’aide et d’analyse de jeu (&lt;a href=&#34;http://george-abitbol.fr/v/6d59a4c2&#34;&gt;parce que je suis trop mauvais&lt;/a&gt;), et a donné naissance à &lt;a href=&#34;https://github.com/PierreMardon/gametheory&#34;&gt;cette petite bibliothèque Java&lt;/a&gt;. J’ai tiré beaucoup de cette expérience, que ce soit en théorie des jeux, en algorithmique théorique et pratique, en intelligence artificielle ou même en architecture logicielle. Alors bon, je n’assume pas tout à fait cette vieille lib, “si je devais la recoder je le ferais différemment”™ - pas en Java notamment - mais ça fait partie de ces projets tentaculaires qui vous portent pendant des années et vous font monter en compétence sur un large front dans l’allégresse.&lt;/p&gt;
+&lt;p&gt;Ça me titillait depuis longtemps de trouver un sujet dans le domaine et de bonnes raisons de m’y recoller. Quand soudain, je tombai sur le &lt;a href=&#34;https://fr.wikipedia.org/wiki/Paradoxe_de_Saint-P%C3%A9tersbourg&#34;&gt;paradoxe de Saint-Pétersbourg&lt;/a&gt; qui relança avec un ami une vieille conversation sur l’évaluation de l’EV (&lt;a href=&#34;https://en.wikipedia.org/wiki/Expected_value&#34;&gt;expected value&lt;/a&gt;) en MTT (multi-table tournament).&lt;/p&gt;
+&lt;p&gt;Il se trouve que la question &lt;em&gt;“Faut-il jouer toutes les mains EV+ ICM en tournoi?”&lt;/em&gt; impliquait un long périple avec dedans du machine-learning, des simulations de jeu et des modélisations intéressantes - tout ce que j’adore.&lt;/p&gt;
+&lt;p&gt;Mais revenons au début, je vais commencer dans ce billet par tenter de vous expliquer la question.&lt;/p&gt;
+&lt;h2 id=&#34;théorie-des-jeux&#34;&gt;Théorie des jeux&lt;/h2&gt;
+&lt;p&gt;Au poker, on cherche souvent à jouer GTO (Game Theory Optimal). Derrière ce terme, beaucoup d’implicite. La théorie des jeux étudie les interactions stratégiques d’agents à cheval entre les mathématiques et les sciences sociales, avec de très intéressantes questions qu’on va oublier bien vite :
+Comment définit-on &lt;a href=&#34;https://www.youtube.com/watch?v=PFjX5tgu0iQ&#34;&gt;la rationalité&lt;/a&gt; des agents ?
+Est-elle normative ou prescriptive ?
+Quelles qualités descriptives a-t-elle ?&lt;/p&gt;
+&lt;p&gt;Voilà, on oublie, et maintenant on constate que dans la plupart des cas, tout le monde cherche à trouver la meilleure manière de jouer pour gagner - que ce soit aux échecs, au poker, au go ou à Starcraft&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+&lt;p&gt;Dans des jeux comme les échecs, les algorithmes n’explorent pas l’ensemble de l’arbre de jeu mais évaluent un certain nombre de coups à l’avance. Si je regarde les 5 prochains coups possibles et que sur cette base je dois faire un choix, il me faut évaluer la valeur de chaque situation future résultant de chaque combinaison possible de 5 actions. On appelle fonction d’évaluation cette estimation de la valeur d’une situation qui n’est pas une situation finale. Dans des jeux faisant intervenir la chance (l’aléatoire), on la confond souvent avec la valeur statistique d’espérance (EV, Expected Value : l’espérance), car on va prendre les décisions en fonction de l’EV calculé grâce la fonction d’évaluation. EV+ signifie ainsi “d’espérance positive”.&lt;/p&gt;
+&lt;h2 id=&#34;poker&#34;&gt;Poker&lt;/h2&gt;
+&lt;p&gt;Le poker est un jeu de taille considérable du fait du nombre de combinaisons de cartes multiplié par le nombre de séquences d’action (mises) de jeu possibles. Je parle ici uniquement du No-Limit Hold’em (NLHE) qui est la variante la plus commune.&lt;/p&gt;
+&lt;p&gt;Dans le cas du cash-game où les jetons misés valent une somme déterminée d’argent, le problème de l’optimisation de la stratégie est circonscrit à une main. Cela reste énorme en complexité mais permet aux explorations algorithmiques de ne pas recourir à des fonctions d’évaluation intermédiaire, et d’interpréter directement les gains et pertes futurs résultant des actions en terme d’argent.&lt;/p&gt;
+&lt;p&gt;En effet, lorsqu’on va chercher à évaluer si telle action est préférable à telle autre, on va faire ce genre de calcul :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Si je me couche, à la fin de la main j’ai un stack (un tapis) de 900 jetons.&lt;/li&gt;
+&lt;li&gt;Si je suis la mise, selon les cartes qui vont être révélées :
+&lt;ul&gt;
+&lt;li&gt;j’ai 40% de chances de finir avec un stack de 1300 jetons&lt;/li&gt;
+&lt;li&gt;j’ai 60% de chances de finir avec un stack de 500 jetons&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Je peux donc calculer mon espérance :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Me coucher : 900 jetons&lt;/li&gt;
+&lt;li&gt;Suivre : 0,4 x 1300 + 0,6 x 500 = 820 jetons&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Ok, je dois donc rationnellement me coucher, car plus (+) de jetons, c’est mieux.&lt;/p&gt;
+&lt;h2 id=&#34;tournoi&#34;&gt;Tournoi&lt;/h2&gt;
+&lt;p&gt;Dans le cas d’un tournoi cependant, il-y-a la notion de prix, et donc que les rétributions sont attribuées selon la place finale d’un joueur.
+Prenons le cas de trois joueurs qui doivent partager 1000€ de prix et disposent en tout de 1000 jetons. Nous ne connaissons rien des joueurs, si bien qu’on les considère aveuglément à égalité stratégique.&lt;/p&gt;
+&lt;p&gt;Si seul le premier joueur remporte les 1000€ il paraît raisonnable d’estimer leurs chances de gagner proportionnellement à leurs stacks. On peut d’ailleurs vérifier ça très facilement en leur faisant échanger des jetons aléatoirement (ce qui simule bien l’égalité stratégique).
+Si les stacks sont 500, 300 et 200, alors en moyenne le premier joueur remportera la mise 50% du temps, le second 30% et le dernier 20%. Leurs espérances de gain sont donc 500€, 300€ et 200€ respectivement.&lt;/p&gt;
+&lt;p&gt;Petite simulation pour vérifier ça :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;numpy&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;np&lt;/span&gt;
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;random&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;nb_simulations&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100000&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;players_stacks&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;# We&amp;#39;ll exchange chips one by one, so let&amp;#39;s speed-up by setting smaller stacks&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;payouts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;nb_players&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;len&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;players_stacks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;podiums&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nb_simulations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;game_stacks&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;players_stacks&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;copy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[]&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;in_game_players&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;stack&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;enumerate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;game_stacks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;stack&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;len&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;in_game_players&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;# We have a winner&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in_game_players&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;break&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;# Exchange chips until one player is broke&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;# Randomly select two players&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;random&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shuffle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;in_game_players&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;p1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in_game_players&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;p2&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in_game_players&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;# And make them exchange one chip&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;game_stacks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;game_stacks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;# Is the losing player broke ?&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;game_stacks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+                &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;p2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt;
+                &lt;span class=&#34;k&#34;&gt;break&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# Recompute in_game_players&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;podiums&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;append&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nb_players&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;podiums&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;nb_players&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;podium&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;payouts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;n&#34;&gt;result&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;np&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;divide&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;nb_simulations&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; [499.611 299.829 200.56 ]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ce qui m&amp;rsquo;a bien l&amp;rsquo;air de converger vers le résultat attendu.&lt;/p&gt;
+&lt;p&gt;Maintenant, si le premier joueur remporte 600€ et le second 400€, a-t-on les mêmes espérances de gain ? Faisons donc tourner cette simulation avec ces payouts :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;payouts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;600&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;400&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; [445.71 330.83 223.46]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Il est tout de suite moins intuitif d’estimer ça à vue de nez.&lt;/p&gt;
+&lt;h2 id=&#34;icm&#34;&gt;ICM&lt;/h2&gt;
+&lt;p&gt;Le jeu simulé ci-dessus est le &lt;a href=&#34;https://en.wikipedia.org/wiki/Gambler%27s_ruin&#34;&gt;Gambler’s Ruin&lt;/a&gt; (qui est en soi plus un problème théorique qu’un jeu).&lt;/p&gt;
+&lt;p&gt;La performance de cette simulation est très faible pour de nombreux joueurs avec de nombreux jetons. Il existe des techniques de calcul avancées que je n’ai pas encore explorées, car en pratique les joueurs de poker préfèrent modéliser leur espérance de classement grâce à l’Independent Chip Model (ICM) dont le calcul est bien plus simple.&lt;/p&gt;
+&lt;p&gt;L’ICM est un modèle qui statue que la contribution à l’accès à la première place du tournoi est la même pour chaque jeton, puis récursivement pour les places suivantes. On retrouve donc la proportionnalité entre les jetons et l’espérance lorsque seul le premier joueur remporte le prix.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Attention cependant, l’ICM n’est &lt;strong&gt;pas&lt;/strong&gt; une solution du classement du problème du N-players Gambler’s Ruin. C’est par contre une approximation commune.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Pour la situation ci-dessus, l’ICM nous donnera donc avec les stacks [500, 300, 200]:&lt;/p&gt;
+&lt;p&gt;En notant X_Y = le joueur X finit en Yième position.&lt;/p&gt;
+&lt;p&gt;P1_1 = 500 / 1000 = 0.5
+P2_1 = 300 / 1000 = 0.3
+P3_1 = 200 / 1000 = 0.2&lt;/p&gt;
+&lt;p&gt;Puis récursivement, en appliquant la formule des probabilités totales, on calcule la probabilité que le joueur 1 soit deuxième :
+P1_2 = P2_1 * P(1_2 | 2_1) + P3_1 * P(1_3 | 3_1)
+P1_2 = 0.3 * (500 / 700) + 0.2 * (500 / 800) = 0,339&lt;/p&gt;
+&lt;p&gt;De même pour les autres joueurs et ainsi de suite pour la troisième place.
+Pour vous éviter les calculs à la main, il existe des calculateurs en ligne. &lt;a href=&#34;https://www.holdemresources.net/icmcalculator&#34;&gt;Celui d’HoldemResources&lt;/a&gt; et &lt;a href=&#34;https://www.icmpoker.com/icmcalculator/&#34;&gt;celui d’ICMIzer&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Pour notre situation, l’ICM nous donne les valeurs :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; [435.71 330.00 234.29]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Pour comparer les résultats, la simulation de Gambler’s Ruin nous donnait :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;gt; [445.71 330.83 223.46]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On retrouve un biais classique de l’ICM qui est de sous-estimer la valeur des plus gros stack et de surestimer les plus petits, tout en restant très correct pour les autres.&lt;/p&gt;
+&lt;h2 id=&#34;etat-de-lart-et-ajustement-dicm&#34;&gt;Etat de l’art et ajustement d’ICM&lt;/h2&gt;
+&lt;p&gt;L’ICM est reconnu comme un modèle plutôt fiable. Il donne des valeurs très satisfaisantes dans la majorité des cas. Cependant les joueurs lui reconnaissent de grandes faiblesses sur les très petits et très gros stacks (comme vu ci-dessus), dans le cas de blinds très élevées ou encore autour de la bulle - ce moment lors duquel il ne reste qu’un joueur à éliminer avant d’être certain que tous joueurs restant remportent un prix.&lt;/p&gt;
+&lt;p&gt;Il existe déjà des variantes de l’ICM. Celle que je décris est le modèle de Malmuth-Harville, alors que le modèle de Malmuth-Weitzman procède similairement en estimant les probabilités d’être éliminé en premier (plutôt que de terminer premier).&lt;/p&gt;
+&lt;p&gt;Ensuite dans les correctifs connus on a la technique &lt;a href=&#34;https://www.icmpoker.com/en/blog/how-fgs-future-game-simulation-calculator-works/&#34;&gt;FGS&lt;/a&gt; (Future Game Simulation) qui ajuste la valeur ICM selon des simulations de mains futures simplifiées.&lt;/p&gt;
+&lt;h2 id=&#34;récapitulatif&#34;&gt;Récapitulatif&lt;/h2&gt;
+&lt;p&gt;Prenons un tout petit peu de recul. Pourquoi a-t-on besoin de cet ICM déjà ?&lt;/p&gt;
+&lt;p&gt;Parce que lorsqu’on cherche une stratégie optimale, on doit estimer la valeur des situations vers lesquelles nous mènent nos actions potentielles. Dans le cas du cash-game, la valeur est immédiatement disponible en fin de main car elle est directement proportionnelle à la quantité de jetons. Mais pour un tournoi, il faudrait aller jusqu’à la résolution du tournoi entier pour observer le gain obtenu. Et autant dire que lorsqu’on doit dérouler toutes les possibilités de tirages et d’actions futures, on préfère circonscrire le problème à la main en cours pour avoir un résultat avant la fin des temps dans le cas d’un calcul informatique.&lt;/p&gt;
+&lt;p&gt;On préfèrerait savoir calculer les espérances de classement selon le modèle du Gambler’s Ruin, hélas il est beaucoup plus compliqué d’avoir une performance correcte dans ce calcul (ceci dit à ce sujet, j’ai dans ma pile de lectures quelques papiers que j’explorerai je l’espère un de ces jours&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;).&lt;/p&gt;
+&lt;p&gt;La fonction d’évaluation est un outil sur lequel on va soit entrainer des IA, soit faire des analyses stratégiques avec des joueurs réels, mais elle ne représente pas l’espérance concrète des joueurs la plupart du temps. Et c’est d’ailleurs en général ce qu’on souhaite, car essayer de se rapprocher des valeurs concrète c’est essayer de revenir à la résolution du tournoi entier.&lt;/p&gt;
+&lt;p&gt;Pourtant, la fonction d’évaluation est un compromis qu’on souhaite toujours faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser cet fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affecté par le choix de cette fonction. On peut d&amp;rsquo;ailleurs aussi arbitrairement considérer que le niveau des joueurs fait partie des données d&amp;rsquo;entrée de la fonction. Cependant on a tendance à reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d&amp;rsquo;évaluation générique.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;La question &lt;em&gt;“Faut-il jouer toutes les mains EV+ ICM en tournoi?”&lt;/em&gt; prise littéralement a une réponse immédiate : non, il-y-a même des ajustements que l’on sait bénéfiques.
+Tout d’abord il est fort probable qu’une meilleure approximation du classement du Gambler’s Ruin donnerait de meilleurs résultats.&lt;/p&gt;
+&lt;p&gt;Cependant après cette question vient la suivante : peut-on trouver un meilleur modèle que l’ICM &lt;strong&gt;calculable efficacement&lt;/strong&gt; ? Expérimentalement par exemple, pourrait on appliquer des techniques modernes de machine learning pour trouver une fonction d’évaluation qui surpasse l’ICM ? Et comment faire tout ça en pratique et pour un grand nombre de joueurs sachant que le calcul de l’ICM a une complexité factorielle ?&lt;/p&gt;
+&lt;p&gt;Des réponses dans un prochain billet !&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;PS: dans ce billet, j&amp;rsquo;essaye de ne pas trop rentrer dans les détails ce qui vaut des imprécisions et des raccourcis volontaires. N&amp;rsquo;hésitez cependant pas à m&amp;rsquo;écrire si vous trouvez à redire, ou s&amp;rsquo;il-y-a des manques criants !&lt;/p&gt;
+&lt;p&gt;PS bis: en cadeau, &lt;a href=&#34;https://arxiv.org/pdf/0911.3100.pdf&#34;&gt;un petit papier&lt;/a&gt; sympa qui montre deux théorèmes contre-intuitifs.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Theorem 1. Suppose a tournament has prize money for nth place which is at least that for (n + 1)st place and that at least one player still in the tournament will not earn as much as second place prize money. Under the Independent Chip Model, any fair bet in which only one other player can gain or lose chips in the hand being played will lower the player’s expected prize money.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Theorem 2. Suppose a tournament has prize money for nth place which is at least that for (n + 1)st place and that at least one player still in the tournament will not earn as much as second place prize money. Under the Independent Chip Model, the expected prize money of any player not involved in a fair bet between two players will increase*&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Traduit à la pelle par :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Si t’es en duel avec une équité de 50% contre un seul adversaire au sein d’un tournoi avec des prix croissants, tu es perdant selon l’ICM.&lt;/li&gt;
+&lt;li&gt;Si deux joueurs sont en duel dans ces mêmes circonstances, tous les autres joueurs sont gagnants en ICM.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Ces jeux sont de natures très variées. C’est ce qui fait d’ailleurs qu’à l’heure actuelle, &lt;a href=&#34;https://ai.facebook.com/blog/pluribus-first-ai-to-beat-pros-in-6-player-poker/&#34;&gt;les meilleures IA de poker&lt;/a&gt; sont basées sur des techniques très différentes de l’impressionnant &lt;a href=&#34;https://deepmind.com/blog/article/muzero-mastering-go-chess-shogi-and-atari-without-rules&#34;&gt;MuZero&lt;/a&gt; de DeepMind (j’espère avoir le temps de faire un petit papier “CFR vs Reinforcement Learning pour les nuls” tiens). &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id=&#34;fn:2&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;les papiers en question : &lt;a href=&#34;https://www.cambridge.org/core/journals/journal-of-applied-probability/article/matrixanalytic-approach-to-the-nplayer-ruin-problem/9FA680080D2FABB21564680B15E24858&#34;&gt;Swan, Y., &amp;amp; Bruss, F. (2006). A matrix-analytic approach to the N-player ruin problem. Journal of Applied Probability, 43(3), 755-766. doi:10.1239/jap/1158784944&lt;/a&gt;, et &lt;a href=&#34;https://arxiv.org/abs/2011.07610v2&#34;&gt;Gambler&amp;rsquo;s Ruin and the ICM - arXiv:2011.07610v2&lt;/a&gt;. Et bien sûr toutes leurs références 🙃 &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/#fnref:2&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
+</content>
+            
+            
+            
+            
+            
+                
+                    
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/categories/game-theory/" term="Game Theory" label="Game Theory" />
+                            
+                        
+                    
+                
+                    
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/poker/" term="Poker" label="Poker" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/ai/" term="AI" label="AI" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/icm/" term="ICM" label="ICM" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/gamblers-ruin/" term="Gambler&#39;s Ruin" label="Gambler&#39;s Ruin" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/game-theory/" term="Game Theory" label="Game Theory" />
+                            
+                        
+                    
+                
+            
+        </entry>
+    
         <entry>
             <title type="text">SwiftUI &amp; Combine Feedback #2 : property wrapper pour UserDefaults et @Published</title>
             <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/swiftui_combine2/" />
