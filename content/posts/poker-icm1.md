@@ -8,7 +8,7 @@ authors = ["Pitt"]
 tags = ["Poker", "AI", "ICM", "Gambler's Ruin", "Game Theory"]
 categories = ["Game Theory"]
 externalLink = ""
-series = ["SwiftUI/Combine Feedback"]
+series = ["Beating ICM"]
 +++
 
 Comme beaucoup, j’ai eu ma période “poker”. Elle s’est très vite traduite chez moi par la conception d’outils divers d’aide et d’analyse de jeu ([parce que je suis trop mauvais](http://george-abitbol.fr/v/6d59a4c2)), et a donné naissance à [cette petite bibliothèque Java](https://github.com/PierreMardon/gametheory). J’ai tiré beaucoup de cette expérience, que ce soit en théorie des jeux, en algorithmique théorique et pratique, en intelligence artificielle ou même en architecture logicielle. Alors bon, je n’assume pas tout à fait cette vieille lib, “si je devais la recoder je le ferais différemment”™ - pas en Java notamment - mais ça fait partie de ces projets tentaculaires qui vous portent pendant des années et vous font monter en compétence sur un large front dans l’allégresse.
