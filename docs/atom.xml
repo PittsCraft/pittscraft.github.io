@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
     <title type="text">Pitt&#39;s Craft</title>
     <subtitle type="html">MemE is a powerful and highly customizable GoHugo theme for personal blogs.</subtitle>
-    <updated>2021-03-03T15:43:39&#43;01:00</updated>
+    <updated>2021-03-05T09:58:47&#43;01:00</updated>
     <id>https://pittscraft.com/</id>
     <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
     <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
@@ -17,7 +17,7 @@
     
     <generator uri="https://gohugo.io/" version="0.80.0">Hugo</generator>
         <entry>
-            <title type="text">Poker : MTT et ICM - la question</title>
+            <title type="text">Poker : MTT et ICM - La Question</title>
             <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/poker_mtt_icm_question/" />
             <id>https://pittscraft.com/posts/poker_mtt_icm_question/</id>
             <updated>2021-03-03T14:14:35&#43;01:00</updated>
@@ -41,7 +41,7 @@ Quelles qualités descriptives a-t-elle ?&lt;/p&gt;
 &lt;p&gt;Voilà, on oublie, et maintenant on constate que dans la plupart des cas, tout le monde cherche à trouver la meilleure manière de jouer pour gagner - que ce soit aux échecs, au poker, au go ou à Starcraft&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;p&gt;Dans des jeux comme les échecs, les algorithmes n’explorent pas l’ensemble de l’arbre de jeu mais évaluent un certain nombre de coups à l’avance. Si je regarde les 5 prochains coups possibles et que sur cette base je dois faire un choix, il me faut évaluer la valeur de chaque situation future résultant de chaque combinaison possible de 5 actions. On appelle fonction d’évaluation cette estimation de la valeur d’une situation qui n’est pas une situation finale. Dans des jeux faisant intervenir la chance (l’aléatoire), on la confond souvent avec la valeur statistique d’espérance (EV, Expected Value : l’espérance), car on va prendre les décisions en fonction de l’EV calculé grâce la fonction d’évaluation. EV+ signifie ainsi “d’espérance positive”.&lt;/p&gt;
 &lt;h2 id=&#34;poker&#34;&gt;Poker&lt;/h2&gt;
-&lt;p&gt;Le poker est un jeu de taille considérable du fait du nombre de combinaisons de cartes multiplié par le nombre de séquences d’action (mises) de jeu possibles. Je parle ici uniquement du No-Limit Hold’em (NLHE) qui est la variante la plus commune.&lt;/p&gt;
+&lt;p&gt;Le poker est un jeu de taille considérable du fait du nombre de combinaisons de cartes multiplié par le nombre de séquences d’action (mises) de jeu possibles. Je parle ici uniquement du No-Limit Hold’Em (NLHE) qui est la variante la plus commune.&lt;/p&gt;
 &lt;p&gt;Dans le cas du cash-game où les jetons misés valent une somme déterminée d’argent, le problème de l’optimisation de la stratégie est circonscrit à une main. Cela reste énorme en complexité mais permet aux explorations algorithmiques de ne pas recourir à des fonctions d’évaluation intermédiaire, et d’interpréter directement les gains et pertes futurs résultant des actions en terme d’argent.&lt;/p&gt;
 &lt;p&gt;En effet, lorsqu’on va chercher à évaluer si telle action est préférable à telle autre, on va faire ce genre de calcul :&lt;/p&gt;
 &lt;ul&gt;
@@ -60,7 +60,7 @@ Quelles qualités descriptives a-t-elle ?&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;Ok, je dois donc rationnellement me coucher, car plus (+) de jetons, c’est mieux.&lt;/p&gt;
 &lt;h2 id=&#34;tournoi&#34;&gt;Tournoi&lt;/h2&gt;
-&lt;p&gt;Dans le cas d’un tournoi cependant, il-y-a la notion de prix, et donc que les rétributions sont attribuées selon la place finale d’un joueur.
+&lt;p&gt;Dans un tournoi cependant, les prix sont attribuées selon la place finale d’un joueur.
 Prenons le cas de trois joueurs qui doivent partager 1000€ de prix et disposent en tout de 1000 jetons. Nous ne connaissons rien des joueurs, si bien qu’on les considère aveuglément à égalité stratégique.&lt;/p&gt;
 &lt;p&gt;Si seul le premier joueur remporte les 1000€ il paraît raisonnable d’estimer leurs chances de gagner proportionnellement à leurs stacks. On peut d’ailleurs vérifier ça très facilement en leur faisant échanger des jetons aléatoirement (ce qui simule bien l’égalité stratégique).
 Si les stacks sont 500, 300 et 200, alors en moyenne le premier joueur remportera la mise 50% du temps, le second 30% et le dernier 20%. Leurs espérances de gain sont donc 500€, 300€ et 200€ respectivement.&lt;/p&gt;
@@ -113,6 +113,7 @@ Si les stacks sont 500, 300 et 200, alors en moyenne le premier joueur remporter
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output :&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;gt; [499.611 299.829 200.56 ]
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Ce qui m&amp;rsquo;a bien l&amp;rsquo;air de converger vers le résultat attendu.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Petite note sur la taille des stacks allègrement divisée par 100 : il se trouve que ça n&amp;rsquo;a aucune influence, je l&amp;rsquo;ai vérifié expérimentalement. Cependant comme j&amp;rsquo;aimerais bien savoir pourquoi et que je n&amp;rsquo;ai pas le temps de creuser, &lt;a href=&#34;https://math.stackexchange.com/questions/4049787/n-players-gamblers-ruin-ranking-stability-regarding-stacks-proportionality&#34;&gt;j&amp;rsquo;ai posé la question&lt;/a&gt; à l&amp;rsquo;Internet.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Maintenant, si le premier joueur remporte 600€ et le second 400€, a-t-on les mêmes espérances de gain ? Faisons donc tourner cette simulation avec ces payouts :&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;n&#34;&gt;payouts&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;600&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;400&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Output :&lt;/p&gt;
@@ -143,7 +144,7 @@ Pour vous éviter les calculs à la main, il existe des calculateurs en ligne. &
 &lt;p&gt;Parce que lorsqu’on cherche une stratégie optimale, on doit estimer la valeur des situations vers lesquelles nous mènent nos actions potentielles. Dans le cas du cash-game, la valeur est immédiatement disponible en fin de main car elle est directement proportionnelle à la quantité de jetons. Mais pour un tournoi, il faudrait aller jusqu’à la résolution du tournoi entier pour observer le gain obtenu. Et autant dire que lorsqu’on doit dérouler toutes les possibilités de tirages et d’actions futures, on préfère circonscrire le problème à la main en cours pour avoir un résultat avant la fin des temps dans le cas d’un calcul informatique.&lt;/p&gt;
 &lt;p&gt;On préfèrerait savoir calculer les espérances de classement selon le modèle du Gambler’s Ruin, hélas il est beaucoup plus compliqué d’avoir une performance correcte dans ce calcul (ceci dit à ce sujet, j’ai dans ma pile de lectures quelques papiers que j’explorerai je l’espère un de ces jours&lt;sup id=&#34;fnref:2&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/#fn:2&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;).&lt;/p&gt;
 &lt;p&gt;La fonction d’évaluation est un outil sur lequel on va soit entrainer des IA, soit faire des analyses stratégiques avec des joueurs réels, mais elle ne représente pas l’espérance concrète des joueurs la plupart du temps. Et c’est d’ailleurs en général ce qu’on souhaite, car essayer de se rapprocher des valeurs concrète c’est essayer de revenir à la résolution du tournoi entier en utilisant stratégies calculées sur la base de la fonction d&amp;rsquo;évaluation&amp;hellip; Et c&amp;rsquo;est l&amp;rsquo;Ouroboros.&lt;/p&gt;
-&lt;p&gt;Pourtant, la fonction d’évaluation est un compromis qu’on souhaite toujours faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser ce fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affectée par le choix de cette fonction. On peut d&amp;rsquo;ailleurs arbitrairement considérer que le niveau des joueurs fait partie des données d&amp;rsquo;entrée de la fonction. Cependant on a tendance à reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d&amp;rsquo;évaluation générique.&lt;/p&gt;
+&lt;p&gt;Pourtant on pourrait faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser ce fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affectée par le choix de cette fonction. On peut d&amp;rsquo;ailleurs arbitrairement considérer que le niveau des joueurs fait partie des données d&amp;rsquo;entrée de la fonction. Cependant on préfère reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d&amp;rsquo;évaluation générique et stable : l&amp;rsquo;appréciation du niveau des joueurs est une donnée stratégique et contextuelle, elle sera donc intégrée comme une donnée d&amp;rsquo;entrée des mécanismes stratégiques.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;La question &lt;em&gt;“Faut-il jouer toutes les mains EV+ ICM en tournoi?”&lt;/em&gt; prise littéralement a une réponse immédiate : non, il-y-a même des ajustements que l’on sait bénéfiques.
 Tout d’abord il est fort probable qu’une meilleure approximation du classement du Gambler’s Ruin donnerait de meilleurs résultats, ensuite s&amp;rsquo;il était possible de calculer une fonction d&amp;rsquo;évaluation prenant en compte les asymétries du poker (tables de jeu et tours de parole) on augmenterait certainement encore la fiabilité de l&amp;rsquo;évaluation.&lt;/p&gt;
@@ -209,6 +210,12 @@ Tout d’abord il est fort probable qu’une meilleure approximation du classeme
                             
                             
                                 <category scheme="https://pittscraft.com/tags/icm/" term="ICM" label="ICM" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/mtt/" term="MTT" label="MTT" />
                             
                         
                             

@@ -1,11 +1,11 @@
 +++
 draft = false
 date = 2021-03-03T14:14:35+01:00
-title = "Poker : MTT et ICM - la question"
+title = "Poker : MTT et ICM - La Question"
 description = ""
 slug = "poker_mtt_icm_question"
 authors = ["Pitt"]
-tags = ["Poker", "AI", "ICM", "Gambler's Ruin", "Game Theory"]
+tags = ["Poker", "AI", "ICM", "MTT", "Gambler's Ruin", "Game Theory"]
 categories = ["Game Theory"]
 externalLink = ""
 series = ["Beating ICM"]
@@ -33,7 +33,7 @@ Dans des jeux comme les échecs, les algorithmes n’explorent pas l’ensemble 
 
 ## Poker
 
-Le poker est un jeu de taille considérable du fait du nombre de combinaisons de cartes multiplié par le nombre de séquences d’action (mises) de jeu possibles. Je parle ici uniquement du No-Limit Hold’em (NLHE) qui est la variante la plus commune.
+Le poker est un jeu de taille considérable du fait du nombre de combinaisons de cartes multiplié par le nombre de séquences d’action (mises) de jeu possibles. Je parle ici uniquement du No-Limit Hold’Em (NLHE) qui est la variante la plus commune.
 
 Dans le cas du cash-game où les jetons misés valent une somme déterminée d’argent, le problème de l’optimisation de la stratégie est circonscrit à une main. Cela reste énorme en complexité mais permet aux explorations algorithmiques de ne pas recourir à des fonctions d’évaluation intermédiaire, et d’interpréter directement les gains et pertes futurs résultant des actions en terme d’argent.
 
@@ -52,7 +52,7 @@ Ok, je dois donc rationnellement me coucher, car plus (+) de jetons, c’est mie
 
 ## Tournoi
 
-Dans le cas d’un tournoi cependant, il-y-a la notion de prix, et donc que les rétributions sont attribuées selon la place finale d’un joueur.
+Dans un tournoi cependant, les prix sont attribuées selon la place finale d’un joueur.
 Prenons le cas de trois joueurs qui doivent partager 1000€ de prix et disposent en tout de 1000 jetons. Nous ne connaissons rien des joueurs, si bien qu’on les considère aveuglément à égalité stratégique.
 
 Si seul le premier joueur remporte les 1000€ il paraît raisonnable d’estimer leurs chances de gagner proportionnellement à leurs stacks. On peut d’ailleurs vérifier ça très facilement en leur faisant échanger des jetons aléatoirement (ce qui simule bien l’égalité stratégique).
@@ -113,6 +113,8 @@ Output :
 ```
 
 Ce qui m'a bien l'air de converger vers le résultat attendu.
+
+*Petite note sur la taille des stacks allègrement divisée par 100 : il se trouve que ça n'a aucune influence, je l'ai vérifié expérimentalement. Cependant comme j'aimerais bien savoir pourquoi et que je n'ai pas le temps de creuser, [j'ai posé la question](https://math.stackexchange.com/questions/4049787/n-players-gamblers-ruin-ranking-stability-regarding-stacks-proportionality) à l'Internet.*
 
 Maintenant, si le premier joueur remporte 600€ et le second 400€, a-t-on les mêmes espérances de gain ? Faisons donc tourner cette simulation avec ces payouts :
 
@@ -175,7 +177,7 @@ On préfèrerait savoir calculer les espérances de classement selon le modèle 
 
 La fonction d’évaluation est un outil sur lequel on va soit entrainer des IA, soit faire des analyses stratégiques avec des joueurs réels, mais elle ne représente pas l’espérance concrète des joueurs la plupart du temps. Et c’est d’ailleurs en général ce qu’on souhaite, car essayer de se rapprocher des valeurs concrète c’est essayer de revenir à la résolution du tournoi entier en utilisant stratégies calculées sur la base de la fonction d'évaluation... Et c'est l'Ouroboros.
 
-Pourtant, la fonction d’évaluation est un compromis qu’on souhaite toujours faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser ce fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affectée par le choix de cette fonction. On peut d'ailleurs arbitrairement considérer que le niveau des joueurs fait partie des données d'entrée de la fonction. Cependant on a tendance à reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d'évaluation générique.
+Pourtant on pourrait faire tendre vers plus de réalisme. Si on sait par exemple qu’un tournoi typique regroupe des joueurs de différents niveaux distribués d’une manière assez régulière, modéliser ce fait statistique peut produire une fonction d’évaluation plus adaptée à l’entraînement pour ce contexte de jeu. Car pour une IA, le jeu sur laquelle on l’entraîne inclut la fonction d’évaluation. Sa confrontation au jeu réel sera lourdement affectée par le choix de cette fonction. On peut d'ailleurs arbitrairement considérer que le niveau des joueurs fait partie des données d'entrée de la fonction. Cependant on préfère reporter ce genre de données contextuelles vers les algorithmes stratégiques pour garder une fonction d'évaluation générique et stable : l'appréciation du niveau des joueurs est une donnée stratégique et contextuelle, elle sera donc intégrée comme une donnée d'entrée des mécanismes stratégiques.
 
 ## Conclusion
 
