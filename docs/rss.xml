@@ -21,7 +21,7 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Fri, 05 Mar 2021 10:59:09 &#43;0100</lastBuildDate>
+        <lastBuildDate>Fri, 05 Mar 2021 11:04:06 &#43;0100</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
@@ -132,14 +132,14 @@ Si les stacks sont 500, 300 et 200, alors en moyenne le premier joueur remporter
 &lt;p&gt;L’ICM est un modèle qui statue que la contribution à l’accès à la première place du tournoi est la même pour chaque jeton, puis récursivement pour les places suivantes. On retrouve donc la proportionnalité entre les jetons et l’espérance lorsque seul le premier joueur remporte le prix.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Attention cependant, l’ICM n’est &lt;strong&gt;pas&lt;/strong&gt; une solution du classement du problème du N-players Gambler’s Ruin. C’est par contre une approximation commune.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Pour la situation ci-dessus, l’ICM nous donnera donc avec les stacks [500, 300, 200]:&lt;/p&gt;
-&lt;p&gt;En notant X_Y = le joueur X finit en Yième position.&lt;/p&gt;
-&lt;p&gt;P1_1 = 500 / 1000 = 0.5
+&lt;p&gt;En notant &lt;code&gt;X_Y&lt;/code&gt; = le joueur X finit en Yième position.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;P1_1 = 500 / 1000 = 0.5
 P2_1 = 300 / 1000 = 0.3
-P3_1 = 200 / 1000 = 0.2&lt;/p&gt;
-&lt;p&gt;Puis récursivement, en appliquant la formule des probabilités totales, on calcule la probabilité que le joueur 1 soit deuxième :
-P1_2 = P2_1 * P(1_2 | 2_1) + P3_1 * P(1_3 | 3_1)
-P1_2 = 0.3 * (500 / 700) + 0.2 * (500 / 800) = 0,339&lt;/p&gt;
-&lt;p&gt;De même pour les autres joueurs et ainsi de suite pour la troisième place.
+P3_1 = 200 / 1000 = 0.2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Puis récursivement, en appliquant la formule des probabilités totales, on calcule la probabilité que le joueur 1 soit deuxième :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;P1_2 = P2_1 * P(1_2 | 2_1) + P3_1 * P(1_3 | 3_1)
+P1_2 = 0.3 * (500 / 700) + 0.2 * (500 / 800) = 0,339
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;De même pour les autres joueurs et ainsi de suite pour la troisième place.
 Pour vous éviter les calculs à la main, il existe des calculateurs en ligne. &lt;a href=&#34;https://www.holdemresources.net/icmcalculator&#34;&gt;Celui d’HoldemResources&lt;/a&gt; et &lt;a href=&#34;https://www.icmpoker.com/icmcalculator/&#34;&gt;celui d’ICMIzer&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Pour notre situation, l’ICM nous donne les valeurs :&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;&amp;gt; [435.71 330.00 234.29]

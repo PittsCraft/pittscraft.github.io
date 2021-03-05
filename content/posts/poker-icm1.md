@@ -141,15 +141,20 @@ L’ICM est un modèle qui statue que la contribution à l’accès à la premi�
 
 Pour la situation ci-dessus, l’ICM nous donnera donc avec les stacks [500, 300, 200]:
 
-En notant X_Y = le joueur X finit en Yième position.
+En notant `X_Y` = le joueur X finit en Yième position.
 
+```
 P1_1 = 500 / 1000 = 0.5
 P2_1 = 300 / 1000 = 0.3
 P3_1 = 200 / 1000 = 0.2
+```
 
 Puis récursivement, en appliquant la formule des probabilités totales, on calcule la probabilité que le joueur 1 soit deuxième :
+
+```
 P1_2 = P2_1 * P(1_2 | 2_1) + P3_1 * P(1_3 | 3_1)
 P1_2 = 0.3 * (500 / 700) + 0.2 * (500 / 800) = 0,339
+```
 
 De même pour les autres joueurs et ainsi de suite pour la troisième place.
 Pour vous éviter les calculs à la main, il existe des calculateurs en ligne. [Celui d’HoldemResources](https://www.holdemresources.net/icmcalculator) et [celui d’ICMIzer](https://www.icmpoker.com/icmcalculator/).
