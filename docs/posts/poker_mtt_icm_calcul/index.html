@@ -60,7 +60,7 @@
         "description": "Où on calcule avec brutalité les espérances des joueurs selon un modèle indépendantiste.",
         "inLanguage" : "fr",
         "articleSection": "posts",
-        "wordCount":  1904 ,
+        "wordCount":  2030 ,
         "image": "https://pittscraft.com/images/apple-touch-icon.png",
         "author": {
             "@type": "Person",
@@ -244,11 +244,11 @@
     
     
         
-        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;1904</span>
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;2030</span>
     
     
         
-        <span class="post-meta-item reading-time"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm61.8-104.4l-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;9&nbsp;min.</span>
+        <span class="post-meta-item reading-time"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm61.8-104.4l-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;10&nbsp;min.</span>
     
     
     
@@ -373,10 +373,12 @@ Et j&rsquo;en profite pour faire une version récursive de l&rsquo;algorithme qu
 
 <span class="c1">// Entry point
 </span><span class="c1"></span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">naiveIcm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="c1">// Number of players
-</span><span class="c1"></span>    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">usedPlayers</span><span class="p">(</span><span class="n">size</span><span class="p">);</span> <span class="c1">// Flags to note down players that were already considered
-</span><span class="c1"></span>    <span class="kt">double</span> <span class="n">stacksSum</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">stacks</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="c1">// Number of players
+</span><span class="c1"></span>    <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> 
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="c1">// Flags to note down players that were already considered
+</span><span class="c1"></span>    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">usedPlayers</span><span class="p">(</span><span class="n">size</span><span class="p">);</span> 
+    <span class="kt">double</span> <span class="n">stacksSum</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">stacks</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
     <span class="n">recursiveNaiveIcm</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">payouts</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">usedPlayers</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stacksSum</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
 <span class="p">}</span>
@@ -424,45 +426,63 @@ Duration 25924ms for 12 players
     <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="kt">double</span> <span class="o">*</span><span class="n">subResult</span> <span class="o">=</span> <span class="n">cacheValues</span> <span class="o">+</span> <span class="n">usedPlayers</span> <span class="o">*</span> <span class="n">size</span><span class="p">;</span>
+    <span class="c1">// Point subResult to the cache entry
+</span><span class="c1"></span>    <span class="kt">double</span> <span class="o">*</span><span class="n">subResult</span> <span class="o">=</span> <span class="n">cacheValues</span> <span class="o">+</span> <span class="n">usedPlayers</span> <span class="o">*</span> <span class="n">size</span><span class="p">;</span>
     <span class="c1">// If the subResult wasn&#39;t computed previously, let&#39;s do it
 </span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="o">!*</span><span class="p">(</span><span class="n">cacheFlags</span> <span class="o">+</span> <span class="n">usedPlayers</span><span class="p">))</span> <span class="p">{</span>
         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">iMask</span> <span class="o">=</span> <span class="mh">0x1ll</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">usedPlayers</span> <span class="o">&amp;</span> <span class="n">iMask</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
-            <span class="k">const</span> <span class="kt">double</span> <span class="n">newFactor</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">stacksSum</span><span class="p">;</span>
-            <span class="n">subResult</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">newFactor</span> <span class="o">*</span> <span class="n">payouts</span><span class="p">[</span><span class="n">rank</span><span class="p">];</span>
+            <span class="c1">// Probability of ith player to have this rank *among remaining players* 
+</span><span class="c1"></span>            <span class="c1">// (ignoring previously ranked ones)
+</span><span class="c1"></span>            <span class="k">const</span> <span class="kt">double</span> <span class="n">newFactor</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">stacksSum</span><span class="p">;</span>
+            <span class="c1">// Fill the EV of this subresult for this player
+</span><span class="c1"></span>            <span class="n">subResult</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">newFactor</span> <span class="o">*</span> <span class="n">payouts</span><span class="p">[</span><span class="n">rank</span><span class="p">];</span>
             <span class="n">recursiveIcm</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">payouts</span><span class="p">,</span> <span class="n">subResult</span><span class="p">,</span> <span class="n">usedPlayers</span> <span class="o">|</span> <span class="n">iMask</span><span class="p">,</span> <span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
                           <span class="n">size</span><span class="p">,</span> <span class="n">newFactor</span><span class="p">,</span> <span class="n">stacksSum</span> <span class="o">-</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cacheValues</span><span class="p">,</span> <span class="n">cacheFlags</span><span class="p">);</span>
         <span class="p">}</span>
-        <span class="o">*</span><span class="p">(</span><span class="n">cacheFlags</span> <span class="o">+</span> <span class="n">usedPlayers</span><span class="p">)</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="c1">// Mark the cache entry as filled
+</span><span class="c1"></span>        <span class="o">*</span><span class="p">(</span><span class="n">cacheFlags</span> <span class="o">+</span> <span class="n">usedPlayers</span><span class="p">)</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Apply the factor accounting for previously ranked players and add to the destination array
+</span><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">subResult</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">icm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-    <span class="kt">double</span> <span class="n">result</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+    <span class="c1">// Prepare the array that will receive the results from the recursive function
+</span><span class="c1"></span>    <span class="kt">double</span> <span class="n">result</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
     <span class="n">fill_n</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-    <span class="kt">double</span> <span class="n">stacksArray</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+    <span class="c1">// Just translate vectors to C arrays
+</span><span class="c1"></span>    <span class="kt">double</span> <span class="n">stacksArray</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
     <span class="kt">double</span> <span class="n">payoutsArray</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">stacksArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
         <span class="n">payoutsArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
     <span class="p">}</span>
-    <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksSum</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">stacks</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
-    <span class="k">const</span> <span class="k">auto</span> <span class="n">cacheEntrySize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">);</span> <span class="c1">// One double for each player
+    <span class="c1">// Compute the total stack sum
+</span><span class="c1"></span>    <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksSum</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">stacks</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
+
+    <span class="c1">// ## Cache ##
+</span><span class="c1"></span>    <span class="k">const</span> <span class="k">auto</span> <span class="n">cacheEntrySize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">);</span> <span class="c1">// One double for each player
+</span><span class="c1"></span>    <span class="c1">// We&#39;ll store all cached subresult in this memory area.
 </span><span class="c1"></span>    <span class="k">auto</span> <span class="n">cacheValues</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span> <span class="n">cacheEntrySize</span><span class="p">);</span>
-    <span class="k">auto</span> <span class="n">cacheFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">bool</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">));</span>
-    <span class="n">recursiveIcm</span><span class="p">(</span><span class="n">stacksArray</span><span class="p">,</span> <span class="n">payoutsArray</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stacksSum</span><span class="p">,</span>
+    <span class="c1">// And we&#39;ll store the information of whether each one is filled or not.
+</span><span class="c1"></span>    <span class="k">auto</span> <span class="n">cacheFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">bool</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">));</span>
+
+    <span class="c1">// Ok let&#39;s go
+</span><span class="c1"></span>    <span class="n">recursiveIcm</span><span class="p">(</span><span class="n">stacksArray</span><span class="p">,</span> <span class="n">payoutsArray</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stacksSum</span><span class="p">,</span>
                   <span class="n">cacheValues</span><span class="p">,</span> <span class="n">cacheFlags</span><span class="p">);</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">toReturn</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    
+    <span class="c1">// Just translate back to vector
+</span><span class="c1"></span>    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">toReturn</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
     <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">toReturn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
     <span class="p">}</span>
-    <span class="n">free</span><span class="p">(</span><span class="n">cacheValues</span><span class="p">);</span>
+    <span class="c1">// And free the allocated memory
+</span><span class="c1"></span>    <span class="n">free</span><span class="p">(</span><span class="n">cacheValues</span><span class="p">);</span>
     <span class="n">free</span><span class="p">(</span><span class="n">cacheFlags</span><span class="p">);</span>
     <span class="k">return</span> <span class="n">toReturn</span><span class="p">;</span>
 <span class="p">}</span>
