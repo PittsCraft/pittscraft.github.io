@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+    <meta charset="UTF-8" />
+
+    <meta name="generator" content="Hugo 0.80.0" /><meta name="theme-color" content="#fff" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <title>Poker : MTT et ICM - Le Calcul Brutal | Pitt&#39;s Craft</title>
+
+    <link rel="stylesheet" href="/css/meme.min.f9894a4a4e2059037165836b72caba3584b7eddf447230427071d466c3bdd7ab.css"/>
+
+    
+    
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.2e8cecdb28365acb51546c474e04cc3d1566d483eb8370d97ec4daebeaec1398.js"></script>
+
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM&#43;Plex&#43;Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source&#43;Code&#43;Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM&#43;Plex&#43;Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source&#43;Code&#43;Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap" /></noscript>
+
+    <meta name="author" content="Pitt" /><meta name="description" content="Où on calcule avec brutalité les espérances des joueurs selon un modèle indépendantiste." />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2a6df4" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Pitt&#39;s Craft" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Pitt&#39;s Craft" />
+    <meta name="msapplication-starturl" content="../../" />
+    <meta name="msapplication-TileColor" content="#fff" />
+    <meta name="msapplication-TileImage" content="../../icons/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    
+    
+
+    
+    <link rel="canonical" href="https://pittscraft.com/posts/poker_mtt_icm_calcul/" />
+    
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "datePublished": "2021-03-08T14:14:35+01:00",
+        "dateModified": "2021-03-08T14:14:35+01:00",
+        "url": "https://pittscraft.com/posts/poker_mtt_icm_calcul/",
+        "headline": "Poker : MTT et ICM - Le Calcul Brutal",
+        "description": "Où on calcule avec brutalité les espérances des joueurs selon un modèle indépendantiste.",
+        "inLanguage" : "fr",
+        "articleSection": "posts",
+        "wordCount":  1904 ,
+        "image": "https://pittscraft.com/images/apple-touch-icon.png",
+        "author": {
+            "@type": "Person",
+            "email": "pitt@pittscraft.com",
+            "image": "https://pittscraft.com/icons/apple-touch-icon.png",
+            "url": "https://pittscraft.com/about/",
+            "name": "Pitt"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Pitt's Craft",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://pittscraft.com/images/apple-touch-icon.png"
+            },
+            "url": "https://pittscraft.com/"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebSite",
+            "@id": "https://pittscraft.com/"
+        }
+    }
+</script>
+
+    
+
+<meta name="twitter:card" content="summary" />
+
+<meta name="twitter:site" content="@Pitt51279043" />
+<meta name="twitter:creator" content="@Pitt51279043" />
+
+    
+
+
+
+<meta property="og:title" content="Poker : MTT et ICM - Le Calcul Brutal" />
+<meta property="og:description" content="Où on calcule avec brutalité les espérances des joueurs selon un modèle indépendantiste." />
+<meta property="og:url" content="https://pittscraft.com/posts/poker_mtt_icm_calcul/" />
+<meta property="og:site_name" content="Pitt&#39;s Craft" />
+<meta property="og:locale" content="fr" /><meta property="og:image" content="https://pittscraft.com/images/apple-touch-icon.png" />
+    <meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2021-03-08T14:14:35&#43;01:00" />
+    <meta property="article:modified_time" content="2021-03-08T14:14:35&#43;01:00" />
+    
+    <meta property="article:section" content="posts" />
+
+
+
+    
+</head>
+
+    <body>
+        <div class="container">
+            
+    <header class="header">
+        
+            <div class="header-wrapper">
+                <div class="header-inner single">
+                    
+    <div class="site-brand">
+        
+            <a href="/" class="brand">Pitt&#39;s Craft</a>
+        
+    </div>
+
+                    <nav class="nav">
+    <ul class="menu" id="menu">
+        
+            
+        
+        
+        
+        
+            
+                <li class="menu-item"><a href="/posts/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon archive"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class="menu-item-name">Posts</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/categories/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon th"><path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"/></svg><span class="menu-item-name">Categories</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/tags/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon tags"><path d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"/></svg><span class="menu-item-name">Tags</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/about/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon user-circle"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class="menu-item-name">About</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href=""></a>
+                </li>
+            
+        
+            
+                
+            
+        
+            
+                <li class="menu-item search-item">
+                        <form id="search" class="search" role="search">
+    <label for="search-input"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon search-icon"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></label>
+    <input type="search" id="search-input" class="search-input">
+</form>
+
+<template id="search-result" hidden>
+    <article class="content post">
+        <h2 class="post-title"><a class="summary-title-link"></a></h2>
+        <summary class="summary"></summary>
+        <div class="read-more-container">
+            <a class="read-more-link">Lire Plus »</a>
+        </div>
+    </article>
+</template>
+
+                    </li>
+                
+            
+        
+    </ul>
+</nav>
+
+                    
+                </div>
+            </div>
+            
+    <input type="checkbox" id="nav-toggle" aria-hidden="true" />
+    <label for="nav-toggle" class="nav-toggle"></label>
+    <label for="nav-toggle" class="nav-curtain"></label>
+
+
+        
+    </header>
+
+
+
+
+            
+            
+    <main class="main single" id="main">
+    <div class="main-inner">
+
+        
+
+        <article class="content post h-entry" data-small-caps="true" data-align="default" data-type="posts" data-toc-num="true">
+
+            <h1 class="post-title p-name">Poker : MTT et ICM - Le Calcul Brutal</h1>
+
+            
+
+            
+                <div class="post-description p-summary">Où on calcule avec brutalité les espérances des joueurs selon un modèle indépendantiste.</div>
+                
+            
+
+            
+                
+
+<div class="post-meta">
+    
+        
+        <time datetime="2021-03-08T14:14:35&#43;01:00" class="post-meta-item published dt-published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"/></svg>&nbsp;8.3.2021</time>
+    
+    
+        
+        <time datetime="2021-03-08T14:14:35&#43;01:00" class="post-meta-item modified dt-updated"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M400 64h-48V12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v52H160V12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v52H48C21.49 64 0 85.49 0 112v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 400H54a6 6 0 0 1-6-6V160h352v298a6 6 0 0 1-6 6zm-52.849-200.65L198.842 404.519c-4.705 4.667-12.303 4.637-16.971-.068l-75.091-75.699c-4.667-4.705-4.637-12.303.068-16.971l22.719-22.536c4.705-4.667 12.303-4.637 16.97.069l44.104 44.461 111.072-110.181c4.705-4.667 12.303-4.637 16.971.068l22.536 22.718c4.667 4.705 4.636 12.303-.069 16.97z"/></svg>&nbsp;8.3.2021</time>
+    
+    
+    
+        
+        
+        
+            
+                <span class="post-meta-item category"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>&nbsp;<a href="/categories/game-theory/" class="category-link p-category">Game Theory</a></span>
+            
+        
+    
+    
+        
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;1904</span>
+    
+    
+        
+        <span class="post-meta-item reading-time"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm61.8-104.4l-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;9&nbsp;min.</span>
+    
+    
+    
+</div>
+
+            
+
+            <div class="post-body e-content">
+              <p style="text-indent:0"><span class="drop-cap">D</span>ans <a href="https://pittscraft.com/posts/poker_mtt_icm_question/" target="_blank" rel="noopener">mon précédent billet</a>, je vous parlais des fonctions d&rsquo;évaluation en théorie des jeux, plus particulièrement dans les tournois de poker No-Limit Hold&rsquo;Em (NLHE), et spécifiquement de l&rsquo;Independent Chip Model (ICM).</p>
+<p>Pour rappel une fonction d&rsquo;évaluation donne une estimation probabiliste des gains de chaque joueur en fonction de l&rsquo;état du jeu. L&rsquo;ICM utilise la taille des stacks des joueurs pour évaluer leurs chances d&rsquo;atteindre chaque rang dans le classement final du tournoi. Ces probabilités multipliées par les prix de chaque rangs donnent une espérance de gain en monnaie sonnante et trébuchante qui permettra aux joueurs de prendre des décisions selon les issues possibles de ses actions.</p>
+<h2 id="calcul-de-licm"><a href="#calcul-de-licm" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Calcul de l&rsquo;ICM</h2>
+<p>L&rsquo;ICM suppose que la probabilité pour chaque joueur d&rsquo;accéder à la première place est égale à la proportion représentée par son stack sur la totalité des jetons en jeu (la somme des stacks).
+Récursivement la probabilité pour un joueur <code>A</code> d&rsquo;accéder à la seconde place va être une somme pour chaque autre joueur <code>B</code> en première place.</p>
+<pre><code>SA = stack du joueur A
+SB = stack du joueur B
+
+P2A = probabilité du joueur A d'accéder à la seconde place, initialisé à 0
+
+Pour chaque autre joueur B:
+    P1B = probabilité du joueur B d'être premier = SB / Somme des stacks
+    P2A_sachant_1B = probabilité du joueur considéré d'accéder à la seconde place quand le joueur B accède à la première place
+    P2A_sachant_1B = SA / (Somme des stacks - SB)
+    P2A = P2A + P1B x P2A_sachant_1B
+</code></pre><p>Pour calculer le tableau de valeurs de l&rsquo;ICM en fonction des stacks et des prix (payouts) on pourrait écrire un algorithme de ce type :</p>
+<pre><code>payouts = [Q1, Q2, Q3, ...] : prix pour la première, deuxième, troisième.. place.
+résultat = [RA, RB, RC, ...] : tableau des résultats, avec chaque valeur initialisée à 0
+
+pour tout classement possible des joueurs :
+  (prenons le classement (A, B, C...) pour l'exemple)
+  p = probabilité de ce classement 
+    = P1A 
+      x P2B_sachant_1A 
+      x P3C_sachant_1A_et_2B 
+      x ...
+  RA = RA + p x Q1
+  RB = RB + p x Q2
+  RC = RC + p x Q3
+  ...
+
+</code></pre><p>Voici un bout de code python naïf qui fait ça :</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">icm_proba</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="n">stacks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">stacks_sum</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">player</span><span class="p">]</span>
+        <span class="n">result</span> <span class="o">*=</span> <span class="n">stack</span> <span class="o">/</span> <span class="n">stacks_sum</span>
+        <span class="n">stacks_sum</span> <span class="o">-=</span> <span class="n">stack</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">icm</span><span class="p">(</span><span class="n">stacks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">payouts</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stacks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+    <span class="n">nb_stacks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">stacks</span><span class="p">)</span>
+    <span class="n">stacks_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">stacks</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_stacks</span><span class="p">,))</span>
+    <span class="k">for</span> <span class="n">permutation</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nb_stacks</span><span class="p">)):</span>
+        <span class="n">probability</span> <span class="o">=</span> <span class="n">icm_proba</span><span class="p">(</span><span class="n">permutation</span><span class="p">,</span> <span class="n">stacks</span><span class="p">,</span> <span class="n">stacks_sum</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">player</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">permutation</span><span class="p">):</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">player</span><span class="p">]</span> <span class="o">+=</span> <span class="n">probability</span> <span class="o">*</span> <span class="n">payouts</span><span class="p">[</span><span class="n">rank</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">icm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+</code></pre></div><p>Output :</p>
+<pre><code>[435.71428571 330.         234.28571429]
+</code></pre><p><em>On note la finesse du formattage</em></p>
+<h2 id="complexité"><a href="#complexité" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Complexité</h2>
+<p>Prendre tout classement possible de N joueurs, c&rsquo;est ce qu&rsquo;on appelle une permutation ou encore un arrangement.
+Et on calcule très facilement combien il existe d&rsquo;arrangement pour un nombre donné de joueurs :</p>
+<pre><code>1 : 1 (ben oui)
+2 : 2 x 1 = 2 (juré ça change après)
+3 : 3 x 2 x 1 = 6
+4 : 4 x 3 x 2 x 1 = 24
+5 : 5 x 4 x 3 x 2 x 1 = 120
+</code></pre><p>C&rsquo;est la factorielle, et on peut voir que ça croit très rapidement (plus vite qu&rsquo;une exponentielle).
+Si on code ça comme ça on obtient une complexité tellement violente qu&rsquo;il est difficile de calculer l&rsquo;ICM au delà de 10 joueurs dans un temps raisonnable.</p>
+<p>Par exemple avec le code ci-dessus j&rsquo;ai obtenu ces temps :</p>
+<pre><code>3.695487976074219e-05 seconds for 2 players
+2.8848648071289062e-05 seconds for 3 players
+8.177757263183594e-05 seconds for 4 players
+0.0006070137023925781 seconds for 5 players
+0.0037360191345214844 seconds for 6 players
+0.027889013290405273 seconds for 7 players
+0.24523401260375977 seconds for 8 players
+2.2415449619293213 seconds for 9 players
+23.641671180725098 seconds for 10 players
+</code></pre><p>Je vous rappelle qu&rsquo;à l&rsquo;origine, je m&rsquo;intéresse à l&rsquo;ICM en tournoi multi-table. C&rsquo;est à dire dans des tournois où le nombre de joueur est entre dix et&hellip; quelques milliers.</p>
+<p>De plus, quand je regarde par exemple sur <a href="https://www.holdemresources.net/icmcalculator" target="_blank" rel="noopener">HoldemRessources</a>, leur calculateur me répond en environ 200ms pour une vingtaine de joueurs. Même si ils ont mis un serveur très performant, on est dans des ordres de grandeur très lointains. On peut faire beaucoup mieux.</p>
+<h2 id="première-optimisation--passer-en-récursif-et-en-c"><a href="#première-optimisation--passer-en-récursif-et-en-c" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Première optimisation : passer en récursif et en C++</h2>
+<p>Eh oui car le Python n&rsquo;est rapide que quand il appelle des bibliothèques compilées. Faisons-donc la notre !
+Et j&rsquo;en profite pour faire une version récursive de l&rsquo;algorithme qui va nous économiser pas mal de multiplications pour le calcul de probabilité. En effet, on regroupe toutes les permutations pour lesquelles le premier joueur dans le classement est le joueur d&rsquo;index 0 dans les stacks par exemple, mais voyez plutôt ci-dessous.</p>
+<p>Au premier appel, la fonction <code>recursiveNaiveIcm</code> va énumérer tous les joueurs possibles en première place. Pour chacun, elle va s&rsquo;appeler elle-même pour la seconde place, etc.</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">recursiveNaiveIcm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">,</span>
+                        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">usedPlayers</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span>
+                        <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">factor</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksSum</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// No player to rank left
+</span><span class="c1"></span>        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">usedPlayers</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// ith player has already been considered
+</span><span class="c1"></span>        <span class="c1">// The probability to have this ith player at this rank knowing the previous ranking is stacks[i] / stacksSum
+</span><span class="c1"></span>        <span class="c1">// The total probability of this ranking chain is thus :
+</span><span class="c1"></span>        <span class="k">const</span> <span class="kt">double</span> <span class="n">newFactor</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">stacksSum</span><span class="p">;</span>
+        <span class="c1">// Let&#39;s remember this player is ranked
+</span><span class="c1"></span>        <span class="n">usedPlayers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="c1">// Add his pondered payout to the result
+</span><span class="c1"></span>        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">newFactor</span> <span class="o">*</span> <span class="n">payouts</span><span class="p">[</span><span class="n">rank</span><span class="p">];</span>
+        <span class="c1">// Rank all possible next players
+</span><span class="c1"></span>        <span class="n">recursiveNaiveIcm</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">payouts</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">usedPlayers</span><span class="p">,</span> <span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">newFactor</span><span class="p">,</span>
+                          <span class="n">stacksSum</span> <span class="o">-</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="c1">// Reset the flag
+</span><span class="c1"></span>        <span class="n">usedPlayers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Entry point
+</span><span class="c1"></span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">naiveIcm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="c1">// Number of players
+</span><span class="c1"></span>    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">usedPlayers</span><span class="p">(</span><span class="n">size</span><span class="p">);</span> <span class="c1">// Flags to note down players that were already considered
+</span><span class="c1"></span>    <span class="kt">double</span> <span class="n">stacksSum</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">stacks</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="n">recursiveNaiveIcm</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">payouts</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">usedPlayers</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stacksSum</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p><em>Je n&rsquo;avais pas fait de C++ depuis plus de 10 ans alors on ne se moque pas. De mon temps on codait en C++98, on avait une orange à Noël, et on était content !</em></p>
+<p>Voyons ce qu&rsquo;on gagne en temps d&rsquo;exécution :</p>
+<pre><code>Duration 0ms for 2 players
+Duration 0ms for 3 players
+Duration 0ms for 4 players
+Duration 0ms for 5 players
+Duration 0ms for 6 players
+Duration 0ms for 7 players
+Duration 2ms for 8 players
+Duration 18ms for 9 players
+Duration 177ms for 10 players
+Duration 2087ms for 11 players
+Duration 25924ms for 12 players
+</code></pre><p>Pas mal, on peut ajouter un onzième et un douzième joueurs pour presque le même temps de calcul. En gros, on a une accélération de 11 x 12, donc de l&rsquo;ordre de la centaine !</p>
+<p>Mais ça ne nous emmène pas si loin. Continuons de gratter !</p>
+<h2 id="deuxième-optimisation--cache-et-c-moins-moins"><a href="#deuxième-optimisation--cache-et-c-moins-moins" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Deuxième optimisation : cache et C-moins-moins</h2>
+<p>Supposons que nous avons <code>n</code> joueurs. À un moment du calcul où on a défini les rangs des <code>k</code> premiers joueurs, il reste <code>n - k</code> joueurs dont on va énumérer les différentes classements possibles.</p>
+<p>Si on prend ces mêmes <code>k</code> premiers joueurs <strong>mais dans un autre ordre</strong>, l&rsquo;énumération des différents classements des <code>n - k</code> joueurs restants va être presque identique :</p>
+<ul>
+<li><code>size</code>, <code>stacks</code> et <code>payouts</code> ne bougent pas</li>
+<li><code>result</code> est la destination, ce n&rsquo;est pas un paramètre du calcul</li>
+<li><code>usedPlayers</code> a les mêmes indexes à <code>true</code> (correspondant aux <code>k</code> joueurs classés)</li>
+<li><code>rank</code> = <code>k</code>, c&rsquo;est le même</li>
+<li><code>stacksSum</code> correspond à la somme des stacks des <code>n - k</code> joueurs restants et a la même valeur</li>
+</ul>
+<p>En fait, seul le paramètre <code>factor</code> varie, car la probabilité d&rsquo;avoir les <code>k</code> premiers joueurs classés dans un ordre ou un autre n&rsquo;est pas la même.</p>
+<p>Cependant, ce facteur est finalement appliqué à toutes les contributions des appels imbriqués. Mais on peut donc l&rsquo;extraire et l&rsquo;appliquer a posteriori.</p>
+<p>Ce-faisant, on va calculer une seule fois cette sous-partie pour <code>n - k</code> joueurs au lieu de la calculer pour chaque classement des mêmes <code>k</code> premiers joueurs.</p>
+<p>Si en plus on applique ça pour tous les <code>k</code> entre 0 et <code>n - 1</code>, on n&rsquo;a en fait à calculer la sous partie que pour toutes les combinaisons (de taille 1 à <code>n</code>) de joueurs.</p>
+<p>Hors on sait très bien dénombrer également le nombre de combinaisons possible de joueurs parmis <code>n</code>, et c&rsquo;est 2<sup>n</sup>. J&rsquo;évoquais tout à l&rsquo;heure la complexité factorielle de l&rsquo;algorithme naïf, la réduire à une complexité exponentielle semble prometteur !</p>
+<p>Pour ajouter encore un peu de perf, je vous mets avec ça :</p>
+<ul>
+<li>des pointeurs old-s<strong>C</strong>hool plutôt que des <code>vector</code>s</li>
+<li>un bitmask pour les <code>usedPlayers</code> plutôt qu&rsquo;un tableau de booléens</li>
+</ul>
+<p>et voici ce que ça donne :</p>
+<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="kt">void</span> <span class="nf">recursiveIcm</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span>
+                  <span class="kt">double</span> <span class="o">*</span><span class="n">result</span><span class="p">,</span>
+                  <span class="kt">long</span> <span class="kt">long</span> <span class="n">usedPlayers</span><span class="p">,</span> <span class="kt">int</span> <span class="n">rank</span><span class="p">,</span>
+                  <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="kt">double</span> <span class="n">factor</span><span class="p">,</span> <span class="kt">double</span> <span class="n">stacksSum</span><span class="p">,</span>
+                  <span class="kt">double</span> <span class="o">*</span><span class="n">cacheValues</span><span class="p">,</span> <span class="kt">bool</span> <span class="o">*</span><span class="n">cacheFlags</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">double</span> <span class="o">*</span><span class="n">subResult</span> <span class="o">=</span> <span class="n">cacheValues</span> <span class="o">+</span> <span class="n">usedPlayers</span> <span class="o">*</span> <span class="n">size</span><span class="p">;</span>
+    <span class="c1">// If the subResult wasn&#39;t computed previously, let&#39;s do it
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="o">!*</span><span class="p">(</span><span class="n">cacheFlags</span> <span class="o">+</span> <span class="n">usedPlayers</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">iMask</span> <span class="o">=</span> <span class="mh">0x1ll</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">usedPlayers</span> <span class="o">&amp;</span> <span class="n">iMask</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
+            <span class="k">const</span> <span class="kt">double</span> <span class="n">newFactor</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">stacksSum</span><span class="p">;</span>
+            <span class="n">subResult</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">newFactor</span> <span class="o">*</span> <span class="n">payouts</span><span class="p">[</span><span class="n">rank</span><span class="p">];</span>
+            <span class="n">recursiveIcm</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">payouts</span><span class="p">,</span> <span class="n">subResult</span><span class="p">,</span> <span class="n">usedPlayers</span> <span class="o">|</span> <span class="n">iMask</span><span class="p">,</span> <span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                          <span class="n">size</span><span class="p">,</span> <span class="n">newFactor</span><span class="p">,</span> <span class="n">stacksSum</span> <span class="o">-</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cacheValues</span><span class="p">,</span> <span class="n">cacheFlags</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">cacheFlags</span> <span class="o">+</span> <span class="n">usedPlayers</span><span class="p">)</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">factor</span> <span class="o">*</span> <span class="n">subResult</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">icm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="kt">double</span> <span class="n">result</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+    <span class="n">fill_n</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="kt">double</span> <span class="n">stacksArray</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+    <span class="kt">double</span> <span class="n">payoutsArray</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">stacksArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">payoutsArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksSum</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">stacks</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="mf">0.</span><span class="p">);</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">cacheEntrySize</span> <span class="o">=</span> <span class="n">size</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">);</span> <span class="c1">// One double for each player
+</span><span class="c1"></span>    <span class="k">auto</span> <span class="n">cacheValues</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span> <span class="n">cacheEntrySize</span><span class="p">);</span>
+    <span class="k">auto</span> <span class="n">cacheFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kt">bool</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="p">),</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">bool</span><span class="p">));</span>
+    <span class="n">recursiveIcm</span><span class="p">(</span><span class="n">stacksArray</span><span class="p">,</span> <span class="n">payoutsArray</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">stacksSum</span><span class="p">,</span>
+                  <span class="n">cacheValues</span><span class="p">,</span> <span class="n">cacheFlags</span><span class="p">);</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">toReturn</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">toReturn</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">cacheValues</span><span class="p">);</span>
+    <span class="n">free</span><span class="p">(</span><span class="n">cacheFlags</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">toReturn</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>Mais surtout le résultat en termes de performance :</p>
+<pre><code>Duration 0ms for 2 players
+Duration 0ms for 3 players
+Duration 0ms for 4 players
+Duration 0ms for 5 players
+Duration 0ms for 6 players
+Duration 0ms for 7 players
+Duration 0ms for 8 players
+Duration 0ms for 9 players
+Duration 0ms for 10 players
+Duration 0ms for 11 players
+Duration 1ms for 12 players
+Duration 1ms for 13 players
+Duration 3ms for 14 players
+Duration 7ms for 15 players
+Duration 19ms for 16 players
+Duration 51ms for 17 players
+Duration 130ms for 18 players
+Duration 321ms for 19 players
+Duration 737ms for 20 players
+</code></pre><h2 id="conclusion-et-quoi-est-après"><a href="#conclusion-et-quoi-est-après" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Conclusion et quoi-est-après</h2>
+<p>J&rsquo;ai toujours en tête de comparer et de titiller les fonctions d&rsquo;évaluation en MTT. J&rsquo;ai maintenant une bibliothèque de calcul de l&rsquo;ICM de qualité professionnelle, qui m&rsquo;autorise des simulations de tournois pour un petit nombre de joueur. Ça peut être suffisant pour faire des tests qualitatifs sur quelques joueurs, mais j&rsquo;ai envie de voir si je peux aller plus loin.</p>
+<p>Comment calculer efficacement l&rsquo;ICM pour 50 joueurs ? Ce sera très probablement le sujet de mon prochain billet !</p>
+
+            </div>
+
+            
+    
+    
+        <ul class="post-copyright">
+            <li class="copyright-item author"><span class="copyright-item-text">Auteur</span> : <a href="https://pittscraft.com/about/" class="p-author h-card" target="_blank" rel="noopener">Pitt</a></li>
+            
+                
+                
+                
+                
+                <li class="copyright-item link"><span class="copyright-item-text">Lien</span> : <a href="/posts/poker_mtt_icm_calcul/" target="_blank" rel="noopener">https://pittscraft.com/posts/poker_mtt_icm_calcul/</a></li>
+            
+            
+        </ul>
+    
+
+
+
+        </article>
+
+        
+
+        
+    <div class="updated-badge-container">
+        <span title="Updated @ 2021-03-08 14:14:35 CET" style="cursor:help">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20" class="updated-badge"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="130" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path class="updated-badge-left" d="M0 0h55v20H0z"/><path class="updated-badge-right" d="M55 0h75v20H55z"/><path fill="url(#b)" d="M0 0h130v20H0z"/></g><g fill="#fff" text-anchor="middle" font-size="110"><text x="285" y="150" fill="#010101" fill-opacity=".3" textLength="450" transform="scale(.1)">updated</text><text x="285" y="140" textLength="450" transform="scale(.1)">updated</text><text x="915" y="150" fill="#010101" fill-opacity=".3" textLength="650" transform="scale(.1)">2021-03-08</text><text x="915" y="140" textLength="650" transform="scale(.1)">2021-03-08</text></g></svg>
+        </span></div>
+
+
+
+        
+
+
+        <div class="post-share">
+
+        
+
+        <div class="share-items">
+
+            
+                <div class="share-item twitter">
+                    
+                    <a href="https://twitter.com/share?url=https://pittscraft.com/posts/poker_mtt_icm_calcul/&amp;text=Poker%20:%20MTT%20et%20ICM%20-%20Le%20Calcul%20Brutal&amp;hashtags=Poker,AI,ICM,MTT,GameTheory,&amp;via=Pitt51279043" title="Partage sur Twitter" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon twitter-icon"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item facebook">
+                    
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://pittscraft.com/posts/poker_mtt_icm_calcul/&amp;hashtag=%23Poker" title="Partage sur Facebook" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon facebook-icon"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item linkedin">
+                    
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://pittscraft.com/posts/poker_mtt_icm_calcul/&amp;title=Poker%20:%20MTT%20et%20ICM%20-%20Le%20Calcul%20Brutal&amp;summary=O%c3%b9%20on%20calcule%20avec%20brutalit%c3%a9%20les%20esp%c3%a9rances%20des%20joueurs%20selon%20un%20mod%c3%a8le%20ind%c3%a9pendantiste.&amp;source=Pitt%27s%20Craft" title="Partage sur LinkedIn" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon linkedin-icon"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item telegram">
+                    
+                    <a href="https://t.me/share/url?url=https://pittscraft.com/posts/poker_mtt_icm_calcul/&amp;text=Poker%20:%20MTT%20et%20ICM%20-%20Le%20Calcul%20Brutal" title="Partage sur Telegram" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon telegram-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg></a>
+                </div>
+            
+
+            
+
+            
+
+            
+
+            
+
+            
+
+        </div>
+
+    </div>
+
+
+
+
+        
+    
+    
+        <div class="related-posts">
+            <h2 class="related-title">Lire aussi : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"/></svg></h2>
+            <ul class="related-list">
+                
+                    <li class="related-item">
+                        <a href="/posts/poker_mtt_icm_question/" class="related-link">Poker : MTT et ICM - La Question</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
+
+
+        
+    
+        <div class="post-tags">
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/poker/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>Poker</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/ai/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>AI</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/icm/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ICM</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/mtt/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>MTT</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/game-theory/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>Game Theory</a>
+                
+            
+        </div>
+    
+
+
+
+        
+
+
+        
+
+
+        
+    
+        
+        
+    
+    
+    
+    
+        <ul class="post-nav">
+            
+            
+                <li class="post-nav-next">
+                    <a href="/posts/poker_mtt_icm_question/" rel="next">Poker : MTT et ICM - La Question &gt;</a>
+                </li>
+            
+        </ul>
+    
+
+
+
+        
+
+
+    </div>
+</main>
+
+
+            
+    <div id="back-to-top" class="back-to-top">
+        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon arrow-up"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a>
+    </div>
+
+
+            
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="site-info">©&nbsp;2020–2021&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
+
+            
+    
+        <ul class="socials"><li class="socials-item">
+                    <a href="/rss.xml" target="_blank" rel="external noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon social-icon"><path d="M19.199 24C19.199 13.467 10.533 4.8 0 4.8V0c13.165 0 24 10.835 24 24h-4.801zM3.291 17.415c1.814 0 3.293 1.479 3.293 3.295 0 1.813-1.485 3.29-3.301 3.29C1.47 24 0 22.526 0 20.71s1.475-3.294 3.291-3.295zM15.909 24h-4.665c0-6.169-5.075-11.245-11.244-11.245V8.09c8.727 0 15.909 7.184 15.909 15.91z"/></svg></a>
+                </li><li class="socials-item">
+                    <a href="mailto:pitt@pittscraft.com" target="_blank" rel="external noopener" title="Email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon social-icon"><path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z"/></svg></a>
+                </li><li class="socials-item">
+                    <a href="https://github.com/PittsCraft" target="_blank" rel="external noopener" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon social-icon"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+                </li></ul>
+    
+
+
+
+            
+        </div>
+    </footer>
+
+
+        </div>
+        
+
+        
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js"></script>
+
+<script>
+    mediumZoom(document.querySelectorAll('div.post-body img'), {
+        background: 'hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)'
+    })
+</script>
+
+
+
+
+
+
+
+
+
+    </body>
+</html>

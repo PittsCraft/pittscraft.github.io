@@ -2,7 +2,7 @@
 draft = false
 date = 2021-03-03T14:14:35+01:00
 title = "Poker : MTT et ICM - La Question"
-description = ""
+description = "Où il est question des fonctions d'évaluation en théorie des jeux, du Gambler's Ruin et de l'ICM."
 slug = "poker_mtt_icm_question"
 authors = ["Pitt"]
 tags = ["Poker", "AI", "ICM", "MTT", "Gambler's Ruin", "Game Theory"]
@@ -115,6 +115,8 @@ Output :
 Ce qui m'a bien l'air de converger vers le résultat attendu.
 
 *Petite note sur la taille des stacks allègrement divisée par 100 : il se trouve que ça n'a aucune influence, je l'ai vérifié expérimentalement. Cependant comme j'aimerais bien savoir pourquoi et que je n'ai pas le temps de creuser, [j'ai posé la question](https://math.stackexchange.com/questions/4049787/n-players-gamblers-ruin-ranking-stability-regarding-stacks-proportionality) à l'Internet.*
+
+*\[EDIT\] Au temps pour moi, la proportionalité n'est pas la seule à compter. La taille des stacks a bien une influence dans le cas suivant où le second joueur a un prix ! Ceci-dit, même si mes chiffres sont légèrement biaisés ça n'invalide en rien le propos.*
 
 Maintenant, si le premier joueur remporte 600€ et le second 400€, a-t-on les mêmes espérances de gain ? Faisons donc tourner cette simulation avec ces payouts :
 
