@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
     <title type="text">Pitt&#39;s Craft</title>
     <subtitle type="html">MemE is a powerful and highly customizable GoHugo theme for personal blogs.</subtitle>
-    <updated>2021-03-08T19:48:19&#43;01:00</updated>
+    <updated>2021-03-09T09:58:33&#43;01:00</updated>
     <id>https://pittscraft.com/</id>
     <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
     <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
@@ -184,11 +184,9 @@ Duration 25924ms for 12 players
 &lt;p&gt;Ce-faisant, on va calculer une seule fois cette sous-partie pour &lt;code&gt;n - k&lt;/code&gt; joueurs au lieu de la calculer pour chaque classement des mêmes &lt;code&gt;k&lt;/code&gt; premiers joueurs.&lt;/p&gt;
 &lt;p&gt;Si en plus on applique ça pour tous les &lt;code&gt;k&lt;/code&gt; entre 0 et &lt;code&gt;n - 1&lt;/code&gt;, on n&amp;rsquo;a en fait à calculer la sous partie que pour toutes les combinaisons (de taille 1 à &lt;code&gt;n&lt;/code&gt;) de joueurs.&lt;/p&gt;
 &lt;p&gt;Hors on sait très bien dénombrer également le nombre de combinaisons possible de joueurs parmis &lt;code&gt;n&lt;/code&gt;, et c&amp;rsquo;est 2&lt;sup&gt;n&lt;/sup&gt;. J&amp;rsquo;évoquais tout à l&amp;rsquo;heure la complexité factorielle de l&amp;rsquo;algorithme naïf, la réduire à une complexité exponentielle semble prometteur !&lt;/p&gt;
-&lt;p&gt;Pour ajouter encore un peu de perf, je vous mets avec ça :&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;des pointeurs old-s&lt;strong&gt;C&lt;/strong&gt;hool plutôt que des &lt;code&gt;vector&lt;/code&gt;s&lt;/li&gt;
-&lt;li&gt;un bitmask pour les &lt;code&gt;usedPlayers&lt;/code&gt; plutôt qu&amp;rsquo;un tableau de booléens&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;On va indexer les sous-calculs à mettre en cache selon la liste non-ordonnée des joueurs déjà classés, qui implicitement définit le rang actuel et la somme des stacks restants. Pour ce faire, on va choisir un vecteur de bits représenté par un entier, avec à 1 les bits des joueurs déjà classés, et on a une indexation parfaite (et on retombe d&amp;rsquo;ailleurs sur la complexité en 2&lt;sup&gt;n&lt;/sup&gt;). En bonus, on peut se servir de ce bitmask pour remplacer l&amp;rsquo;ancien tableau de booléens, ce qui va nous économiser quelques cycles de CPU.&lt;/p&gt;
+&lt;p&gt;Pour ajouter encore un peu de perf, je vous mets avec ça des pointeurs old-s&lt;strong&gt;C&lt;/strong&gt;hool plutôt que des &lt;code&gt;vector&lt;/code&gt;s, car oui, ça fait une vraie différence.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Entendons-nous bien, le niveau d&amp;rsquo;optimisation dépend fortement de la nature du problème. Si on bosse sur une app de TODO list, le nombre d&amp;rsquo;opérations est tellement faible qu&amp;rsquo;il n&amp;rsquo;y a en général&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_calcul/#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; aucune raison de chercher à économiser des cycles de CPU. Mais quand on multiplie un nombre d&amp;rsquo;opérations par 2&lt;sup&gt;20&lt;/sup&gt; c&amp;rsquo;est à dire environ un million, on s&amp;rsquo;approche dangereusement de la seconde d&amp;rsquo;exécution.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;et voici ce que ça donne :&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cpp&#34; data-lang=&#34;cpp&#34;&gt;&lt;span class=&#34;kt&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;recursiveIcm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;stacks&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;const&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;payouts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
                   &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;result&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
@@ -278,9 +276,20 @@ Duration 51ms for 17 players
 Duration 130ms for 18 players
 Duration 321ms for 19 players
 Duration 737ms for 20 players
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;conclusion-et-quoi-est-après&#34;&gt;Conclusion et quoi-est-après&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;chemin-doptimisation&#34;&gt;Chemin d&amp;rsquo;optimisation&lt;/h2&gt;
+&lt;p&gt;Je vous passe bien sûr le cheminement détaillé, car j&amp;rsquo;ai pris le temps d&amp;rsquo;appréhender tout ce que j&amp;rsquo;avais raté ou oublié en termes de gestion de mémoire et des bibliothèques standards en C++20. En bref, disons que je suis passé par des versions bien plus moderne et haut niveau de cet algorithme avec notamment une &lt;code&gt;std::map&lt;/code&gt; puis &lt;code&gt;std::unordered_map&lt;/code&gt; puis &lt;code&gt;robinhood::unordered_map&lt;/code&gt; pour le cache, des &lt;code&gt;std::vector&lt;/code&gt; (qui se copiaient à chaque affectation ofc) puis des &lt;code&gt;std::vector&amp;amp;&lt;/code&gt; et ensuite des &lt;code&gt;std::shared_ptr&amp;lt;std::vector&amp;gt;&lt;/code&gt; super hype pour finalement revenir à des pointeurs et &lt;code&gt;calloc&lt;/code&gt; pour des questions de performance évidentes.&lt;/p&gt;
+&lt;p&gt;Comme disait Sam Waters : &amp;ldquo;Le profiling, c&amp;rsquo;est ma vie&amp;rdquo;.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion-et-quoi-est-après&#34;&gt;Conclusion et quoi-est-après&lt;/h2&gt;
 &lt;p&gt;J&amp;rsquo;ai toujours en tête de comparer et de titiller les fonctions d&amp;rsquo;évaluation en MTT. J&amp;rsquo;ai maintenant une bibliothèque de calcul de l&amp;rsquo;ICM de qualité professionnelle, qui m&amp;rsquo;autorise des simulations de tournois pour un petit nombre de joueur. Ça peut être suffisant pour faire des tests qualitatifs sur quelques joueurs, mais j&amp;rsquo;ai envie de voir si je peux aller plus loin.&lt;/p&gt;
 &lt;p&gt;Comment calculer efficacement l&amp;rsquo;ICM pour 50 joueurs ? Ce sera très probablement le sujet de mon prochain billet !&lt;/p&gt;
+&lt;section class=&#34;footnotes&#34; role=&#34;doc-endnotes&#34;&gt;
+&lt;hr&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
+&lt;p&gt;Il-y-a pas mal d&amp;rsquo;écoles différentes sur ce sujet bien sûr, et cette question prend de plus en plus d&amp;rsquo;importance avec la montée en puissance de l&amp;rsquo;éco-conception. D&amp;rsquo;un côté on risque de produire du code plus complexe, moins maintenable et moins fiable en cherchant l&amp;rsquo;optimisation, ce qu&amp;rsquo;on traduit par l&amp;rsquo;injonction &amp;ldquo;early optimization is the root of all evil&amp;rdquo; qui nous somme de garder le code simple à moins qu&amp;rsquo;il ne soit constaté nécessaire de l&amp;rsquo;optimiser -, de l&amp;rsquo;autre on assiste facilement à un phénomène d&amp;rsquo;encrassement à mesure que le code grossit : si des opérations suboptimales sont disséminées partout, l&amp;rsquo;optimisation consiste alors à tout réécrire et on regrette de ne pas avoir anticipé. Comme disait Bouddha : &amp;ldquo;La voie du milieu c&amp;rsquo;est bien, enfin rarement en voiture quand même&amp;rdquo;. &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_calcul/#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/section&gt;
 </content>
             
             

@@ -217,9 +217,11 @@ Si en plus on applique ça pour tous les `k` entre 0 et `n - 1`, on n'a en fait 
 
 Hors on sait très bien dénombrer également le nombre de combinaisons possible de joueurs parmis `n`, et c'est 2<sup>n</sup>. J'évoquais tout à l'heure la complexité factorielle de l'algorithme naïf, la réduire à une complexité exponentielle semble prometteur !
 
-Pour ajouter encore un peu de perf, je vous mets avec ça :
-- des pointeurs old-s**C**hool plutôt que des `vector`s
-- un bitmask pour les `usedPlayers` plutôt qu'un tableau de booléens
+On va indexer les sous-calculs à mettre en cache selon la liste non-ordonnée des joueurs déjà classés, qui implicitement définit le rang actuel et la somme des stacks restants. Pour ce faire, on va choisir un vecteur de bits représenté par un entier, avec à 1 les bits des joueurs déjà classés, et on a une indexation parfaite (et on retombe d'ailleurs sur la complexité en 2<sup>n</sup>). En bonus, on peut se servir de ce bitmask pour remplacer l'ancien tableau de booléens, ce qui va nous économiser quelques cycles de CPU.
+
+Pour ajouter encore un peu de perf, je vous mets avec ça des pointeurs old-s**C**hool plutôt que des `vector`s, car oui, ça fait une vraie différence.
+
+*Entendons-nous bien, le niveau d'optimisation dépend fortement de la nature du problème. Si on bosse sur une app de TODO list, le nombre d'opérations est tellement faible qu'il n'y a en général[^optim] aucune raison de chercher à économiser des cycles de CPU. Mais quand on multiplie un nombre d'opérations par 2<sup>20</sup> c'est à dire environ un million, on s'approche dangereusement de la seconde d'exécution.*
 
 et voici ce que ça donne :
 
@@ -318,9 +320,16 @@ Duration 321ms for 19 players
 Duration 737ms for 20 players
 ```
 
+## Chemin d'optimisation
+
+Je vous passe bien sûr le cheminement détaillé, car j'ai pris le temps d'appréhender tout ce que j'avais raté ou oublié en termes de gestion de mémoire et des bibliothèques standards en C++20. En bref, disons que je suis passé par des versions bien plus moderne et haut niveau de cet algorithme avec notamment une `std::map` puis `std::unordered_map` puis `robinhood::unordered_map` pour le cache, des `std::vector` (qui se copiaient à chaque affectation ofc) puis des `std::vector&` et ensuite des `std::shared_ptr<std::vector>` super hype pour finalement revenir à des pointeurs et `calloc` pour des questions de performance évidentes. 
+
+Comme disait Sam Waters : "Le profiling, c'est ma vie".
+
 ## Conclusion et quoi-est-après
 
 J'ai toujours en tête de comparer et de titiller les fonctions d'évaluation en MTT. J'ai maintenant une bibliothèque de calcul de l'ICM de qualité professionnelle, qui m'autorise des simulations de tournois pour un petit nombre de joueur. Ça peut être suffisant pour faire des tests qualitatifs sur quelques joueurs, mais j'ai envie de voir si je peux aller plus loin.
 
 Comment calculer efficacement l'ICM pour 50 joueurs ? Ce sera très probablement le sujet de mon prochain billet !
 
+[^optim]: Il-y-a pas mal d'écoles différentes sur ce sujet bien sûr, et cette question prend de plus en plus d'importance avec la montée en puissance de l'éco-conception. D'un côté on risque de produire du code plus complexe, moins maintenable et moins fiable en cherchant l'optimisation, ce qu'on traduit par l'injonction "early optimization is the root of all evil" qui nous somme de garder le code simple à moins qu'il ne soit constaté nécessaire de l'optimiser -, de l'autre on assiste facilement à un phénomène d'encrassement à mesure que le code grossit : si des opérations suboptimales sont disséminées partout, l'optimisation consiste alors à tout réécrire et on regrette de ne pas avoir anticipé. Comme disait Bouddha : "La voie du milieu c'est bien, enfin rarement en voiture quand même".
