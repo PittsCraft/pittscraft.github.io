@@ -18,7 +18,7 @@
 
     
     
-        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.5b34e19afb452f639cb07ac3b357889f5ed4d04a6e1434050889b1e7a6fdd4e1.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.bdb20127dac7af81aa50ee80ce1920bbd7cbad8fa15e0f4d789e1a025d5b3162.js"></script>
 
     
 
@@ -505,7 +505,7 @@ Duration 130ms for 18 players
 Duration 321ms for 19 players
 Duration 737ms for 20 players
 </code></pre><p>Vous aurez peut-être remarqué une optimisation supplémentaire : si le prix du rang concerné est nul on sort immédiatement. Sous l&rsquo;hypothèse fort raisonnable que les prix sont décroissants, les calculs subséquents auraient en effet un effet nul.
-<em>C&rsquo;n&rsquo;est peut-être qu&rsquo;un détail pour vous</em> mais c&rsquo;est loin d&rsquo;être anodin. On va ainsi réduire les combinaisons de joueurs à un classement uniquement pour les <code>k</code>classes payées, ce qui nous donne en complexité une combinaison potentiellement réduite à C<sup>k</sup><inf>n</inf> après application du cache.</p>
+<em>C&rsquo;n&rsquo;est peut-être qu&rsquo;un détail pour vous</em> mais c&rsquo;est loin d&rsquo;être anodin. On va ainsi réduire les combinaisons de joueurs à un classement uniquement pour les <code>k</code>classes payées, ce qui nous donne en complexité une combinaison potentiellement réduite à C<sup>k</sup><sub>n</sub> après application du cache.</p>
 <p>Les chiffres ci-dessus valent lorsqu&rsquo;aucun prix n&rsquo;est nul, voici l&rsquo;effet quand la moitié des places sont payées :</p>
 <pre><code>Duration 0ms for 2 players
 Duration 0ms for 3 players

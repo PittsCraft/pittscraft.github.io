@@ -321,7 +321,7 @@ Duration 737ms for 20 players
 ```
 
 Vous aurez peut-être remarqué une optimisation supplémentaire : si le prix du rang concerné est nul on sort immédiatement. Sous l'hypothèse fort raisonnable que les prix sont décroissants, les calculs subséquents auraient en effet un effet nul.
-*C'n'est peut-être qu'un détail pour vous* mais c'est loin d'être anodin. On va ainsi réduire les combinaisons de joueurs à un classement uniquement pour les `k`classes payées, ce qui nous donne en complexité une combinaison potentiellement réduite à C<sup>k</sup><inf>n</inf> après application du cache.
+*C'n'est peut-être qu'un détail pour vous* mais c'est loin d'être anodin. On va ainsi réduire les combinaisons de joueurs à un classement uniquement pour les `k`classes payées, ce qui nous donne en complexité une combinaison potentiellement réduite à C<sup>k</sup><sub>n</sub> après application du cache.
 
 Les chiffres ci-dessus valent lorsqu'aucun prix n'est nul, voici l'effet quand la moitié des places sont payées :
 
