@@ -231,7 +231,7 @@ void recursiveIcm(const double *stacks, const double *payouts,
                   long long usedPlayers, int rank,
                   int size, double factor, double stacksSum,
                   double *cacheValues, bool *cacheFlags) {
-    if (rank == size) {
+    if (rank == size || payouts[rank] == 0) {
         return;
     }
     // Point subResult to the cache entry
@@ -319,6 +319,37 @@ Duration 130ms for 18 players
 Duration 321ms for 19 players
 Duration 737ms for 20 players
 ```
+
+Vous aurez peut-être remarqué une optimisation supplémentaire : si le prix du rang concerné est nul on sort immédiatement. Sous l'hypothèse fort raisonnable que les prix sont décroissants, les calculs subséquents auraient en effet un effet nul.
+*C'n'est peut-être qu'un détail pour vous* mais c'est loin d'être anodin. On va ainsi réduire les combinaisons de joueurs à un classement uniquement pour les `k`classes payées, ce qui nous donne en complexité une combinaison potentiellement réduite à C<sup>k</sup><inf>n</inf> après application du cache.
+
+Les chiffres ci-dessus valent lorsqu'aucun prix n'est nul, voici l'effet quand la moitié des places sont payées :
+
+```
+Duration 0ms for 2 players
+Duration 0ms for 3 players
+Duration 0ms for 4 players
+Duration 0ms for 5 players
+Duration 0ms for 6 players
+Duration 0ms for 7 players
+Duration 0ms for 8 players
+Duration 0ms for 9 players
+Duration 0ms for 10 players
+Duration 0ms for 11 players
+Duration 0ms for 12 players
+Duration 1ms for 13 players
+Duration 1ms for 14 players
+Duration 4ms for 15 players
+Duration 9ms for 16 players
+Duration 17ms for 17 players
+Duration 47ms for 18 players
+Duration 90ms for 19 players
+Duration 276ms for 20 players
+```
+
+On a donc deux facteurs qui vont déterminer le temps d'exécution :
+- le nombre de joueurs
+- le nombre de places payées
 
 ## Chemin d'optimisation
 

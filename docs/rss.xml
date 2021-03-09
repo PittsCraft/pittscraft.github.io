@@ -21,7 +21,7 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Tue, 09 Mar 2021 09:58:33 &#43;0100</lastBuildDate>
+        <lastBuildDate>Tue, 09 Mar 2021 16:32:47 &#43;0100</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
@@ -200,7 +200,7 @@ Duration 25924ms for 12 players
                   &lt;span class=&#34;kt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;long&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;usedPlayers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;rank&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
                   &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;factor&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;stacksSum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
                   &lt;span class=&#34;kt&#34;&gt;double&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cacheValues&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cacheFlags&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rank&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rank&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;size&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;||&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;payouts&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rank&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
         &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
     &lt;span class=&#34;c1&#34;&gt;// Point subResult to the cache entry
@@ -283,7 +283,34 @@ Duration 51ms for 17 players
 Duration 130ms for 18 players
 Duration 321ms for 19 players
 Duration 737ms for 20 players
-&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;chemin-doptimisation&#34;&gt;Chemin d&amp;rsquo;optimisation&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Vous aurez peut-être remarqué une optimisation supplémentaire : si le prix du rang concerné est nul on sort immédiatement. Sous l&amp;rsquo;hypothèse fort raisonnable que les prix sont décroissants, les calculs subséquents auraient en effet un effet nul.
+&lt;em&gt;C&amp;rsquo;n&amp;rsquo;est peut-être qu&amp;rsquo;un détail pour vous&lt;/em&gt; mais c&amp;rsquo;est loin d&amp;rsquo;être anodin. On va ainsi réduire les combinaisons de joueurs à un classement uniquement pour les &lt;code&gt;k&lt;/code&gt;classes payées, ce qui nous donne en complexité une combinaison potentiellement réduite à C&lt;sup&gt;k&lt;/sup&gt;&lt;inf&gt;n&lt;/inf&gt; après application du cache.&lt;/p&gt;
+&lt;p&gt;Les chiffres ci-dessus valent lorsqu&amp;rsquo;aucun prix n&amp;rsquo;est nul, voici l&amp;rsquo;effet quand la moitié des places sont payées :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Duration 0ms for 2 players
+Duration 0ms for 3 players
+Duration 0ms for 4 players
+Duration 0ms for 5 players
+Duration 0ms for 6 players
+Duration 0ms for 7 players
+Duration 0ms for 8 players
+Duration 0ms for 9 players
+Duration 0ms for 10 players
+Duration 0ms for 11 players
+Duration 0ms for 12 players
+Duration 1ms for 13 players
+Duration 1ms for 14 players
+Duration 4ms for 15 players
+Duration 9ms for 16 players
+Duration 17ms for 17 players
+Duration 47ms for 18 players
+Duration 90ms for 19 players
+Duration 276ms for 20 players
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;On a donc deux facteurs qui vont déterminer le temps d&amp;rsquo;exécution :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;le nombre de joueurs&lt;/li&gt;
+&lt;li&gt;le nombre de places payées&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;chemin-doptimisation&#34;&gt;Chemin d&amp;rsquo;optimisation&lt;/h2&gt;
 &lt;p&gt;Je vous passe bien sûr le cheminement détaillé, car j&amp;rsquo;ai pris le temps d&amp;rsquo;appréhender tout ce que j&amp;rsquo;avais raté ou oublié en termes de gestion de mémoire et des bibliothèques standards en C++20. En bref, disons que je suis passé par des versions bien plus moderne et haut niveau de cet algorithme avec notamment une &lt;code&gt;std::map&lt;/code&gt; puis &lt;code&gt;std::unordered_map&lt;/code&gt; puis &lt;code&gt;robinhood::unordered_map&lt;/code&gt; pour le cache, des &lt;code&gt;std::vector&lt;/code&gt; (qui se copiaient à chaque affectation ofc) puis des &lt;code&gt;std::vector&amp;amp;&lt;/code&gt; et ensuite des &lt;code&gt;std::shared_ptr&amp;lt;std::vector&amp;gt;&lt;/code&gt; super hype pour finalement revenir à des pointeurs et &lt;code&gt;calloc&lt;/code&gt; pour des questions de performance évidentes.&lt;/p&gt;
 &lt;p&gt;Comme disait Sam Waters : &amp;ldquo;Le profiling, c&amp;rsquo;est ma vie&amp;rdquo;.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion-et-quoi-est-après&#34;&gt;Conclusion et quoi-est-après&lt;/h2&gt;
