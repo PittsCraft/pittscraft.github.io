@@ -1,0 +1,13 @@
+{{ define "main" }}
+    {{ partial "pages/post.html" . }}
+    <script type="text/javascript">
+      function redirect(){
+        window.location.replace("https://us02web.zoom.us/j/5359340784");
+      }
+      if(window.addEventListener) {
+          window.addEventListener('load', redirect, false);
+      } else {
+          window.attachEvent('onload', redirect); //IE
+      }
+      </script>
+{{ end }}
