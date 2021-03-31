@@ -1,6 +1,6 @@
 +++
 draft = false
-date = 2021-03-31T14:14:35+01:00
+date = 2021-03-31T08:14:35+01:00
 title = "Poker : MTT et ICM - Méthode de Monte-Carlo"
 description = "Un Monaco-Picon s'il vous plaît. En pinte."
 slug = "poker_mtt_icm_montecarlo"
