@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
     <title type="text">Pitt&#39;s Craft</title>
     <subtitle type="html">MemE is a powerful and highly customizable GoHugo theme for personal blogs.</subtitle>
-    <updated>2021-03-31T10:04:48&#43;02:00</updated>
+    <updated>2021-03-31T10:13:47&#43;02:00</updated>
     <id>https://pittscraft.com/</id>
     <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
     <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
@@ -18,8 +18,8 @@
     <generator uri="https://gohugo.io/" version="0.80.0">Hugo</generator>
         <entry>
             <title type="text">Poker : MTT et ICM - Méthode de Monte-Carlo</title>
-            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/poker_mtt_icm_montecarlo/" />
-            <id>https://pittscraft.com/posts/poker_mtt_icm_montecarlo/</id>
+            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/" />
+            <id>https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/</id>
             <updated>2021-03-31T08:14:35&#43;01:00</updated>
             <published>2021-03-31T08:14:35&#43;01:00</published>
             <author>
@@ -211,7 +211,7 @@
 &lt;h2 id=&#34;convergence&#34;&gt;Convergence&lt;/h2&gt;
 &lt;p&gt;On sait qu&amp;rsquo;on a une convergence en &lt;em&gt;O(1/sqrt(n))&lt;/em&gt; (&lt;em&gt;note : ajouter une extension LateX à mon site builder&lt;/em&gt;). Mais ça ne nous dit pas quand il faut arrêter l&amp;rsquo;échantillonnage !
 Par le passé j&amp;rsquo;utilisais de petits algos observant la variation sur des lots de puissances de deux d&amp;rsquo;échantillons, ce qui n&amp;rsquo;est pas fiable : on peut avoir une convergence très lente, et un fort ralentissement ne permet pas de conclure en une précision donnée. &amp;ldquo;En pratique, ça marche&amp;rdquo; oui, enfin peut-être, mais ce n&amp;rsquo;est pas forcément beaucoup plus dur d&amp;rsquo;implémenter des garanties statistiques sûres.&lt;/p&gt;
-&lt;p&gt;Après quelques recherches j&amp;rsquo;ai trouvé une méthode assez générique dans ce (vieux) papier&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_montecarlo/#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. Le calcul se base sur un plafond en dessous duquel la variance d&amp;rsquo;un échantillon satisfait une garantie statistique : avec une probabilité &lt;code&gt;α&lt;/code&gt;, la moyenne de l&amp;rsquo;échantillon est dans l&amp;rsquo;intervalle de confiance de taille &lt;code&gt;d&lt;/code&gt; autour de la moyenne à la limite.&lt;/p&gt;
+&lt;p&gt;Après quelques recherches j&amp;rsquo;ai trouvé une méthode assez générique dans ce (vieux) papier&lt;sup id=&#34;fnref:1&#34;&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/#fn:1&#34; class=&#34;footnote-ref&#34; role=&#34;doc-noteref&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;. Le calcul se base sur un plafond en dessous duquel la variance d&amp;rsquo;un échantillon satisfait une garantie statistique : avec une probabilité &lt;code&gt;α&lt;/code&gt;, la moyenne de l&amp;rsquo;échantillon est dans l&amp;rsquo;intervalle de confiance de taille &lt;code&gt;d&lt;/code&gt; autour de la moyenne à la limite.&lt;/p&gt;
 &lt;p&gt;J&amp;rsquo;ai donc réorganisé un peu mon code pour l&amp;rsquo;implémenter. Le coût du calcul étant assez élevé, il convient de ne pas l&amp;rsquo;appliquer à chaque étape de l&amp;rsquo;échantillonage, mais plutôt régulièrement, tous les 100 échantillons par exemple. De plus, j&amp;rsquo;ai extrait les définitions du RNG (pour un futur quasi-Monte-Carlo) et du tri (pour un futur tri partiel par palliers) histoire de pouvoir plus facilement implémenter d&amp;rsquo;autres versions de l&amp;rsquo;algorithme - &lt;em&gt;voir le code en fin d&amp;rsquo;article&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Un point important à considérer est que la variance d&amp;rsquo;un calcul d&amp;rsquo;ICM par la méthode de Monte-Carlo dépend fortement de la distribution des stacks des joueurs et de celle des prix. En effet, pour prendre un extrême, si tous les prix sont égaux la variance est simplement nulle. On va évidemment souhaiter éviter le coût de calcul de cette &lt;em&gt;stopping rule&lt;/em&gt; si on en opère en nombre, mais il faudra être prudent pour garder des garanties correctes. De plus, la taille &lt;code&gt;d&lt;/code&gt; de l&amp;rsquo;intervalle de confiance est liée linéairement aux prix. Si on distribue deux fois plus de prix aux joueurs, pour une même précision relative on devra multiplier &lt;code&gt;d&lt;/code&gt; par deux. L&amp;rsquo;idéal est alors d&amp;rsquo;exprimer &lt;code&gt;d&lt;/code&gt; en fonction d&amp;rsquo;une grandeur pertinente comme la somme des prix distribués et d&amp;rsquo;en tenir compte lors du traitement d&amp;rsquo;échantillons variés pour au moins connaître la précision des résultats calculés.&lt;/p&gt;
 &lt;p&gt;Si les échantillons sont assez homogènes, on pourra par exemple faire une petite tambouille comme calculer le nombre d&amp;rsquo;itérations nécessaires sur un petit ensemble de situations extraites du paquet à traiter, prendre le maximum et le multiplier par deux pour traiter tout le paquet (à vue de nez, &amp;ldquo;en pratique, ça marche&amp;rdquo;).&lt;/p&gt;
@@ -556,7 +556,7 @@ Par le passé j&amp;rsquo;utilisais de petits algos observant la variation sur d
 &lt;hr&gt;
 &lt;ol&gt;
 &lt;li id=&#34;fn:1&#34; role=&#34;doc-endnote&#34;&gt;
-&lt;p&gt;A Brief Survey of Stopping Rules in Monte Carlo Simulations, 1968, Gilman - &lt;a href=&#34;https://repository.lib.ncsu.edu/handle/1840.4/5244&#34;&gt;https://repository.lib.ncsu.edu/handle/1840.4/5244&lt;/a&gt; &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_montecarlo/#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A Brief Survey of Stopping Rules in Monte Carlo Simulations, 1968, Gilman - &lt;a href=&#34;https://repository.lib.ncsu.edu/handle/1840.4/5244&#34;&gt;https://repository.lib.ncsu.edu/handle/1840.4/5244&lt;/a&gt; &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/#fnref:1&#34; class=&#34;footnote-backref&#34; role=&#34;doc-backlink&#34;&gt;&amp;#x21a9;&amp;#xfe0e;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/section&gt;
