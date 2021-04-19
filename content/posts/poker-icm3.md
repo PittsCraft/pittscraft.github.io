@@ -184,7 +184,7 @@ vector<double> monteCarloIcm(const vector<double> &stacks, const vector<double> 
     for (int i = 0; i < nbPlayers; ++i) {
         stacksArray[i] = stacks[i];
         payoutsArray[i] = payouts[i];
-        resultsArray[i] = 0;s
+        resultsArray[i] = 0;
     }
     monteCarloIcm(stacksArray, payoutsArray, nbPlayers, trials, relevantRanksCount, resultsArray);
     for (int i = 0; i < nbPlayers; i++) {
