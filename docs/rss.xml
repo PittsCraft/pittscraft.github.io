@@ -9,7 +9,7 @@
     <channel>
         <title>Pitt&#39;s Craft</title>
         <link>https://pittscraft.com/</link>
-        <description>MemE is a powerful and highly customizable GoHugo theme for personal blogs.</description>
+        <description>Blog professionnel d&#39;un algorithmicien et architecte logiciel indépendant.</description>
         <generator>Hugo 0.80.0 https://gohugo.io/</generator>
         
             <language>fr</language>
@@ -21,7 +21,7 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Wed, 31 Mar 2021 10:18:45 &#43;0200</lastBuildDate>
+        <lastBuildDate>Mon, 19 Apr 2021 16:20:06 &#43;0200</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
