@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+    <meta charset="UTF-8" />
+
+    <meta name="generator" content="Hugo 0.80.0" /><meta name="theme-color" content="#fff" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+    <title>Poker : MTT et ICM - Perf Tuning avec du Deep Learning | Pitt&#39;s Craft</title>
+
+    <link rel="stylesheet" href="/css/meme.min.f9894a4a4e2059037165836b72caba3584b7eddf447230427071d466c3bdd7ab.css"/>
+
+    
+    
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.2e8cecdb28365acb51546c474e04cc3d1566d483eb8370d97ec4daebeaec1398.js"></script>
+
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM&#43;Plex&#43;Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source&#43;Code&#43;Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap" media="print" onload="this.media='all'" />
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM&#43;Plex&#43;Serif:ital,wght@0,400;0,500;0,700;1,400;1,700&amp;family=Source&#43;Code&#43;Pro:ital,wght@0,400;0,700;1,400;1,700&amp;family=Comfortaa:wght@700&amp;display=swap" /></noscript>
+
+    <meta name="author" content="Pitt" /><meta name="description" content="Jusqu&#39;au-boutisme de l&#39;extrême qui envoie du pâté." />
+
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2a6df4" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Pitt&#39;s Craft" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Pitt&#39;s Craft" />
+    <meta name="msapplication-starturl" content="../../" />
+    <meta name="msapplication-TileColor" content="#fff" />
+    <meta name="msapplication-TileImage" content="../../icons/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    
+    
+
+    
+    <link rel="canonical" href="https://pittscraft.com/posts/poker_mtt_icm_deep_learning/" />
+    
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "datePublished": "2021-04-21T08:14:35+01:00",
+        "dateModified": "2021-04-21T08:14:35+01:00",
+        "url": "https://pittscraft.com/posts/poker_mtt_icm_deep_learning/",
+        "headline": "Poker : MTT et ICM - Perf Tuning avec du Deep Learning",
+        "description": "Jusqu'au-boutisme de l'extrême qui envoie du pâté.",
+        "inLanguage" : "fr",
+        "articleSection": "posts",
+        "wordCount":  2162 ,
+        "image": ["https://pittscraft.com/images/poker-icm4/henaff.jpeg","https://pittscraft.com/images/poker-icm4/bezos.gif","https://pittscraft.com/images/poker-icm4/prizepool-winamax.png","https://pittscraft.com/images/poker-icm4/model-rmse.jpeg"],
+        "author": {
+            "@type": "Person",
+            "email": "pitt@pittscraft.com",
+            "image": "https://pittscraft.com/icons/apple-touch-icon.png",
+            "url": "https://pittscraft.com/about/",
+            "name": "Pitt"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Pitt's Craft",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://pittscraft.com/images/apple-touch-icon.png"
+            },
+            "url": "https://pittscraft.com/"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebSite",
+            "@id": "https://pittscraft.com/"
+        }
+    }
+</script>
+
+    
+
+<meta name="twitter:card" content="summary_large_image" />
+
+
+<meta name="twitter:site" content="@Pitt51279043" />
+<meta name="twitter:creator" content="@Pitt51279043" />
+
+    
+
+
+
+<meta property="og:title" content="Poker : MTT et ICM - Perf Tuning avec du Deep Learning" />
+<meta property="og:description" content="Jusqu&#39;au-boutisme de l&#39;extrême qui envoie du pâté." />
+<meta property="og:url" content="https://pittscraft.com/posts/poker_mtt_icm_deep_learning/" />
+<meta property="og:site_name" content="Pitt&#39;s Craft" />
+<meta property="og:locale" content="fr" /><meta property="og:image" content="https://pittscraft.com/images/poker-icm4/henaff.jpeg" />
+<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2021-04-21T08:14:35&#43;01:00" />
+    <meta property="article:modified_time" content="2021-04-21T08:14:35&#43;01:00" />
+    
+    <meta property="article:section" content="posts" />
+
+
+
+    
+</head>
+
+    <body>
+        <div class="container">
+            
+    <header class="header">
+        
+            <div class="header-wrapper">
+                <div class="header-inner single">
+                    
+    <div class="site-brand">
+        
+            <a href="/" class="brand">Pitt&#39;s Craft</a>
+        
+    </div>
+
+                    <nav class="nav">
+    <ul class="menu" id="menu">
+        
+            
+        
+        
+        
+        
+            
+                <li class="menu-item"><a href="/posts/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon archive"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class="menu-item-name">Posts</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/categories/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon th"><path d="M149.333 56v80c0 13.255-10.745 24-24 24H24c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24h101.333c13.255 0 24 10.745 24 24zm181.334 240v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm32-240v80c0 13.255 10.745 24 24 24H488c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24zm-32 80V56c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.256 0 24.001-10.745 24.001-24zm-205.334 56H24c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24zM0 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H24c-13.255 0-24 10.745-24 24zm386.667-56H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zm0 160H488c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H386.667c-13.255 0-24 10.745-24 24v80c0 13.255 10.745 24 24 24zM181.333 376v80c0 13.255 10.745 24 24 24h101.333c13.255 0 24-10.745 24-24v-80c0-13.255-10.745-24-24-24H205.333c-13.255 0-24 10.745-24 24z"/></svg><span class="menu-item-name">Categories</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/tags/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon tags"><path d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"/></svg><span class="menu-item-name">Tags</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href="/about/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon user-circle"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class="menu-item-name">About</span></a>
+                </li>
+            
+        
+            
+                <li class="menu-item"><a href=""></a>
+                </li>
+            
+        
+            
+                
+            
+        
+            
+                <li class="menu-item search-item">
+                        <form id="search" class="search" role="search">
+    <label for="search-input"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon search-icon"><path d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></label>
+    <input type="search" id="search-input" class="search-input">
+</form>
+
+<template id="search-result" hidden>
+    <article class="content post">
+        <h2 class="post-title"><a class="summary-title-link"></a></h2>
+        <summary class="summary"></summary>
+        <div class="read-more-container">
+            <a class="read-more-link">Lire Plus »</a>
+        </div>
+    </article>
+</template>
+
+                    </li>
+                
+            
+        
+    </ul>
+</nav>
+
+                    
+                </div>
+            </div>
+            
+    <input type="checkbox" id="nav-toggle" aria-hidden="true" />
+    <label for="nav-toggle" class="nav-toggle"></label>
+    <label for="nav-toggle" class="nav-curtain"></label>
+
+
+        
+    </header>
+
+
+
+
+            
+            
+    <main class="main single" id="main">
+    <div class="main-inner">
+
+        
+
+        <article class="content post h-entry" data-small-caps="true" data-align="default" data-type="posts" data-toc-num="true">
+
+            <h1 class="post-title p-name">Poker : MTT et ICM - Perf Tuning avec du Deep Learning</h1>
+
+            
+
+            
+                <div class="post-description p-summary">Jusqu&rsquo;au-boutisme de l&rsquo;extrême qui envoie du pâté.</div>
+                
+            
+
+            
+                
+
+<div class="post-meta">
+    
+        
+        <time datetime="2021-04-21T08:14:35&#43;01:00" class="post-meta-item published dt-published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"/></svg>&nbsp;21.4.2021</time>
+    
+    
+        
+        <time datetime="2021-04-21T08:14:35&#43;01:00" class="post-meta-item modified dt-updated"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M400 64h-48V12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v52H160V12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v52H48C21.49 64 0 85.49 0 112v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 400H54a6 6 0 0 1-6-6V160h352v298a6 6 0 0 1-6 6zm-52.849-200.65L198.842 404.519c-4.705 4.667-12.303 4.637-16.971-.068l-75.091-75.699c-4.667-4.705-4.637-12.303.068-16.971l22.719-22.536c4.705-4.667 12.303-4.637 16.97.069l44.104 44.461 111.072-110.181c4.705-4.667 12.303-4.637 16.971.068l22.536 22.718c4.667 4.705 4.636 12.303-.069 16.97z"/></svg>&nbsp;21.4.2021</time>
+    
+    
+    
+        
+        
+        
+            
+                <span class="post-meta-item category"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>&nbsp;<a href="/categories/game-theory/" class="category-link p-category">Game Theory</a></span>
+            
+        
+    
+    
+        
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;2162</span>
+    
+    
+        
+        <span class="post-meta-item reading-time"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm61.8-104.4l-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;11&nbsp;min.</span>
+    
+    
+    
+</div>
+
+            
+
+            <div class="post-body e-content">
+              <p><em>Résumé des épisodes précédents:</em></p>
+<ul>
+<li>En théorie des jeux, <a href="https://pittscraft.com/posts/poker_mtt_icm_question/" target="_blank" rel="noopener">les fonctions d&rsquo;évaluation</a> permettent d&rsquo;évaluer des situations, de les comparer, et donc de faire des choix renseignés</li>
+<li>l&rsquo;Independent Chip Model (ICM) est la fonction d&rsquo;évaluation de référence pour les tournois de poker, et on cherche à trouver mieux, notamment pour un grand nombre de joueurs</li>
+<li>l&rsquo;ICM est long à calculer pour un grand nombre de joueurs. <a href="https://pittscraft.com/posts/poker_mtt_icm_calcul/" target="_blank" rel="noopener">Après pas mal d&rsquo;optimisations</a>, on a des temps humainement raisonnables pour une vingtaine de joueurs payés maximum. Si on veut utiliser l&rsquo;ICM de manière intensive comme dans une simulation de tournoi, il faudra viser plutôt autour de dix joueurs payés.</li>
+<li><a href="https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/" target="_blank" rel="noopener">avec la méthode de Monte-Carlo</a>, on s&rsquo;en sort avec des temps très raisonnables pour une cinquantaine de joueurs au sacrifice de l&rsquo;exactitude du calcul mais avec des garanties statistiques.</li>
+</ul>
+<p style="text-indent:0"><span class="drop-cap">R</span>appelons-nous une des conclusion du dernier épisode :</p>
+<blockquote>
+<p>(&hellip;) le calcul prend <code>27ms</code> pour une moyenne sur 15500 échantillons. C&rsquo;est très raisonnable en soi, mais si j&rsquo;envisage de simuler quelques milliers de tournois comportant des milliers de mains elles-mêmes incluant plusieurs calculs d&rsquo;ICM, ce ne sera pas suffisant. Damned.</p>
+</blockquote>
+<p>Du coup©™ peut-on obtenir des valeurs tout aussi satisfaisantes mais beaucoup plus rapidement ?</p>
+<h2 id="neural-networksdeepmachine-learning-artificial-intelligence-motherfr"><a href="#neural-networksdeepmachine-learning-artificial-intelligence-motherfr" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Neural-Networks—Deep—Machine-Learning-Artificial-Intelligence-MotherF****r</h2>
+<p>Quelques définitions au doigt mouillé :</p>
+<ul>
+<li>le machine learning c&rsquo;est l&rsquo;approche pour laquelle la machine n&rsquo;a pas été programmée pour résoudre un problème explicitement (ce n&rsquo;est donc pas une heuristique). Elle <em>apprend</em> à le résoudre.</li>
+<li>les réseaux de neurones sont une technique <a href="http://www.oya.fr/?post/2015/01/16/74-antique-seconde-edition" target="_blank" rel="noopener">antique</a> (ils datent de 1943) qui convient particulièrement bien au machine learning. On n&rsquo;a juste pas pu les exploiter pleinement jusqu&rsquo;à récemment, lorsque les machines ont commencer à envoyer suffisamment de pâté (le fameux point <em>Pâté Hénaff</em> pour nos amis franglophones).</li>
+</ul>
+<p><img src="/images/poker-icm4/henaff.jpeg" alt="When Hénaff is enough">
+<em><p style="text-align: center;">Une minute de silence pour cette vanne, merci.</p></em></p>
+<ul>
+<li>les réseaux de neurones ont une couche de neurones d&rsquo;entrée qui acceptent un signal (des données) et une couche de neurones de sortie qui donne un résultat associé à ce signal. Entre les deux, on peut avoir plusieurs autres couches de neurones, auquel cas le réseau devient profond. Et on commence à parler de deep learning. Ce que permet le deep learning c&rsquo;est surtout d&rsquo;extraire des caractéristiques des données d&rsquo;entrée brutes grâce au seul bourrinage d&rsquo;un nombre gigantesque de données, au lieu d&rsquo;essayer de traiter les données en amont pour les rendres assimilables par un réseau de neurones plus modeste, et ce n&rsquo;est pas rien.</li>
+</ul>
+<p>Tout ceci est une sous-partie du domaine de l&rsquo;intelligence artificielle qui consiste à coder disons&hellip; des trucs un peu compliqués. Ici on se fiche un peu de ces distinctions, on va utiliser un réseau de neurones pour faire un calcul qui comprend des additions et des multiplications, et non pas des trucs révolutionnaires qui changent la société comme <a href="https://www.youtube.com/watch?v=-DysigzGQvU" target="_blank" rel="noopener">faire chanter nos dictateurs favoris</a>.</p>
+<h2 id="objectif-et-paramètres"><a href="#objectif-et-paramètres" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Objectif et paramètres</h2>
+<p>Depuis la dernière fois, on sait générer des valeurs d&rsquo;ICM pour une cinquantaine de joueurs avec une précision et une probabilité abitraires. Cependant s&rsquo;assurer de cette précision probable a un coût. Comme je le proposais précédemment, on peut simplement observer le nombre de tirages nécessaires pour l&rsquo;atteindre sur pas mal de cas, prendre le maximum, et on ne sera pas bien loin de la garantie initiale pour des <em>valeurs similaires</em>.</p>
+<p>On peut donc se dédouaner des checks coûteux de convergence, mais ce qu&rsquo;on voudrait vraiment pour le solstice c&rsquo;est un temps de calcul bien plus faible. Genre maximum une milliseconde.</p>
+<p>Alors pour ça on va fixer quelques paramètres, parce que si je m&rsquo;intéresse à 10, 50 ou 1000 joueurs c&rsquo;est pas le même topo. De même, si seul le premier du classement est payé ou si la distribution des prix est exponentielle, c&rsquo;est pas bien pareil. Et enfin si tous les joueurs ont le même stack ça diffère franchement de la situation où on a quelques Bezos et des dizaines d&rsquo;ultra-pauvres.</p>
+<p><img src="/images/poker-icm4/bezos.gif" alt="Jeffy">
+<em><p style="text-align: center;">Me, showing off with my monster stack on the final table.</p></em></p>
+<p>Je vais rester sur <strong>50 joueurs</strong> maximum parce que ça représente quelque chose pour lequel le calcul ICM classique est incapable de finir dans un temps raisonnable, et Monte-Carlo a du mal à être super rapide mais peut quand même me fournir des valeurs. Pour les prix (le prizepool, les payouts), on va copier sur un tournoi d&rsquo;une cinquantaine de joueurs que j&rsquo;ai trouvé sur Winamax au pif. Car oui, on va <strong>fixer le prizepool</strong>, je ne vois pas pourquoi on se mettrait des bâtons dans les roues, puisqu&rsquo;on va par contre faire <strong>varier à fond la distribution des stacks</strong>. L&rsquo;idée est de correspondre au cas d&rsquo;usage pour lequel on fait tourner plein de simulations de tournoi sur une configuration donnée : 50 joueurs et prizepool déterminé.</p>
+<p><img src="/images/poker-icm4/prizepool-winamax.png" alt="Prizepool Winamax pour un tournoi d&rsquo;une cinquantaine de joueurs"></p>
+<h2 id="étape-1--générer-les-données"><a href="#étape-1--générer-les-données" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Étape #1 : Générer les données</h2>
+<p>Pour entraîner mon réseau je vais avoir besoin de couples <code>(input, output) = (distribution de stacks, icm)</code>. Je sais calculer l&rsquo;ICM, j&rsquo;ai donc juste besoin de listes de stacks variées. Comme je vais avoir du mal à extraire ces données de leurs milieux naturels (les plateformes de poker en ligne), je vais les générer en mimant les processus de mère Nature, c&rsquo;est à dire en organisant des petits simili-tournois. Ca tombe bien, j&rsquo;en aurai besoin plus tard pour évaluer des concurrents à l&rsquo;ICM !</p>
+<p>La conception de ces tournois est un large sujet, mais ce qui va compter ici c&rsquo;est surtout de générer une variété de situations assez grande. J&rsquo;ai donc pris un petit test avec des joueurs omniscients que j&rsquo;ai codé et dont on va ignorer les défauts pour le moment :</p>
+<ul>
+<li>pour chaque main on va tirer un certain nombre de couples de joueurs qui vont s&rsquo;affronter</li>
+<li>à chaque affrontement, une équité va être tirée qui va donner la probabilité que le premier joueur gagne au showdown (si les joueurs payent les relances des adversaires)</li>
+<li>les jeu est un simple push/call/fold : le premier joueur peut se coucher et perd sa blinde, ou relancer à tapis. S&rsquo;il relance, le second joueur peut suivre et aller au showdown ou se coucher et perdre sa blinde.</li>
+<li>les joueurs vont jouer en connaissance de leur équité. Le second joueur va d&rsquo;abord décider s&rsquo;il suivra au cas où le premier joueur relance, et le premier joueur sachant tout ça (son équité et la future décision du second joueur car il est omniscient), va décider de relancer ou pas.</li>
+<li>pour estimer les situations futures les joueurs se servent de fonctions d&rsquo;EV qui pourraient être l&rsquo;ICM mais seront en l&rsquo;occurence une estimation proportionnelle aux jetons (Chips EV)</li>
+</ul>
+<p>On fait donc prendre leurs décisions à tous les couples de joueurs en même temps, puis on résoud en faisant les tirages aléatoires nécessaires pour les affrontements et redistribuant les jetons selon les issues de toutes les mains.</p>
+<p>On va insérer une sonde au niveau de l&rsquo;évaluation d&rsquo;EV pour répertorier toutes les situations qui sont évaluées dans un bon vieux <code>Set[Tuple]</code> histoire de ne pas avoir de doublons, et hop on peut jouer des tournois pour générer des distributions de stacks crédibles.</p>
+<p>Aujourd&rsquo;hui je ne vous colle pas le code : on est prooches de la fin de cette petite épopée, et je mettrai simplement mon code à disposition sur Github une fois que tout sera fini.</p>
+<h2 id="étape-2--calculer-licm"><a href="#étape-2--calculer-licm" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Étape #2 : Calculer l&rsquo;ICM</h2>
+<p>On a joué autant de simili-tournois que nécessaire pour avoir assez (N) de situations différentes, et nous allons maintenant calculer l&rsquo;ICM de chaque :</p>
+<ul>
+<li>prenons en échantillon toutes les situations générées par un tournoi supplémentaire</li>
+<li>observons la convergence des caculs d&rsquo;ICM méthode Monte-Carlo pour récupérer le nombre de tirages nécessaires à une bonne précision probable pour chaque situation</li>
+<li>prenons le maximum de ces nombres, ce qui est bien pessimiste</li>
+<li>pour toutes les N situations générées précédemment, calculons l&rsquo;ICM avec ce nombre de tirages</li>
+</ul>
+<p>Grâce à notre pessimisme, on ne doit pas s&rsquo;éloigner beaucoup (en fréquence et en distance) des garanties statistiques de notre échantillon et on va prendre le raccourci de considérer qu&rsquo;on a les mêmes garanties.</p>
+<h2 id="étape-3--définition-du-nn-neural-network"><a href="#étape-3--définition-du-nn-neural-network" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Étape #3 : Définition du NN (Neural Network)</h2>
+<p>Comment construit-on un NN ? À tâtons. Sisi. Enfin on peut quand même trouver de bons conseils pour orienter ses tâtonnements de manière pertinente. À ce sujet et après avoir bien compris de quoi il retourne, je ne peux que vous conseiller <a href="https://machinelearningmastery.com/" target="_blank" rel="noopener">le blog de Jason Brownlee</a> qui couvre énormément de cas et de questions que les data scientists se posent en pratique.</p>
+<p>Pour le détail, on va normaliser en peu nos données :</p>
+<ul>
+<li>en input on va considérer uniquement des stacks triés par ordre décroissants (on a fait ça au moment même de la génération des stacks et avant de calculer l&rsquo;ICM) et divisés par la somme des stacks</li>
+<li>en output on va diviser l&rsquo;ICM par la somme des payouts (qui est la somme des valeurs d&rsquo;ICM)</li>
+</ul>
+<p>Si vous vous rappelez du calcul de l&rsquo;ICM, on est dans des combinaisons de multiplications et de sommes et les couches de neurones denses - chaque neurone est connecté à chaque neurone de la couche suivante - se prêtent particulièrement bien à ce ce genre de calculs. Après quelques essais, j&rsquo;ai trouvé que cette forme de réseau marchait pas mal :</p>
+<pre><code>         [Input layer] : nb_players neurons (stacks)
+        | | | | | | | | | | | | | | | | | | | | | |
+         [Hidden layer 1] : 3 * nb_players neurons
+        | | | | | | | | | | | | | | | | | | | | | |
+         [Hidden layer 2] : 3 * nb_players neurons
+        | | | | | | | | | | | | | | | | | | | | | |
+         [Output layer] : nb_players neurons (ICM)
+</code></pre><p>On utilise de traditionnelles fonctions d&rsquo;activation <code>relu</code>, une fonction de perte <code>mean_squared_error</code> et un optimizer RMS ce qui correspond bien à un problème de régression.</p>
+<p>Ça nous donne pour du Keras :</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python">    <span class="n">nn</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_players</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_players</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_players</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_players</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">nn</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+        <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mean_squared_error&#39;</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">RMSprop</span><span class="p">(),</span>
+        <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">RootMeanSquaredError</span><span class="p">()]</span>
+    <span class="p">)</span>
+</code></pre></div><h2 id="entrainement-et-résultats"><a href="#entrainement-et-résultats" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Entrainement et résultats</h2>
+<ul>
+<li>9k situations d&rsquo;entraînement</li>
+<li>1k situations de validation</li>
+<li>1k situations de test</li>
+<li>une configuration de tournoi avec
+<ul>
+<li>50 joueurs</li>
+<li>100 blindes de stack initial</li>
+<li>les blindes qui sont multipliées toutes les 10 mains par 1,3</li>
+<li>30% des joueurs qui participent à chaque main (comme sur une table de 6 joueurs en gros)</li>
+</ul>
+</li>
+<li>le prizepool : <code>4650. 3450. 2325. 1650. 1200.  825.  600 0 0 0 ...</code></li>
+<li>donc <strong>un buy-in de 294</strong> milliards de dollars (pourquoi pas)</li>
+<li>une précision pour les évaluation ICM en Monte-Carlo de un demi buy-in avec 90% de confiance</li>
+</ul>
+<p>J&rsquo;obtiens un nombre de tirages nécessaires pour chaque évaluation ICM de <strong>3100</strong>.</p>
+<p>Je fais tourner mes calculs en multithread pendant une minute environ pour une moyenne de <strong>6ms</strong> par évaluation ICM (mais le multithread n&rsquo;est pas facilement réalisable au sein d&rsquo;un tournoi, on est plutôt autour de 15ms en monothread).</p>
+<p>Maintenant que j&rsquo;ai toutes mes situations et les estimations ICM associées, j&rsquo;entraîne mon NN pour 10 epochs avec un batch-size de 30 - pour ceux à qui ça parle - ce qui me prend environ 5 secondes.</p>
+<p>Un petit plot pour la convergence du NN :</p>
+<p><img src="/images/poker-icm4/model-rmse.jpeg" alt="NN training plot"></p>
+<p>et sur les tests finaux une RMSE (root means squared error) moyenne de 100.62 (milliards de dollars).</p>
+<p>Ce que ça veut dire, c&rsquo;est qu&rsquo;en une minute j&rsquo;ai entraîné un réseau de neurones dont les erreurs par rapport aux évaluations de Monte-Carlo sont de l&rsquo;ordre de la précision de ces évaluations. Et ça, c&rsquo;est déjà pas mal !</p>
+<p>Mais l&rsquo;objectif était d&rsquo;aller plus vite que les quelques millisecondes de calculs de Monte-Carlo, et ça se confirme en effet.</p>
+<p>Temps de calcul d&rsquo;une évaluation ICM en utilisant le modèle Keras : <strong>19 microsecondes</strong> ! Objectif atteint : on a divisé par <strong>316</strong> le temps de calcul par rapport à l&rsquo;évaluation de Monte-Carlo.</p>
+<p>Allez, une dernière optimisation pour la route : Keras étant utilisé tant pour l&rsquo;entraînement tant que l&rsquo;évaluation, il est possible de dégraisser un peu tout ça en utilisant TensorFlow lite (<a href="https://micwurm.medium.com/using-tensorflow-lite-to-speed-up-predictions-a3954886eb98" target="_blank" rel="noopener">un bon guide ici</a>). Et dans ce cas, on obtient moins de <strong>10 microsecondes</strong> par évaluation.</p>
+<h2 id="concluons"><a href="#concluons" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Concluons</h2>
+<p>Je vous ai caché quelques technicités, notamment l&rsquo;exposition des fonctions de calcul d&rsquo;ICM codées en C++ à du code Python grâce à Boost qui fut une aventure déplaisante mais relativement efficace. Ceci-dit, voilà, on peut calculer l&rsquo;ICM avec une bonne précision en quelques micro-secondes moyennant une étape préliminaire d&rsquo;environ une minute. On peut augmenter cette précision ce qui gonflera le temps de préparation, mais si on travaille à configuration de tournoi fixe et pour un nombre important de tournois, on passera très certainement énormément moins de temps au total.</p>
+<p>La suite ? On va enfin faire des simulations marrantes avec de l&rsquo;ICM et tenter de comprendre quels sont son domaine d&rsquo;application, ses limites, et si on a le temps on cherchera à créer de meilleures évaluations.</p>
+<p>Malgré les milliards de mails par secondes que je reçois concernant ces expériences, n&rsquo;hésitez pas à m&rsquo;écrire pour me dire ce que vous en pensez ou me poser toute question - ou me proposer une mission autour de l&rsquo;IA ;)</p>
+
+            </div>
+
+            
+    
+    
+        <ul class="post-copyright">
+            <li class="copyright-item author"><span class="copyright-item-text">Auteur</span> : <a href="https://pittscraft.com/about/" class="p-author h-card" target="_blank" rel="noopener">Pitt</a></li>
+            
+                
+                
+                
+                
+                <li class="copyright-item link"><span class="copyright-item-text">Lien</span> : <a href="/posts/poker_mtt_icm_deep_learning/" target="_blank" rel="noopener">https://pittscraft.com/posts/poker_mtt_icm_deep_learning/</a></li>
+            
+            
+        </ul>
+    
+
+
+
+        </article>
+
+        
+
+        
+    <div class="updated-badge-container">
+        <span title="Updated @ 2021-04-21 08:14:35 &#43;0100" style="cursor:help">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20" class="updated-badge"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="130" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path class="updated-badge-left" d="M0 0h55v20H0z"/><path class="updated-badge-right" d="M55 0h75v20H55z"/><path fill="url(#b)" d="M0 0h130v20H0z"/></g><g fill="#fff" text-anchor="middle" font-size="110"><text x="285" y="150" fill="#010101" fill-opacity=".3" textLength="450" transform="scale(.1)">updated</text><text x="285" y="140" textLength="450" transform="scale(.1)">updated</text><text x="915" y="150" fill="#010101" fill-opacity=".3" textLength="650" transform="scale(.1)">2021-04-21</text><text x="915" y="140" textLength="650" transform="scale(.1)">2021-04-21</text></g></svg>
+        </span></div>
+
+
+
+        
+
+
+        <div class="post-share">
+
+        
+
+        <div class="share-items">
+
+            
+                <div class="share-item twitter">
+                    
+                    <a href="https://twitter.com/share?url=https://pittscraft.com/posts/poker_mtt_icm_deep_learning/&amp;text=Poker%20:%20MTT%20et%20ICM%20-%20Perf%20Tuning%20avec%20du%20Deep%20Learning&amp;hashtags=Poker,AI,ICM,MTT,GameTheory,ML,DeepLearning,MonteCarlo,&amp;via=Pitt51279043" title="Partage sur Twitter" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon twitter-icon"><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item facebook">
+                    
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://pittscraft.com/posts/poker_mtt_icm_deep_learning/&amp;hashtag=%23Poker" title="Partage sur Facebook" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon facebook-icon"><path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item linkedin">
+                    
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://pittscraft.com/posts/poker_mtt_icm_deep_learning/&amp;title=Poker%20:%20MTT%20et%20ICM%20-%20Perf%20Tuning%20avec%20du%20Deep%20Learning&amp;summary=Jusqu%27au-boutisme%20de%20l%27extr%c3%aame%20qui%20envoie%20du%20p%c3%a2t%c3%a9.&amp;source=Pitt%27s%20Craft" title="Partage sur LinkedIn" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon linkedin-icon"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg></a>
+                </div>
+            
+
+            
+                <div class="share-item telegram">
+                    
+                    <a href="https://t.me/share/url?url=https://pittscraft.com/posts/poker_mtt_icm_deep_learning/&amp;text=Poker%20:%20MTT%20et%20ICM%20-%20Perf%20Tuning%20avec%20du%20Deep%20Learning" title="Partage sur Telegram" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon telegram-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg></a>
+                </div>
+            
+
+            
+
+            
+
+            
+
+            
+
+            
+
+        </div>
+
+    </div>
+
+
+
+
+        
+    
+    
+        <div class="related-posts">
+            <h2 class="related-title">Lire aussi : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon related-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"/></svg></h2>
+            <ul class="related-list">
+                
+                    <li class="related-item">
+                        <a href="/posts/poker_mtt_icm_monte_carlo/" class="related-link">Poker : MTT et ICM - Méthode de Monte-Carlo</a>
+                    </li>
+                
+                    <li class="related-item">
+                        <a href="/posts/poker_mtt_icm_calcul/" class="related-link">Poker : MTT et ICM - Le Calcul Brutal</a>
+                    </li>
+                
+                    <li class="related-item">
+                        <a href="/posts/poker_mtt_icm_question/" class="related-link">Poker : MTT et ICM - La Question</a>
+                    </li>
+                
+            </ul>
+        </div>
+    
+
+
+
+        
+    
+        <div class="post-tags">
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/poker/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>Poker</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/ai/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>AI</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/icm/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ICM</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/mtt/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>MTT</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/game-theory/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>Game Theory</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/ml/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>ML</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/deep-learning/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>Deep Learning</a>
+                
+            
+                
+                
+                
+                
+                    
+                    <a href="/tags/monte-carlo/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>Monte Carlo</a>
+                
+            
+        </div>
+    
+
+
+
+        
+
+
+        
+
+
+        
+    
+        
+        
+    
+    
+    
+    
+        <ul class="post-nav">
+            
+            
+                <li class="post-nav-next">
+                    <a href="/posts/poker_mtt_icm_monte_carlo/" rel="next">Poker : MTT et ICM - Méthode de Monte-Carlo &gt;</a>
+                </li>
+            
+        </ul>
+    
+
+
+
+        
+
+
+    </div>
+</main>
+
+
+            
+    <div id="back-to-top" class="back-to-top">
+        <a href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon arrow-up"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a>
+    </div>
+
+
+            
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            <div class="site-info">©&nbsp;2020–2021&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
+
+            
+    
+        <ul class="socials"><li class="socials-item">
+                    <a href="/rss.xml" target="_blank" rel="external noopener" title="RSS"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon social-icon"><path d="M19.199 24C19.199 13.467 10.533 4.8 0 4.8V0c13.165 0 24 10.835 24 24h-4.801zM3.291 17.415c1.814 0 3.293 1.479 3.293 3.295 0 1.813-1.485 3.29-3.301 3.29C1.47 24 0 22.526 0 20.71s1.475-3.294 3.291-3.295zM15.909 24h-4.665c0-6.169-5.075-11.245-11.244-11.245V8.09c8.727 0 15.909 7.184 15.909 15.91z"/></svg></a>
+                </li><li class="socials-item">
+                    <a href="mailto:pitt@pittscraft.com" target="_blank" rel="external noopener" title="Email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon social-icon"><path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm0 48v40.805c-22.422 18.259-58.168 46.651-134.587 106.49-16.841 13.247-50.201 45.072-73.413 44.701-23.208.375-56.579-31.459-73.413-44.701C106.18 199.465 70.425 171.067 48 152.805V112h416zM48 400V214.398c22.914 18.251 55.409 43.862 104.938 82.646 21.857 17.205 60.134 55.186 103.062 54.955 42.717.231 80.509-37.199 103.053-54.947 49.528-38.783 82.032-64.401 104.947-82.653V400H48z"/></svg></a>
+                </li><li class="socials-item">
+                    <a href="https://github.com/PittsCraft" target="_blank" rel="external noopener" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon social-icon"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+                </li></ul>
+    
+
+
+
+            
+        </div>
+    </footer>
+
+
+        </div>
+        
+
+        
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/medium-zoom@latest/dist/medium-zoom.min.js"></script>
+
+<script>
+    mediumZoom(document.querySelectorAll('div.post-body img'), {
+        background: 'hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.95)'
+    })
+</script>
+
+
+
+
+
+
+
+
+
+    </body>
+</html>
