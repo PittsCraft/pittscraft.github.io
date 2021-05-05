@@ -1,7 +1,7 @@
 +++
 draft = false
 date = 2021-04-21T08:14:35+01:00
-title = "Poker : MTT et ICM - Perf Tuning avec du Deep Learning"
+title = "Poker : MTT et ICM #4 - Perf Tuning avec du Deep Learning"
 description = "Jusqu'au-boutisme de l'extrême qui envoie du pâté."
 slug = "poker_mtt_icm_deep_learning"
 authors = ["Pitt"]
@@ -11,17 +11,16 @@ externalLink = ""
 series = ["Beating ICM"]
 +++
 
-*Résumé des épisodes précédents:*
-- En théorie des jeux, [les fonctions d'évaluation]({{< ref "/poker-icm1" >}}) permettent d'évaluer des situations, de les comparer, et donc de faire des choix renseignés
-- l'Independent Chip Model (ICM) est la fonction d'évaluation de référence pour les tournois de poker, et on cherche à trouver mieux, notamment pour un grand nombre de joueurs
-- l'ICM est long à calculer pour un grand nombre de joueurs. [Après pas mal d'optimisations]({{< ref "/poker-icm2" >}}), on a des temps humainement raisonnables pour une vingtaine de joueurs payés maximum. Si on veut utiliser l'ICM de manière intensive comme dans une simulation de tournoi, il faudra viser plutôt autour de dix joueurs payés.
-- [avec la méthode de Monte-Carlo]({{< ref "/poker-icm3" >}}), on s'en sort avec des temps très raisonnables pour une cinquantaine de joueurs au sacrifice de l'exactitude du calcul mais avec des garanties statistiques.
-
 Rappelons-nous une des conclusion du dernier épisode :
 
 > (...) le calcul prend `27ms` pour une moyenne sur 15500 échantillons. C'est très raisonnable en soi, mais si j'envisage de simuler quelques milliers de tournois comportant des milliers de mains elles-mêmes incluant plusieurs calculs d'ICM, ce ne sera pas suffisant. Damned.
 
 Du coup©™ peut-on obtenir des valeurs tout aussi satisfaisantes mais beaucoup plus rapidement ?
+
+Pour ceux qui nous rejoignent seulement, je vous conseille de parcourir les articles précédents :
+- [#1 : La problématique exposée sur les fonctions d'évaluation en tournoi de poker]({{< ref "/poker-icm1" >}})
+- [#2 : L'implémentation d'un calcul exact de l'ICM]({{< ref "/poker-icm2" >}})
+- [#3 : Un calcul pour un plus grand nombre de joeurs par la méthode de Monte-Carlo]({{< ref "/poker-icm3" >}})
 
 ## Neural-Networks—Deep—Machine-Learning-Artificial-Intelligence-MotherF****r
 

@@ -1,7 +1,7 @@
 +++
 draft = false
 date = 2021-03-03T14:14:35+01:00
-title = "Poker : MTT et ICM - La Question"
+title = "Poker : MTT et ICM #1 - La Question"
 description = "Où il est question des fonctions d'évaluation en théorie des jeux, du Gambler's Ruin et de l'ICM."
 slug = "poker_mtt_icm_question"
 authors = ["Pitt"]

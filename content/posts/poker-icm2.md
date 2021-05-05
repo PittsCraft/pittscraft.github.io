@@ -1,7 +1,7 @@
 +++
 draft = false
 date = 2021-03-08T14:14:35+01:00
-title = "Poker : MTT et ICM - Le Calcul Brutal"
+title = "Poker : MTT et ICM #2 - Le Calcul Brutal"
 description = "Où on calcule avec brutalité les espérances des joueurs selon un modèle indépendantiste."
 slug = "poker_mtt_icm_calcul"
 authors = ["Pitt"]

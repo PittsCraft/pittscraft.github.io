@@ -21,13 +21,13 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Wed, 21 Apr 2021 20:53:52 &#43;0200</lastBuildDate>
+        <lastBuildDate>Wed, 05 May 2021 16:25:27 &#43;0200</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
         
             <item>
-                <title>Poker : MTT et ICM - Perf Tuning avec du Deep Learning</title>
+                <title>Poker : MTT et ICM #4 - Perf Tuning avec du Deep Learning</title>
                 <link>https://pittscraft.com/posts/poker_mtt_icm_deep_learning/</link>
                 <guid isPermaLink="true">https://pittscraft.com/posts/poker_mtt_icm_deep_learning/</guid>
                 <pubDate>Wed, 21 Apr 2021 08:14:35 &#43;0100</pubDate>
@@ -36,18 +36,17 @@
                 
                 
                 
-                    <description>&lt;p&gt;&lt;em&gt;Résumé des épisodes précédents:&lt;/em&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;En théorie des jeux, &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/&#34;&gt;les fonctions d&amp;rsquo;évaluation&lt;/a&gt; permettent d&amp;rsquo;évaluer des situations, de les comparer, et donc de faire des choix renseignés&lt;/li&gt;
-&lt;li&gt;l&amp;rsquo;Independent Chip Model (ICM) est la fonction d&amp;rsquo;évaluation de référence pour les tournois de poker, et on cherche à trouver mieux, notamment pour un grand nombre de joueurs&lt;/li&gt;
-&lt;li&gt;l&amp;rsquo;ICM est long à calculer pour un grand nombre de joueurs. &lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_calcul/&#34;&gt;Après pas mal d&amp;rsquo;optimisations&lt;/a&gt;, on a des temps humainement raisonnables pour une vingtaine de joueurs payés maximum. Si on veut utiliser l&amp;rsquo;ICM de manière intensive comme dans une simulation de tournoi, il faudra viser plutôt autour de dix joueurs payés.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/&#34;&gt;avec la méthode de Monte-Carlo&lt;/a&gt;, on s&amp;rsquo;en sort avec des temps très raisonnables pour une cinquantaine de joueurs au sacrifice de l&amp;rsquo;exactitude du calcul mais avec des garanties statistiques.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Rappelons-nous une des conclusion du dernier épisode :&lt;/p&gt;
+                    <description>&lt;p&gt;Rappelons-nous une des conclusion du dernier épisode :&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;(&amp;hellip;) le calcul prend &lt;code&gt;27ms&lt;/code&gt; pour une moyenne sur 15500 échantillons. C&amp;rsquo;est très raisonnable en soi, mais si j&amp;rsquo;envisage de simuler quelques milliers de tournois comportant des milliers de mains elles-mêmes incluant plusieurs calculs d&amp;rsquo;ICM, ce ne sera pas suffisant. Damned.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Du coup©™ peut-on obtenir des valeurs tout aussi satisfaisantes mais beaucoup plus rapidement ?&lt;/p&gt;
+&lt;p&gt;Pour ceux qui nous rejoignent seulement, je vous conseille de parcourir les articles précédents :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_question/&#34;&gt;#1 : La problématique exposée sur les fonctions d&amp;rsquo;évaluation en tournoi de poker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_calcul/&#34;&gt;#2 : L&amp;rsquo;implémentation d&amp;rsquo;un calcul exact de l&amp;rsquo;ICM&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/&#34;&gt;#3 : Un calcul pour un plus grand nombre de joeurs par la méthode de Monte-Carlo&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2 id=&#34;neural-networksdeepmachine-learning-artificial-intelligence-motherfr&#34;&gt;Neural-Networks—Deep—Machine-Learning-Artificial-Intelligence-MotherF****r&lt;/h2&gt;
 &lt;p&gt;Quelques définitions au doigt mouillé :&lt;/p&gt;
 &lt;ul&gt;
@@ -221,7 +220,7 @@
             </item>
         
             <item>
-                <title>Poker : MTT et ICM - Méthode de Monte-Carlo</title>
+                <title>Poker : MTT et ICM #3 - Méthode de Monte-Carlo</title>
                 <link>https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/</link>
                 <guid isPermaLink="true">https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/</guid>
                 <pubDate>Wed, 31 Mar 2021 08:14:35 &#43;0100</pubDate>
@@ -822,7 +821,7 @@ Par le passé j&amp;rsquo;utilisais de petits algos observant la variation sur d
             </item>
         
             <item>
-                <title>Poker : MTT et ICM - Le Calcul Brutal</title>
+                <title>Poker : MTT et ICM #2 - Le Calcul Brutal</title>
                 <link>https://pittscraft.com/posts/poker_mtt_icm_calcul/</link>
                 <guid isPermaLink="true">https://pittscraft.com/posts/poker_mtt_icm_calcul/</guid>
                 <pubDate>Mon, 08 Mar 2021 14:14:35 &#43;0100</pubDate>
@@ -1174,7 +1173,7 @@ Duration 276ms for 20 players
             </item>
         
             <item>
-                <title>Poker : MTT et ICM - La Question</title>
+                <title>Poker : MTT et ICM #1 - La Question</title>
                 <link>https://pittscraft.com/posts/poker_mtt_icm_question/</link>
                 <guid isPermaLink="true">https://pittscraft.com/posts/poker_mtt_icm_question/</guid>
                 <pubDate>Wed, 03 Mar 2021 14:14:35 &#43;0100</pubDate>
