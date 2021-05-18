@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
     <title type="text">Pitt&#39;s Craft</title>
     <subtitle type="html">Blog professionnel d&#39;un algorithmicien et architecte logiciel indépendant.</subtitle>
-    <updated>2021-05-05T16:25:27&#43;02:00</updated>
+    <updated>2021-05-18T09:30:32&#43;02:00</updated>
     <id>https://pittscraft.com/</id>
     <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
     <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
@@ -16,6 +16,98 @@
             </author>
     
     <generator uri="https://gohugo.io/" version="0.80.0">Hugo</generator>
+        <entry>
+            <title type="text">Poker : MTT et ICM #4.1 - Publication du code C&#43;&#43;</title>
+            <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/poker_mtt_icm_cpp_code/" />
+            <id>https://pittscraft.com/posts/poker_mtt_icm_cpp_code/</id>
+            <updated>2021-05-18T08:14:35&#43;01:00</updated>
+            <published>2021-05-18T08:14:35&#43;01:00</published>
+            <author>
+                    <name>Pitt</name>
+                    <uri>https://pittscraft.com/about/</uri>
+                    <email>pitt@pittscraft.com</email>
+                    </author>
+            <summary type="html">Nouvelles cassantes</summary>
+            
+                <content type="html">&lt;p&gt;Un micro-post pour vous indiquer que le &lt;a href=&#34;https://github.com/PittsCraft/mtt-icm&#34;&gt;code C++&lt;/a&gt; de calcul d&amp;rsquo;ICM est disponible &lt;a href=&#34;https://github.com/PittsCraft/&#34;&gt;sur mon Github&lt;/a&gt; sous licence CC NC SA (pas d&amp;rsquo;utilisation commerciale et propagation de la license obligatoire).&lt;/p&gt;
+</content>
+            
+            
+            
+            
+            
+                
+                    
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/categories/game-theory/" term="Game Theory" label="Game Theory" />
+                            
+                        
+                    
+                
+                    
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/poker/" term="Poker" label="Poker" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/ai/" term="AI" label="AI" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/icm/" term="ICM" label="ICM" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/mtt/" term="MTT" label="MTT" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/game-theory/" term="Game Theory" label="Game Theory" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/ml/" term="ML" label="ML" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/deep-learning/" term="Deep Learning" label="Deep Learning" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/monte-carlo/" term="Monte Carlo" label="Monte Carlo" />
+                            
+                        
+                            
+                            
+                            
+                                <category scheme="https://pittscraft.com/tags/c-/" term="C&#43;&#43;" label="C&#43;&#43;" />
+                            
+                        
+                    
+                
+            
+        </entry>
+    
         <entry>
             <title type="text">Poker : MTT et ICM #4 - Perf Tuning avec du Deep Learning</title>
             <link rel="alternate" type="text/html" href="https://pittscraft.com/posts/poker_mtt_icm_deep_learning/" />

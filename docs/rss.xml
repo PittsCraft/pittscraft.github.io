@@ -21,10 +21,99 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Wed, 05 May 2021 16:25:27 &#43;0200</lastBuildDate>
+        <lastBuildDate>Tue, 18 May 2021 09:30:32 &#43;0200</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
+        
+            <item>
+                <title>Poker : MTT et ICM #4.1 - Publication du code C&#43;&#43;</title>
+                <link>https://pittscraft.com/posts/poker_mtt_icm_cpp_code/</link>
+                <guid isPermaLink="true">https://pittscraft.com/posts/poker_mtt_icm_cpp_code/</guid>
+                <pubDate>Tue, 18 May 2021 08:14:35 &#43;0100</pubDate>
+                
+                    <author>pitt@pittscraft.com (Pitt)</author>
+                
+                
+                
+                    <description>&lt;p&gt;Un micro-post pour vous indiquer que le &lt;a href=&#34;https://github.com/PittsCraft/mtt-icm&#34;&gt;code C++&lt;/a&gt; de calcul d&amp;rsquo;ICM est disponible &lt;a href=&#34;https://github.com/PittsCraft/&#34;&gt;sur mon Github&lt;/a&gt; sous licence CC NC SA (pas d&amp;rsquo;utilisation commerciale et propagation de la license obligatoire).&lt;/p&gt;
+</description>
+                
+                
+                
+                
+                
+                    
+                        
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/categories/game-theory/">Game Theory</category>
+                                
+                            
+                        
+                    
+                        
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/poker/">Poker</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/ai/">AI</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/icm/">ICM</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/mtt/">MTT</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/game-theory/">Game Theory</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/ml/">ML</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/deep-learning/">Deep Learning</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/monte-carlo/">Monte Carlo</category>
+                                
+                            
+                                
+                                
+                                
+                                    <category domain="https://pittscraft.com/tags/c-/">C&#43;&#43;</category>
+                                
+                            
+                        
+                    
+                
+            </item>
         
             <item>
                 <title>Poker : MTT et ICM #4 - Perf Tuning avec du Deep Learning</title>
