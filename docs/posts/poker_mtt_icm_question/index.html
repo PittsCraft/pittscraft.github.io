@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
     <meta charset="UTF-8" />
 
-    <meta name="generator" content="Hugo 0.80.0" /><meta name="theme-color" content="#fff" />
+    <meta name="generator" content="Hugo 0.111.3"><meta name="theme-color" content="#fff" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
@@ -18,7 +18,7 @@
 
     
     
-        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.2e8cecdb28365acb51546c474e04cc3d1566d483eb8370d97ec4daebeaec1398.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.df5774dfbc8c32f95f1e03a29130311c1115372bb1bc63afed540e1308393896.js"></script>
 
     
 
@@ -60,7 +60,7 @@
         "description": "Où il est question des fonctions d'évaluation en théorie des jeux, du Gambler's Ruin et de l'ICM.",
         "inLanguage" : "fr",
         "articleSection": "posts",
-        "wordCount":  2296 ,
+        "wordCount":  2294 ,
         "image": "https://pittscraft.com/images/apple-touch-icon.png",
         "author": {
             "@type": "Person",
@@ -244,7 +244,7 @@
     
     
         
-        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;2296</span>
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;2294</span>
     
     
         
@@ -293,60 +293,59 @@ Prenons le cas de trois joueurs qui doivent partager 1000€ de prix et disposen
 <p>Si seul le premier joueur remporte les 1000€ il paraît raisonnable d’estimer leurs chances de gagner proportionnellement à leurs stacks. On peut d’ailleurs vérifier ça très facilement en leur faisant échanger des jetons aléatoirement (ce qui simule bien l’égalité stratégique).
 Si les stacks sont 500, 300 et 200, alors en moyenne le premier joueur remportera la mise 50% du temps, le second 30% et le dernier 20%. Leurs espérances de gain sont donc 500€, 300€ et 200€ respectivement.</p>
 <p>Petite simulation pour vérifier ça :</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">random</span>
-
-<span class="n">nb_simulations</span> <span class="o">=</span> <span class="mi">100000</span>
-<span class="n">players_stacks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># We&#39;ll exchange chips one by one, so let&#39;s speed-up by setting smaller stacks</span>
-<span class="n">payouts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-
-<span class="n">nb_players</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">players_stacks</span><span class="p">)</span>
-
-<span class="n">podiums</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_simulations</span><span class="p">):</span>
-    <span class="n">game_stacks</span> <span class="o">=</span> <span class="n">players_stacks</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">podium</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-        <span class="n">in_game_players</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">stack</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">game_stacks</span><span class="p">)</span> <span class="k">if</span> <span class="n">stack</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_game_players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># We have a winner</span>
-            <span class="n">podium</span> <span class="o">=</span> <span class="n">in_game_players</span> <span class="o">+</span> <span class="n">podium</span>
-            <span class="k">break</span>
-        <span class="c1"># Exchange chips until one player is broke</span>
-        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="c1"># Randomly select two players</span>
-            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">in_game_players</span><span class="p">)</span>
-            <span class="n">p1</span> <span class="o">=</span> <span class="n">in_game_players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">p2</span> <span class="o">=</span> <span class="n">in_game_players</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="c1"># And make them exchange one chip</span>
-            <span class="n">game_stacks</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">game_stacks</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
-            <span class="c1"># Is the losing player broke ?</span>
-            <span class="k">if</span> <span class="n">game_stacks</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">podium</span> <span class="o">=</span> <span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">+</span> <span class="n">podium</span>
-                <span class="k">break</span>  <span class="c1"># Recompute in_game_players</span>
-    <span class="n">podiums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">podium</span><span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nb_players</span>
-
-<span class="k">for</span> <span class="n">podium</span> <span class="ow">in</span> <span class="n">podiums</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_players</span><span class="p">):</span>
-        <span class="n">player</span> <span class="o">=</span> <span class="n">podium</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">player</span><span class="p">]</span> <span class="o">+=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">nb_simulations</span><span class="p">)</span>
-
-<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-
-</code></pre></div><p>Output :</p>
-<pre><code>&gt; [499.611 299.829 200.56 ]
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">random</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">nb_simulations</span> <span class="o">=</span> <span class="mi">100000</span>
+</span></span><span class="line"><span class="cl"><span class="n">players_stacks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># We&#39;ll exchange chips one by one, so let&#39;s speed-up by setting smaller stacks</span>
+</span></span><span class="line"><span class="cl"><span class="n">payouts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">nb_players</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">players_stacks</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">podiums</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_simulations</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">game_stacks</span> <span class="o">=</span> <span class="n">players_stacks</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">podium</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">in_game_players</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">stack</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">game_stacks</span><span class="p">)</span> <span class="k">if</span> <span class="n">stack</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_game_players</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># We have a winner</span>
+</span></span><span class="line"><span class="cl">            <span class="n">podium</span> <span class="o">=</span> <span class="n">in_game_players</span> <span class="o">+</span> <span class="n">podium</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Exchange chips until one player is broke</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># Randomly select two players</span>
+</span></span><span class="line"><span class="cl">            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">in_game_players</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p1</span> <span class="o">=</span> <span class="n">in_game_players</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">p2</span> <span class="o">=</span> <span class="n">in_game_players</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># And make them exchange one chip</span>
+</span></span><span class="line"><span class="cl">            <span class="n">game_stacks</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="n">game_stacks</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># Is the losing player broke ?</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">game_stacks</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">podium</span> <span class="o">=</span> <span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">+</span> <span class="n">podium</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span>  <span class="c1"># Recompute in_game_players</span>
+</span></span><span class="line"><span class="cl">    <span class="n">podiums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">podium</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nb_players</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">podium</span> <span class="ow">in</span> <span class="n">podiums</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_players</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">player</span> <span class="o">=</span> <span class="n">podium</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">result</span><span class="p">[</span><span class="n">player</span><span class="p">]</span> <span class="o">+=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">nb_simulations</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span></span></code></pre></div><p>Output :</p>
+<pre tabindex="0"><code>&gt; [499.611 299.829 200.56 ]
 </code></pre><p>Ce qui m&rsquo;a bien l&rsquo;air de converger vers le résultat attendu.</p>
 <p><em>Petite note sur la taille des stacks allègrement divisée par 100 : il se trouve que ça n&rsquo;a aucune influence, je l&rsquo;ai vérifié expérimentalement. Cependant comme j&rsquo;aimerais bien savoir pourquoi et que je n&rsquo;ai pas le temps de creuser, <a href="https://math.stackexchange.com/questions/4049787/n-players-gamblers-ruin-ranking-stability-regarding-stacks-proportionality" target="_blank" rel="noopener">j&rsquo;ai posé la question</a> à l&rsquo;Internet.</em></p>
 <p><em>[EDIT] Au temps pour moi, la proportionalité n&rsquo;est pas la seule à compter. La taille des stacks a bien une influence dans le cas suivant où le second joueur a un prix ! Ceci-dit, même si mes chiffres sont légèrement biaisés ça n&rsquo;invalide en rien le propos.</em></p>
 <p>Maintenant, si le premier joueur remporte 600€ et le second 400€, a-t-on les mêmes espérances de gain ? Faisons donc tourner cette simulation avec ces payouts :</p>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">payouts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-</code></pre></div><p>Output :</p>
-<pre><code>&gt; [445.71 330.83 223.46]
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">payouts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+</span></span></code></pre></div><p>Output :</p>
+<pre tabindex="0"><code>&gt; [445.71 330.83 223.46]
 </code></pre><p>Il est tout de suite moins intuitif d’estimer ça à vue de nez.</p>
 <h2 id="icm"><a href="#icm" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>ICM</h2>
 <p>Le jeu simulé ci-dessus est le <a href="https://en.wikipedia.org/wiki/Gambler%27s_ruin" target="_blank" rel="noopener">Gambler’s Ruin</a> (qui est en soi plus un problème théorique qu’un jeu).</p>
@@ -355,18 +354,18 @@ Si les stacks sont 500, 300 et 200, alors en moyenne le premier joueur remporter
 <p><em>Attention cependant, l’ICM n’est <strong>pas</strong> une solution du classement du problème du N-players Gambler’s Ruin. C’est par contre une approximation commune.</em></p>
 <p>Pour la situation ci-dessus, l’ICM nous donnera donc avec les stacks [500, 300, 200]:</p>
 <p>En notant <code>X_Y</code> = le joueur X finit en Yième position.</p>
-<pre><code>P1_1 = 500 / 1000 = 0.5
+<pre tabindex="0"><code>P1_1 = 500 / 1000 = 0.5
 P2_1 = 300 / 1000 = 0.3
 P3_1 = 200 / 1000 = 0.2
 </code></pre><p>Puis récursivement, en appliquant la formule des probabilités totales, on calcule la probabilité que le joueur 1 soit deuxième :</p>
-<pre><code>P1_2 = P2_1 * P(1_2 | 2_1) + P3_1 * P(1_3 | 3_1)
+<pre tabindex="0"><code>P1_2 = P2_1 * P(1_2 | 2_1) + P3_1 * P(1_3 | 3_1)
 P1_2 = 0.3 * (500 / 700) + 0.2 * (500 / 800) = 0,339
 </code></pre><p>De même pour les autres joueurs et ainsi de suite pour la troisième place.
 Pour vous éviter les calculs à la main, il existe des calculateurs en ligne. <a href="https://www.holdemresources.net/icmcalculator" target="_blank" rel="noopener">Celui d’HoldemResources</a> et <a href="https://www.icmpoker.com/icmcalculator/" target="_blank" rel="noopener">celui d’ICMIzer</a>.</p>
 <p>Pour notre situation, l’ICM nous donne les valeurs :</p>
-<pre><code>&gt; [435.71 330.00 234.29]
+<pre tabindex="0"><code>&gt; [435.71 330.00 234.29]
 </code></pre><p>Pour comparer les résultats, la simulation de Gambler’s Ruin nous donnait :</p>
-<pre><code>&gt; [445.71 330.83 223.46]
+<pre tabindex="0"><code>&gt; [445.71 330.83 223.46]
 </code></pre><p>On retrouve un biais classique de l’ICM qui est de sous-estimer la valeur des plus gros stack et de surestimer les plus petits, tout en restant très correct pour les autres.</p>
 <h2 id="récapitulatif"><a href="#récapitulatif" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Récapitulatif</h2>
 <p>Prenons un tout petit peu de recul. Pourquoi a-t-on besoin de cet ICM déjà ?</p>
@@ -393,17 +392,17 @@ Tout d’abord il est fort probable qu’une meilleure approximation du classeme
 <li>Si t’es en duel avec une équité de 50% contre un seul adversaire au sein d’un tournoi avec des prix croissants, tu es perdant selon l’ICM.</li>
 <li>Si deux joueurs sont en duel dans ces mêmes circonstances, tous les autres joueurs sont gagnants en ICM.</li>
 </ul>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>Ces jeux sont de natures très variées. C’est ce qui fait d’ailleurs qu’à l’heure actuelle, <a href="https://ai.facebook.com/blog/pluribus-first-ai-to-beat-pros-in-6-player-poker/" target="_blank" rel="noopener">les meilleures IA de poker</a> sont basées sur des techniques très différentes de l’impressionnant <a href="https://deepmind.com/blog/article/muzero-mastering-go-chess-shogi-and-atari-without-rules" target="_blank" rel="noopener">MuZero</a> de DeepMind (j’espère avoir le temps de faire un petit papier “CFR vs Reinforcement Learning pour les nuls” tiens). <a href="#fnref:1" class="footnote-backref" role="doc-backlink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon footnote-icon"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"/></svg></a></p>
+<li id="fn:1">
+<p>Ces jeux sont de natures très variées. C’est ce qui fait d’ailleurs qu’à l’heure actuelle, <a href="https://ai.facebook.com/blog/pluribus-first-ai-to-beat-pros-in-6-player-poker/" target="_blank" rel="noopener">les meilleures IA de poker</a> sont basées sur des techniques très différentes de l’impressionnant <a href="https://deepmind.com/blog/article/muzero-mastering-go-chess-shogi-and-atari-without-rules" target="_blank" rel="noopener">MuZero</a> de DeepMind (j’espère avoir le temps de faire un petit papier “CFR vs Reinforcement Learning pour les nuls” tiens).&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon footnote-icon"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"/></svg></a></p>
 </li>
-<li id="fn:2" role="doc-endnote">
-<p>les papiers en question : <a href="https://www.cambridge.org/core/journals/journal-of-applied-probability/article/matrixanalytic-approach-to-the-nplayer-ruin-problem/9FA680080D2FABB21564680B15E24858" target="_blank" rel="noopener">Swan, Y., &amp; Bruss, F. (2006). A matrix-analytic approach to the N-player ruin problem. Journal of Applied Probability, 43(3), 755-766. doi:10.1239/jap/1158784944</a>, et <a href="https://arxiv.org/abs/2011.07610v2" target="_blank" rel="noopener">Gambler&rsquo;s Ruin and the ICM - arXiv:2011.07610v2</a>. Et bien sûr toutes leurs références 🙃 <a href="#fnref:2" class="footnote-backref" role="doc-backlink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon footnote-icon"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"/></svg></a></p>
+<li id="fn:2">
+<p>les papiers en question : <a href="https://www.cambridge.org/core/journals/journal-of-applied-probability/article/matrixanalytic-approach-to-the-nplayer-ruin-problem/9FA680080D2FABB21564680B15E24858" target="_blank" rel="noopener">Swan, Y., &amp; Bruss, F. (2006). A matrix-analytic approach to the N-player ruin problem. Journal of Applied Probability, 43(3), 755-766. doi:10.1239/jap/1158784944</a>, et <a href="https://arxiv.org/abs/2011.07610v2" target="_blank" rel="noopener">Gambler&rsquo;s Ruin and the ICM - arXiv:2011.07610v2</a>. Et bien sûr toutes leurs références 🙃&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon footnote-icon"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"/></svg></a></p>
 </li>
 </ol>
-</section>
+</div>
 
             </div>
 
@@ -624,7 +623,7 @@ Tout d’abord il est fort probable qu’une meilleure approximation du classeme
             
     <footer id="footer" class="footer">
         <div class="footer-inner">
-            <div class="site-info">©&nbsp;2020–2021&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
+            <div class="site-info">©&nbsp;2020–2023&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
 
             
     

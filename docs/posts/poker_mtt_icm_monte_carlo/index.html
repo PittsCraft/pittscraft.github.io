@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
     <meta charset="UTF-8" />
 
-    <meta name="generator" content="Hugo 0.80.0" /><meta name="theme-color" content="#fff" />
+    <meta name="generator" content="Hugo 0.111.3"><meta name="theme-color" content="#fff" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
@@ -18,7 +18,7 @@
 
     
     
-        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.2e8cecdb28365acb51546c474e04cc3d1566d483eb8370d97ec4daebeaec1398.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.df5774dfbc8c32f95f1e03a29130311c1115372bb1bc63afed540e1308393896.js"></script>
 
     
 
@@ -60,7 +60,7 @@
         "description": "Un Monaco-Picon s'il vous plaît. En pinte.",
         "inLanguage" : "fr",
         "articleSection": "posts",
-        "wordCount":  3705 ,
+        "wordCount":  3710 ,
         "image": "https://pittscraft.com/images/apple-touch-icon.png",
         "author": {
             "@type": "Person",
@@ -244,7 +244,7 @@
     
     
         
-        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;3705</span>
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;3710</span>
     
     
         
@@ -280,155 +280,155 @@
 <p>Pour le tirage aléatoire, on a besoin d&rsquo;un aléatoire statistique correct mais sans qualité cryptographique particulière. On gagne pas mal en utilisant <a href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/SFMT/index.html" target="_blank" rel="noopener">SFMT</a>, une variante de l&rsquo;algorithme de Mersenne-Twister plus rapide sur les microprocesseurs modernes.</p>
 <p>Enfin pour le tri il faut noter que selon la distribution des prix, on peut éventuellement chercher à classer les premiers joueurs pour les places ayant un prix non-nul. Ce n&rsquo;est pas une optimisation systématique mais lorsqu&rsquo;elle est pertinente il serait dommage de l&rsquo;ignorer.</p>
 <p>Voici une version directe, sans autre optimisation.</p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp">
-<span class="cp">#include</span> <span class="cpf">&#34;monte-carlo-icm.hpp&#34;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;unordered_map&gt;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;sfmt.hpp&gt;</span><span class="cp">
-</span><span class="cp"></span>
-<span class="cm">/**
-</span><span class="cm">  * Compute a permutation according to the sorting of random values put to the power of given weights.
-</span><span class="cm">  * In fact, logarithm is used for performance, and logarithm tables could certainly be used to fasten the
-</span><span class="cm">  * computation.
-</span><span class="cm">  *
-</span><span class="cm">  * @param weights
-</span><span class="cm">  * @param destination where the permutation will be written to
-</span><span class="cm">  * @param size size of weights and destination array
-</span><span class="cm">  * @param dist random distribution
-</span><span class="cm">  * @param mt SFMT (fast Mersenne-Twister algorithm)
-</span><span class="cm">  */</span>
-<span class="kt">void</span> <span class="nf">monteCarloPermutation</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span>
-                            <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">dist</span><span class="p">,</span> <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="o">&amp;</span><span class="n">mt</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">double</span> <span class="n">draw</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">draw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">))</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
-          <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-              <span class="c1">// Reverse order
-</span><span class="c1"></span>              <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
-          <span class="p">}</span>
-    <span class="p">);</span>
-<span class="p">}</span>
-
-<span class="cm">/**
-</span><span class="cm">  * Same as `monteCarloPermutation` except the sorting process stops for performance
-</span><span class="cm">  * after the first values are sorted.
-</span><span class="cm">  *
-</span><span class="cm">  * @param weights
-</span><span class="cm">  * @param destination where the permutation will be written to
-</span><span class="cm">  * @param size size of weights and destination array
-</span><span class="cm">  * @param nbRelevant number of top values that should be strictly sorted. The other ones may not be sorted
-</span><span class="cm">  *          according to the random draw.
-</span><span class="cm">  * @param dist random distribution
-</span><span class="cm">  * @param mt SFMT (fast Mersenne-Twister algorithm)
-</span><span class="cm">  */</span>
-<span class="kt">void</span> <span class="nf">monteCarloPermutationPartial</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span>
-                                  <span class="k">const</span> <span class="kt">int</span> <span class="n">nbRelevant</span><span class="p">,</span>
-                                  <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">dist</span><span class="p">,</span> <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="o">&amp;</span><span class="n">mt</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">double</span> <span class="n">draw</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">draw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">))</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">partial_sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">nbRelevant</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
-                  <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-                      <span class="c1">// Reverse order
-</span><span class="c1"></span>                      <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
-                  <span class="p">}</span>
-    <span class="p">);</span>
-<span class="p">}</span>
-
-<span class="kt">int</span> <span class="nf">firstZeroPayout</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">payouts</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-    <span class="kt">int</span> <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">firstZeroPayout</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">firstZeroPayout</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**
-</span><span class="cm">  * Monte-Carlo ICM Ranking algorithm.
-</span><span class="cm">  *
-</span><span class="cm">  * @param stacks
-</span><span class="cm">  * @param payouts
-</span><span class="cm">  * @param trials
-</span><span class="cm">  * @param relevantRanksCount
-</span><span class="cm">  * @param results array of ICM EV
-</span><span class="cm">  */</span>
-<span class="kt">void</span> <span class="nf">monteCarloIcm</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">trials</span><span class="p">,</span>
-                    <span class="k">const</span> <span class="kt">int</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// Algorithm : https://forumserver.twoplustwo.com/15/poker-theory/new-algorithm-calculate-icm-large-tournaments-1098489/
-</span><span class="c1"></span>    <span class="c1">// Initialize random distribution
-</span><span class="c1"></span>    <span class="c1">// https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
-</span><span class="c1"></span>    <span class="c1">// SFMT variant
-</span><span class="c1"></span>    <span class="n">random_device</span> <span class="n">rd</span><span class="p">;</span>
-    <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="n">mt</span><span class="p">(</span><span class="n">rd</span><span class="p">());</span>
-    <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-    <span class="kt">int</span> <span class="n">permutation</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-    <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksAvg</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">stacks</span> <span class="o">+</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">nbPlayers</span><span class="p">;</span>
-    <span class="kt">double</span> <span class="n">weights</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-    <span class="kt">double</span> <span class="n">contrib</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-    <span class="c1">// - Normalize stacks (not really necessary but cheap) and invert to weights
-</span><span class="c1"></span>    <span class="c1">// - Prepare each trial ranking contribution to the total
-</span><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacksAvg</span> <span class="o">/</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">contrib</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">trials</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="c1">// Partial sort vs sort : interesting only if we have many zero payouts at the end
-</span><span class="c1"></span>    <span class="k">const</span> <span class="kt">float</span> <span class="n">partialSortThreshold</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span> <span class="c1">// Magic number &lt;3
-</span><span class="c1"></span>    <span class="k">const</span> <span class="kt">bool</span> <span class="n">partialSort</span> <span class="o">=</span>
-            <span class="n">relevantRanksCount</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="kt">float</span><span class="p">)</span> <span class="n">relevantRanksCount</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">nbPlayers</span> <span class="o">&lt;=</span> <span class="n">partialSortThreshold</span><span class="p">);</span>
-
-
-    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">trials</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Draw a permutation
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">partialSort</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">monteCarloPermutationPartial</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">mt</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">monteCarloPermutation</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">mt</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="c1">// Cumulate payouts according to the random permutation
-</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">results</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">contrib</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="cm">/**
-</span><span class="cm">  * Vector wrapper of MC ICM
-</span><span class="cm">  * @param stacks
-</span><span class="cm">  * @param payouts
-</span><span class="cm">  * @param trials
-</span><span class="cm">  * @return ICM EV
-</span><span class="cm">  */</span>
-<span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">monteCarloIcm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">trials</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-    <span class="k">const</span> <span class="kt">int</span> <span class="n">relevantRanksCount</span> <span class="o">=</span> <span class="n">firstZeroPayout</span><span class="p">(</span><span class="n">payouts</span><span class="p">);</span>
-    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">results</span><span class="p">(</span><span class="n">nbPlayers</span><span class="p">);</span>
-    <span class="kt">double</span> <span class="n">stacksArray</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-    <span class="kt">double</span> <span class="n">payoutsArray</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-    <span class="kt">double</span> <span class="n">resultsArray</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">stacksArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">payoutsArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-        <span class="n">resultsArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">monteCarloIcm</span><span class="p">(</span><span class="n">stacksArray</span><span class="p">,</span> <span class="n">payoutsArray</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="n">resultsArray</span><span class="p">);</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">resultsArray</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">results</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div><h2 id="autres-pistes-doptimisation"><a href="#autres-pistes-doptimisation" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Autres pistes d&rsquo;optimisation</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;monte-carlo-icm.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;unordered_map&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sfmt.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * Compute a permutation according to the sorting of random values put to the power of given weights.
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * In fact, logarithm is used for performance, and logarithm tables could certainly be used to fasten the
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * computation.
+</span></span></span><span class="line"><span class="cl"><span class="cm">  *
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param weights
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param destination where the permutation will be written to
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param size size of weights and destination array
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param dist random distribution
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param mt SFMT (fast Mersenne-Twister algorithm)
+</span></span></span><span class="line"><span class="cl"><span class="cm">  */</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">monteCarloPermutation</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">dist</span><span class="p">,</span> <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="o">&amp;</span><span class="n">mt</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">draw</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">draw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">))</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">          <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">              <span class="c1">// Reverse order
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>              <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">          <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * Same as `monteCarloPermutation` except the sorting process stops for performance
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * after the first values are sorted.
+</span></span></span><span class="line"><span class="cl"><span class="cm">  *
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param weights
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param destination where the permutation will be written to
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param size size of weights and destination array
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param nbRelevant number of top values that should be strictly sorted. The other ones may not be sorted
+</span></span></span><span class="line"><span class="cl"><span class="cm">  *          according to the random draw.
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param dist random distribution
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param mt SFMT (fast Mersenne-Twister algorithm)
+</span></span></span><span class="line"><span class="cl"><span class="cm">  */</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">monteCarloPermutationPartial</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                  <span class="k">const</span> <span class="kt">int</span> <span class="n">nbRelevant</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                  <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">dist</span><span class="p">,</span> <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="o">&amp;</span><span class="n">mt</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">draw</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">draw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">dist</span><span class="p">(</span><span class="n">mt</span><span class="p">))</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">partial_sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">nbRelevant</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                  <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                      <span class="c1">// Reverse order
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                      <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">                  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">firstZeroPayout</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">payouts</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">firstZeroPayout</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">firstZeroPayout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * Monte-Carlo ICM Ranking algorithm.
+</span></span></span><span class="line"><span class="cl"><span class="cm">  *
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param stacks
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param payouts
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param trials
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param relevantRanksCount
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param results array of ICM EV
+</span></span></span><span class="line"><span class="cl"><span class="cm">  */</span>
+</span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">monteCarloIcm</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">trials</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">const</span> <span class="kt">int</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Algorithm : https://forumserver.twoplustwo.com/15/poker-theory/new-algorithm-calculate-icm-large-tournaments-1098489/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// Initialize random distribution
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// SFMT variant
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">random_device</span> <span class="n">rd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="n">mt</span><span class="p">(</span><span class="n">rd</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">permutation</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksAvg</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">stacks</span> <span class="o">+</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">nbPlayers</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">weights</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">contrib</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// - Normalize stacks (not really necessary but cheap) and invert to weights
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// - Prepare each trial ranking contribution to the total
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacksAvg</span> <span class="o">/</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">contrib</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">trials</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Partial sort vs sort : interesting only if we have many zero payouts at the end
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="kt">float</span> <span class="n">partialSortThreshold</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span> <span class="c1">// Magic number &lt;3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">const</span> <span class="kt">bool</span> <span class="n">partialSort</span> <span class="o">=</span>
+</span></span><span class="line"><span class="cl">            <span class="n">relevantRanksCount</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="kt">float</span><span class="p">)</span> <span class="n">relevantRanksCount</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">nbPlayers</span> <span class="o">&lt;=</span> <span class="n">partialSortThreshold</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">trials</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Draw a permutation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">partialSort</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">monteCarloPermutationPartial</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">mt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">monteCarloPermutation</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">mt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Cumulate payouts according to the random permutation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">results</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">contrib</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * Vector wrapper of MC ICM
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param stacks
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param payouts
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @param trials
+</span></span></span><span class="line"><span class="cl"><span class="cm">  * @return ICM EV
+</span></span></span><span class="line"><span class="cl"><span class="cm">  */</span>
+</span></span><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">monteCarloIcm</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">long</span> <span class="n">trials</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="kt">int</span> <span class="n">relevantRanksCount</span> <span class="o">=</span> <span class="n">firstZeroPayout</span><span class="p">(</span><span class="n">payouts</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">results</span><span class="p">(</span><span class="n">nbPlayers</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">stacksArray</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">payoutsArray</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">double</span> <span class="n">resultsArray</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stacksArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">payoutsArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">resultsArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">monteCarloIcm</span><span class="p">(</span><span class="n">stacksArray</span><span class="p">,</span> <span class="n">payoutsArray</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="n">resultsArray</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">resultsArray</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">results</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h2 id="autres-pistes-doptimisation"><a href="#autres-pistes-doptimisation" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Autres pistes d&rsquo;optimisation</h2>
 <p>Voici quelques optimisations que j&rsquo;imagine pertinentes :</p>
 <ul>
 <li>l&rsquo;échantillonnage préférentiel : plus d&rsquo;échantillons pour les cas les plus probables. On pourrait par exemple fixer successivement chaque joueur premier du classement, et estimer ce cas avec plus ou moins de précision par exemple avec un nombre d&rsquo;échantillon proportionnel à sa probabilité au carré (la contribution de chaque cas restant proportionnelle au stack du joueur bien sûr). Pourquoi pas aller un ou plusieurs crans plus loin en envisageant toutes les combinaisons des k premiers joueurs.</li>
@@ -459,335 +459,335 @@ Par le passé j&rsquo;utilisais de petits algos observant la variation sur des l
 <p><code>util/math.cpp</code></p>
 <p><em>Collez le code de cette page <a href="https://www.johndcook.com/blog/cpp_phi_inverse/" target="_blank" rel="noopener">https://www.johndcook.com/blog/cpp_phi_inverse/</a></em></p>
 <p><code>util/math.hpp</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#ifndef MTT_EXPERIMENTS_C_MATH_HPP
-</span><span class="cp">#define MTT_EXPERIMENTS_C_MATH_HPP
-</span><span class="cp"></span><span class="kt">double</span> <span class="nf">NormalCDFInverse</span><span class="p">(</span><span class="kt">double</span> <span class="n">p</span><span class="p">);</span>
-
-<span class="cp">#endif </span><span class="c1">//MTT_EXPERIMENTS_C_MATH_HPP
-</span></code></pre></div><p><code>monte-carlo-icm.cpp</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="cp">#include</span> <span class="cpf">&#34;monte-carlo-icm.hpp&#34;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;sfmt.hpp&gt;</span><span class="cp">
-</span><span class="cp">#include</span> <span class="cpf">&lt;util/math.hpp&gt;</span><span class="cp">
-</span><span class="cp"></span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
-
-<span class="k">namespace</span> <span class="n">icm</span> <span class="p">{</span>
-    <span class="cm">/**
-</span><span class="cm">     * The Random Number Generator type : functions denoted by this alias are expected to draw doubles between 0 and 1.
-</span><span class="cm">     * Abstracted in order to plug a proper RNG for quasi-Monte-Carlo in the future.
-</span><span class="cm">     */</span>
-    <span class="k">using</span> <span class="n">RNG</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">()</span><span class="o">&gt;</span><span class="p">;</span>
-    <span class="cm">/**
-</span><span class="cm">     * The sorter functions are expected to sort the indexes of the draw array in reverse order according to the values
-</span><span class="cm">     * of the array.
-</span><span class="cm">     */</span>
-    <span class="k">using</span> <span class="n">Sorter</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">draw</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
-    <span class="cm">/**
-</span><span class="cm">     * Private section
-</span><span class="cm">     */</span>
-    <span class="k">namespace</span> <span class="p">{</span>
-        <span class="cm">/**
-</span><span class="cm">         * Compute a permutation according to the sorting of random values put to the power of given weights.
-</span><span class="cm">         * In fact, logarithm is used for performance, and logarithm tables could certainly be used to fasten the
-</span><span class="cm">         * computation.
-</span><span class="cm">         *
-</span><span class="cm">         * @param weights
-</span><span class="cm">         * @param destination where the permutation will be written to
-</span><span class="cm">         * @param size size of weights and destination array
-</span><span class="cm">         * @param rng random number generator
-</span><span class="cm">         * @param sorter function to sort the permutation
-</span><span class="cm">         */</span>
-        <span class="kt">void</span> <span class="nf">monteCarloPermutation</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span>
-                                   <span class="k">const</span> <span class="n">Sorter</span> <span class="o">&amp;</span><span class="n">sorter</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kt">double</span> <span class="n">draw</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">draw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">rng</span><span class="p">())</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-                <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="n">sorter</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Get the index of the first zero payout after which all payouts are zero as well
-</span><span class="cm">         * @param payouts the payouts array
-</span><span class="cm">         * @param size the size of the array
-</span><span class="cm">         * @return the index of the first zero payout
-</span><span class="cm">         */</span>
-        <span class="kt">int</span> <span class="nf">firstZeroPayout</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kt">int</span> <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">firstZeroPayout</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="n">firstZeroPayout</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Compute the mean of a batch of samples
-</span><span class="cm">         * @param samples the samples
-</span><span class="cm">         * @param nbPlayers the size of each sample aka the number of players
-</span><span class="cm">         * @return a vector containing the mean of the samples
-</span><span class="cm">         */</span>
-        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">mean</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">samples</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="n">nbPlayers</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbSamples</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="kt">double</span> <span class="o">*</span><span class="n">sample</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">result</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sample</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">nbSamples</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Compute the variance of samples
-</span><span class="cm">         * @param samples the samples
-</span><span class="cm">         * @param nbPlayers the size of each sample aka the number of players
-</span><span class="cm">         * @return the variance
-</span><span class="cm">         */</span>
-        <span class="kt">double</span> <span class="nf">variance</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">samples</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">meanSample</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
-            <span class="kt">double</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbSamples</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="kt">double</span> <span class="o">*</span><span class="n">sample</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="kt">double</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">meanSample</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-                    <span class="n">result</span> <span class="o">+=</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">diff</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="c1">// Not sure about nbSamples - 1, should be nbSamples but the paper about the stopping rule states n-1...
-</span><span class="c1"></span>            <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">(</span><span class="n">nbSamples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Compute the threshold for the variance under which the stopping limit is considered reached
-</span><span class="cm">         * @param alphaProbability confidence probability
-</span><span class="cm">         * @param confidenceIntervalLength confidence interval length (root mean square)
-</span><span class="cm">         * @param nbSamples number of samples
-</span><span class="cm">         * @return the variance threshold
-</span><span class="cm">         */</span>
-        <span class="kt">double</span> <span class="nf">stoppingRuleLimit</span><span class="p">(</span><span class="kt">double</span> <span class="n">alphaProbability</span><span class="p">,</span> <span class="kt">double</span> <span class="n">confidenceIntervalLength</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kt">double</span> <span class="n">zAlpha</span> <span class="o">=</span> <span class="n">NormalCDFInverse</span><span class="p">(</span><span class="n">alphaProbability</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alphaProbability</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// Symmetrical distribution
-</span><span class="c1"></span>            <span class="k">return</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">nbSamples</span> <span class="o">*</span> <span class="n">confidenceIntervalLength</span> <span class="o">*</span> <span class="n">confidenceIntervalLength</span> <span class="o">/</span> <span class="n">zAlpha</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Pick the appropriate sorter depending on payouts. We can use a partial sort if most of the payouts are zero
-</span><span class="cm">         * @param payouts the payouts
-</span><span class="cm">         * @param nbPlayers the size of the payouts array aka the number of players
-</span><span class="cm">         * @return a sorter
-</span><span class="cm">         */</span>
-        <span class="n">Sorter</span> <span class="nf">chooseSorter</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// Partial sort vs sort : interesting only if we have many zero payouts at the end
-</span><span class="c1"></span>            <span class="k">const</span> <span class="kt">int</span> <span class="n">relevantRanksCount</span> <span class="o">=</span> <span class="n">firstZeroPayout</span><span class="p">(</span><span class="n">payouts</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
-            <span class="k">const</span> <span class="kt">float</span> <span class="n">partialSortThreshold</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span> <span class="c1">// Magic number &lt;3
-</span><span class="c1"></span>            <span class="k">const</span> <span class="kt">bool</span> <span class="n">partialSort</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">relevantRanksCount</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">nbPlayers</span> <span class="o">&lt;=</span> <span class="n">partialSortThreshold</span><span class="p">;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">partialSort</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">return</span> <span class="p">[</span><span class="o">=</span><span class="p">](</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">draw</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="n">partial_sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
-                                 <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-                                     <span class="c1">// Reverse order
-</span><span class="c1"></span>                                     <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
-                                 <span class="p">}</span>
-                    <span class="p">);</span>
-                <span class="p">};</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">draw</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
-                     <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-                         <span class="c1">// Reverse order
-</span><span class="c1"></span>                         <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
-                     <span class="p">});</span>
-            <span class="p">};</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Create a RNG instance (using SFMT)
-</span><span class="cm">         * @return a RNG instance
-</span><span class="cm">         */</span>
-        <span class="n">RNG</span> <span class="nf">defaultRng</span><span class="p">()</span> <span class="p">{</span>
-            <span class="c1">// Initialize random distribution
-</span><span class="c1"></span>            <span class="c1">// https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
-</span><span class="c1"></span>            <span class="c1">// SFMT variant
-</span><span class="c1"></span>            <span class="n">random_device</span> <span class="n">rd</span><span class="p">;</span>
-            <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="n">mt</span><span class="p">(</span><span class="n">rd</span><span class="p">());</span>
-            <span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span><span class="o">&gt;</span> <span class="n">mtPtr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mt</span><span class="p">);</span>
-            <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">mtPtr</span> <span class="o">=</span> <span class="n">make_shared</span><span class="o">&lt;</span><span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mt</span><span class="p">),</span>
-                    <span class="n">distPtr</span> <span class="o">=</span> <span class="n">make_shared</span><span class="o">&lt;</span><span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">dist</span><span class="p">)]()</span> <span class="o">-&gt;</span> <span class="kt">double</span> <span class="p">{</span>
-                <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">distPtr</span><span class="p">)((</span><span class="o">*</span><span class="n">mtPtr</span><span class="p">));</span>
-            <span class="p">};</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Check if we can stop the trials according to the confidence probability and interval
-</span><span class="cm">         * @param alphaProbability the confidence probability
-</span><span class="cm">         * @param confidenceIntervalLength confidence interval length (root mean square)
-</span><span class="cm">         * @param samples the samples
-</span><span class="cm">         * @param nbPlayers the number of players
-</span><span class="cm">         * @return true if the stopping rule criteria are met
-</span><span class="cm">         */</span>
-        <span class="kt">bool</span> <span class="nf">canStop</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">alphaProbability</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">confidenceIntervalLength</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">samples</span><span class="p">,</span>
-                     <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">nbSamples</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="kt">double</span> <span class="n">limit</span> <span class="o">=</span> <span class="n">stoppingRuleLimit</span><span class="p">(</span><span class="n">alphaProbability</span><span class="p">,</span> <span class="n">confidenceIntervalLength</span><span class="p">,</span> <span class="n">nbSamples</span><span class="p">);</span>
-            <span class="k">return</span> <span class="n">variance</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="cm">/**
-</span><span class="cm">         * Normalize stacks (not really necessary but cheap) and invert to weights
-</span><span class="cm">         * @param stacks the stacks
-</span><span class="cm">         * @param nbPlayers the number of players
-</span><span class="cm">         * @param weights the destination array
-</span><span class="cm">         */</span>
-        <span class="kt">void</span> <span class="nf">fillWeights</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksAvg</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">stacks</span> <span class="o">+</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">nbPlayers</span><span class="p">;</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacksAvg</span> <span class="o">/</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="cm">/**
-</span><span class="cm">     * Perform one MC trial
-</span><span class="cm">     *
-</span><span class="cm">     * @param results destination array to add trial contribution into
-</span><span class="cm">     * @param payouts the contribution to add to the results per rank
-</span><span class="cm">     * @param weights something proportional to the inverse of the stacks of the players
-</span><span class="cm">     * @param permutation an array that will be used to store the permutation (permutation[i] = player that reaches rank i)
-</span><span class="cm">     * @param nbPlayers the number of players
-</span><span class="cm">     * @param rng random number generator
-</span><span class="cm">     * @param sorter function to sort the permutation
-</span><span class="cm">     */</span>
-    <span class="kt">void</span> <span class="nf">monteCarloIcmTrial</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">permutation</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span>
-                            <span class="k">const</span> <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sorter</span> <span class="o">&amp;</span><span class="n">sorter</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">monteCarloPermutation</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">sorter</span><span class="p">);</span>
-        <span class="c1">// Cumulate payouts according to the random permutation
-</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">results</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="cm">/**
-</span><span class="cm">     * Monte-Carlo ICM Ranking algorithm.
-</span><span class="cm">     *
-</span><span class="cm">     * @param stacks the stacks
-</span><span class="cm">     * @param payouts the payouts
-</span><span class="cm">     * @param nbPlayers the number of players
-</span><span class="cm">     * @param trials the number of trials to perform
-</span><span class="cm">     * @param results destination array for ICM EV
-</span><span class="cm">     */</span>
-    <span class="kt">void</span> <span class="nf">monteCarloIcm</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">trials</span><span class="p">,</span>
-                       <span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Algorithm : https://forumserver.twoplustwo.com/15/poker-theory/new-algorithm-calculate-icm-large-tournaments-1098489/
-</span><span class="c1"></span>        <span class="n">RNG</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">defaultRng</span><span class="p">();</span>
-        <span class="kt">int</span> <span class="n">permutation</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-
-        <span class="kt">double</span> <span class="n">weights</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-        <span class="n">fillWeights</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
-
-        <span class="kt">double</span> <span class="n">contrib</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-        <span class="c1">// Prepare each trial ranking contribution to the total
-</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">contrib</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">trials</span><span class="p">;</span>
-        <span class="p">}</span>
-
-        <span class="k">const</span> <span class="n">Sorter</span> <span class="n">sorter</span> <span class="o">=</span> <span class="n">chooseSorter</span><span class="p">(</span><span class="n">payouts</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">trials</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">monteCarloIcmTrial</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">contrib</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">sorter</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="cm">/**
-</span><span class="cm">     * Monte-Carlo ICM Ranking algorithm with stopping rule.
-</span><span class="cm">     *
-</span><span class="cm">     * @param stacks the stacks
-</span><span class="cm">     * @param payouts the payouts
-</span><span class="cm">     * @param nbPlayers the number of players
-</span><span class="cm">     * @param results destination array for ICM EV
-</span><span class="cm">     * @param stoppingAlphaProbability the confidence probability
-</span><span class="cm">     * @param stoppingConfidenceIntervalLength confidence interval length (root mean square)
-</span><span class="cm">     * @param stoppingEvalLag the number of trials that are performed before each evaluation of the stopping rule
-</span><span class="cm">     */</span>
-    <span class="kt">long</span> <span class="kt">long</span> <span class="nf">monteCarloIcmWithStoppingRule</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span>
-                                            <span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">stoppingAlphaProbability</span><span class="p">,</span>
-                                            <span class="k">const</span> <span class="kt">double</span> <span class="n">stoppingConfidenceIntervalLength</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">stoppingEvalLag</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Algorithm : https://forumserver.twoplustwo.com/15/poker-theory/new-algorithm-calculate-icm-large-tournaments-1098489/
-</span><span class="c1"></span>        <span class="c1">// Stopping rule : http://www.lib.ncsu.edu/resolver/1840.4/5244 (first method for independent samples)
-</span><span class="c1"></span>        <span class="n">RNG</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">defaultRng</span><span class="p">();</span>
-        <span class="kt">int</span> <span class="n">permutation</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-
-        <span class="kt">double</span> <span class="n">weights</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
-        <span class="n">fillWeights</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
-
-        <span class="c1">// For each trial we&#39;ll contribute the real payouts because we want to use them for the stopping rule
-</span><span class="c1"></span>        <span class="c1">// computation
-</span><span class="c1"></span>
-        <span class="k">const</span> <span class="n">Sorter</span> <span class="n">sorter</span> <span class="o">=</span> <span class="n">chooseSorter</span><span class="p">(</span><span class="n">payouts</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
-
-        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">samples</span><span class="p">;</span>
-        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">allocated</span><span class="p">;</span>
-        <span class="kt">long</span> <span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-        <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
-            <span class="c1">// While we don&#39;t stop according to the stopping rule, we create a batch of samples
-</span><span class="c1"></span>            <span class="k">auto</span> <span class="o">*</span><span class="n">memory</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">nbPlayers</span> <span class="o">*</span> <span class="n">stoppingEvalLag</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
-            <span class="c1">// Store the allocated memory area pointer
-</span><span class="c1"></span>            <span class="n">allocated</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stoppingEvalLag</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="kt">double</span> <span class="o">*</span><span class="n">sampleMemory</span> <span class="o">=</span> <span class="n">memory</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nbPlayers</span><span class="p">;</span>
-                <span class="n">monteCarloIcmTrial</span><span class="p">(</span><span class="n">sampleMemory</span><span class="p">,</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">payouts</span><span class="p">),</span> <span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span>
-                                   <span class="n">sorter</span><span class="p">);</span>
-                <span class="c1">// Store the pointer to the sample
-</span><span class="c1"></span>                <span class="n">samples</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">sampleMemory</span><span class="p">);</span>
-            <span class="p">}</span>
-            <span class="n">count</span> <span class="o">+=</span> <span class="n">stoppingEvalLag</span><span class="p">;</span>
-            <span class="c1">// Break if the stopping rule says it&#39;s enough
-</span><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">canStop</span><span class="p">(</span><span class="n">stoppingAlphaProbability</span><span class="p">,</span> <span class="n">stoppingConfidenceIntervalLength</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="c1">// Sum the samples
-</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="nl">sample</span> <span class="p">:</span> <span class="n">samples</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="c1">// Divide the sum to get the mean
-</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">count</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="c1">// Free the allocated memory areas
-</span><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="nl">memory</span> <span class="p">:</span> <span class="n">allocated</span><span class="p">)</span> <span class="p">{</span>
-            <span class="n">free</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="c1">// Return the number of samples that were generated
-</span><span class="c1"></span>        <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p><code>monte-carlo-icm.hpp</code>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#ifndef MTT_EXPERIMENTS_C_MATH_HPP
+</span></span></span><span class="line"><span class="cl"><span class="cp">#define MTT_EXPERIMENTS_C_MATH_HPP
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="kt">double</span> <span class="nf">NormalCDFInverse</span><span class="p">(</span><span class="kt">double</span> <span class="n">p</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="cp">#endif </span><span class="c1">//MTT_EXPERIMENTS_C_MATH_HPP
+</span></span></span></code></pre></div><p><code>monte-carlo-icm.cpp</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;monte-carlo-icm.hpp&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;random&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;sfmt.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;util/math.hpp&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">namespace</span> <span class="n">icm</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * The Random Number Generator type : functions denoted by this alias are expected to draw doubles between 0 and 1.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Abstracted in order to plug a proper RNG for quasi-Monte-Carlo in the future.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="n">RNG</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">()</span><span class="o">&gt;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * The sorter functions are expected to sort the indexes of the draw array in reverse order according to the values
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * of the array.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="k">using</span> <span class="n">Sorter</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">draw</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Private section
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="k">namespace</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Compute a permutation according to the sorting of random values put to the power of given weights.
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * In fact, logarithm is used for performance, and logarithm tables could certainly be used to fasten the
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * computation.
+</span></span></span><span class="line"><span class="cl"><span class="cm">         *
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param weights
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param destination where the permutation will be written to
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param size size of weights and destination array
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param rng random number generator
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param sorter function to sort the permutation
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">void</span> <span class="nf">monteCarloPermutation</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="k">const</span> <span class="n">Sorter</span> <span class="o">&amp;</span><span class="n">sorter</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">double</span> <span class="n">draw</span><span class="p">[</span><span class="n">size</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">draw</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">log2</span><span class="p">(</span><span class="n">rng</span><span class="p">())</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                <span class="n">destination</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sorter</span><span class="p">(</span><span class="n">draw</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Get the index of the first zero payout after which all payouts are zero as well
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param payouts the payouts array
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param size the size of the array
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return the index of the first zero payout
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="nf">firstZeroPayout</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="p">(</span><span class="n">firstZeroPayout</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">firstZeroPayout</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">firstZeroPayout</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Compute the mean of a batch of samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param samples the samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param nbPlayers the size of each sample aka the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return a vector containing the mean of the samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">mean</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">samples</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="n">nbPlayers</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbSamples</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">double</span> <span class="o">*</span><span class="n">sample</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">result</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sample</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">nbSamples</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Compute the variance of samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param samples the samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param nbPlayers the size of each sample aka the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return the variance
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">double</span> <span class="nf">variance</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">samples</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">meanSample</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">double</span> <span class="n">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbSamples</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">double</span> <span class="o">*</span><span class="n">sample</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="kt">double</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">meanSample</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">result</span> <span class="o">+=</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">diff</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Not sure about nbSamples - 1, should be nbSamples but the paper about the stopping rule states n-1...
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">(</span><span class="n">nbSamples</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Compute the threshold for the variance under which the stopping limit is considered reached
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param alphaProbability confidence probability
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param confidenceIntervalLength confidence interval length (root mean square)
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param nbSamples number of samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return the variance threshold
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">double</span> <span class="nf">stoppingRuleLimit</span><span class="p">(</span><span class="kt">double</span> <span class="n">alphaProbability</span><span class="p">,</span> <span class="kt">double</span> <span class="n">confidenceIntervalLength</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">double</span> <span class="n">zAlpha</span> <span class="o">=</span> <span class="n">NormalCDFInverse</span><span class="p">(</span><span class="n">alphaProbability</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alphaProbability</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span> <span class="c1">// Symmetrical distribution
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">return</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span><span class="n">nbSamples</span> <span class="o">*</span> <span class="n">confidenceIntervalLength</span> <span class="o">*</span> <span class="n">confidenceIntervalLength</span> <span class="o">/</span> <span class="n">zAlpha</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Pick the appropriate sorter depending on payouts. We can use a partial sort if most of the payouts are zero
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param payouts the payouts
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param nbPlayers the size of the payouts array aka the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return a sorter
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Sorter</span> <span class="nf">chooseSorter</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Partial sort vs sort : interesting only if we have many zero payouts at the end
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">const</span> <span class="kt">int</span> <span class="n">relevantRanksCount</span> <span class="o">=</span> <span class="n">firstZeroPayout</span><span class="p">(</span><span class="n">payouts</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">float</span> <span class="n">partialSortThreshold</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">;</span> <span class="c1">// Magic number &lt;3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">const</span> <span class="kt">bool</span> <span class="n">partialSort</span> <span class="o">=</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">relevantRanksCount</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span> <span class="n">nbPlayers</span> <span class="o">&lt;=</span> <span class="n">partialSortThreshold</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">partialSort</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="p">[</span><span class="o">=</span><span class="p">](</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">draw</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">partial_sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">relevantRanksCount</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                 <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                                     <span class="c1">// Reverse order
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                                     <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">                                 <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                    <span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="p">};</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[](</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">draw</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">destination</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sort</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">destination</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                         <span class="c1">// Reverse order
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                         <span class="k">return</span> <span class="p">(</span><span class="n">draw</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">draw</span><span class="p">[</span><span class="n">b</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">                     <span class="p">});</span>
+</span></span><span class="line"><span class="cl">            <span class="p">};</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Create a RNG instance (using SFMT)
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return a RNG instance
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="n">RNG</span> <span class="nf">defaultRng</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Initialize random distribution
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// https://stackoverflow.com/questions/19665818/generate-random-numbers-using-c11-random-library
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// SFMT variant
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">random_device</span> <span class="n">rd</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span> <span class="n">mt</span><span class="p">(</span><span class="n">rd</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">            <span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span><span class="o">&gt;</span> <span class="n">mtPtr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mt</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">dist</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[</span><span class="n">mtPtr</span> <span class="o">=</span> <span class="n">make_shared</span><span class="o">&lt;</span><span class="n">wtl</span><span class="o">::</span><span class="n">sfmt19937</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mt</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">distPtr</span> <span class="o">=</span> <span class="n">make_shared</span><span class="o">&lt;</span><span class="n">uniform_real_distribution</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">dist</span><span class="p">)]()</span> <span class="o">-&gt;</span> <span class="kt">double</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="p">(</span><span class="o">*</span><span class="n">distPtr</span><span class="p">)((</span><span class="o">*</span><span class="n">mtPtr</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="p">};</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Check if we can stop the trials according to the confidence probability and interval
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param alphaProbability the confidence probability
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param confidenceIntervalLength confidence interval length (root mean square)
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param samples the samples
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param nbPlayers the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @return true if the stopping rule criteria are met
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">bool</span> <span class="nf">canStop</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="n">alphaProbability</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">confidenceIntervalLength</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="o">&amp;</span><span class="n">samples</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                     <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">nbSamples</span> <span class="o">=</span> <span class="n">samples</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">nbSamples</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">double</span> <span class="n">limit</span> <span class="o">=</span> <span class="n">stoppingRuleLimit</span><span class="p">(</span><span class="n">alphaProbability</span><span class="p">,</span> <span class="n">confidenceIntervalLength</span><span class="p">,</span> <span class="n">nbSamples</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">variance</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">limit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * Normalize stacks (not really necessary but cheap) and invert to weights
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param stacks the stacks
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param nbPlayers the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">         * @param weights the destination array
+</span></span></span><span class="line"><span class="cl"><span class="cm">         */</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">void</span> <span class="nf">fillWeights</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">const</span> <span class="kt">double</span> <span class="n">stacksAvg</span> <span class="o">=</span> <span class="n">accumulate</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">stacks</span> <span class="o">+</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">nbPlayers</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">stacksAvg</span> <span class="o">/</span> <span class="n">stacks</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Perform one MC trial
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param results destination array to add trial contribution into
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param payouts the contribution to add to the results per rank
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param weights something proportional to the inverse of the stacks of the players
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param permutation an array that will be used to store the permutation (permutation[i] = player that reaches rank i)
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param nbPlayers the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param rng random number generator
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param sorter function to sort the permutation
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">monteCarloIcmTrial</span><span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="kt">double</span> <span class="o">*</span><span class="n">weights</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">permutation</span><span class="p">,</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                            <span class="k">const</span> <span class="n">RNG</span> <span class="o">&amp;</span><span class="n">rng</span><span class="p">,</span> <span class="k">const</span> <span class="n">Sorter</span> <span class="o">&amp;</span><span class="n">sorter</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">monteCarloPermutation</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">sorter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Cumulate payouts according to the random permutation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">results</span><span class="p">[</span><span class="n">permutation</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Monte-Carlo ICM Ranking algorithm.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param stacks the stacks
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param payouts the payouts
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param nbPlayers the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param trials the number of trials to perform
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param results destination array for ICM EV
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">void</span> <span class="nf">monteCarloIcm</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="k">const</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">trials</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                       <span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Algorithm : https://forumserver.twoplustwo.com/15/poker-theory/new-algorithm-calculate-icm-large-tournaments-1098489/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">RNG</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">defaultRng</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">permutation</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kt">double</span> <span class="n">weights</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fillWeights</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kt">double</span> <span class="n">contrib</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Prepare each trial ranking contribution to the total
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">contrib</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">payouts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">trials</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">Sorter</span> <span class="n">sorter</span> <span class="o">=</span> <span class="n">chooseSorter</span><span class="p">(</span><span class="n">payouts</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">trials</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">monteCarloIcmTrial</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">contrib</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">sorter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * Monte-Carlo ICM Ranking algorithm with stopping rule.
+</span></span></span><span class="line"><span class="cl"><span class="cm">     *
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param stacks the stacks
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param payouts the payouts
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param nbPlayers the number of players
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param results destination array for ICM EV
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param stoppingAlphaProbability the confidence probability
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param stoppingConfidenceIntervalLength confidence interval length (root mean square)
+</span></span></span><span class="line"><span class="cl"><span class="cm">     * @param stoppingEvalLag the number of trials that are performed before each evaluation of the stopping rule
+</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">long</span> <span class="kt">long</span> <span class="nf">monteCarloIcmWithStoppingRule</span><span class="p">(</span><span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">stacks</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="o">*</span><span class="n">payouts</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">nbPlayers</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                            <span class="kt">double</span> <span class="o">*</span><span class="n">results</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">stoppingAlphaProbability</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                            <span class="k">const</span> <span class="kt">double</span> <span class="n">stoppingConfidenceIntervalLength</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">stoppingEvalLag</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Algorithm : https://forumserver.twoplustwo.com/15/poker-theory/new-algorithm-calculate-icm-large-tournaments-1098489/
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// Stopping rule : http://www.lib.ncsu.edu/resolver/1840.4/5244 (first method for independent samples)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">RNG</span> <span class="n">rng</span> <span class="o">=</span> <span class="n">defaultRng</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">permutation</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="kt">double</span> <span class="n">weights</span><span class="p">[</span><span class="n">nbPlayers</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fillWeights</span><span class="p">(</span><span class="n">stacks</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">weights</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1">// For each trial we&#39;ll contribute the real payouts because we want to use them for the stopping rule
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="c1">// computation
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">        <span class="k">const</span> <span class="n">Sorter</span> <span class="n">sorter</span> <span class="o">=</span> <span class="n">chooseSorter</span><span class="p">(</span><span class="n">payouts</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">samples</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span> <span class="n">allocated</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">long</span> <span class="kt">long</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// While we don&#39;t stop according to the stopping rule, we create a batch of samples
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">auto</span> <span class="o">*</span><span class="n">memory</span> <span class="o">=</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="p">)</span> <span class="n">calloc</span><span class="p">(</span><span class="n">nbPlayers</span> <span class="o">*</span> <span class="n">stoppingEvalLag</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Store the allocated memory area pointer
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">allocated</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stoppingEvalLag</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kt">double</span> <span class="o">*</span><span class="n">sampleMemory</span> <span class="o">=</span> <span class="n">memory</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">nbPlayers</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">monteCarloIcmTrial</span><span class="p">(</span><span class="n">sampleMemory</span><span class="p">,</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">double</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">payouts</span><span class="p">),</span> <span class="n">weights</span><span class="p">,</span> <span class="n">permutation</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                   <span class="n">sorter</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// Store the pointer to the sample
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">samples</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">sampleMemory</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">count</span> <span class="o">+=</span> <span class="n">stoppingEvalLag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// Break if the stopping rule says it&#39;s enough
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">canStop</span><span class="p">(</span><span class="n">stoppingAlphaProbability</span><span class="p">,</span> <span class="n">stoppingConfidenceIntervalLength</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">nbPlayers</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Sum the samples
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="nl">sample</span> <span class="p">:</span> <span class="n">samples</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">sample</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Divide the sum to get the mean
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nbPlayers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">results</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Free the allocated memory areas
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">double</span> <span class="o">*</span><span class="nl">memory</span> <span class="p">:</span> <span class="n">allocated</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">free</span><span class="p">(</span><span class="n">memory</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// Return the number of samples that were generated
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="n">count</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><code>monte-carlo-icm.hpp</code>
 <em>Déclarez les fonctions qu&rsquo;il vous intéresse d&rsquo;exposer !</em></p>
-<section class="footnotes" role="doc-endnotes">
+<div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn:1" role="doc-endnote">
-<p>A Brief Survey of Stopping Rules in Monte Carlo Simulations, 1968, Gilman - <a href="https://repository.lib.ncsu.edu/handle/1840.4/5244" target="_blank" rel="noopener">https://repository.lib.ncsu.edu/handle/1840.4/5244</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon footnote-icon"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"/></svg></a></p>
+<li id="fn:1">
+<p>A Brief Survey of Stopping Rules in Monte Carlo Simulations, 1968, Gilman - <a href="https://repository.lib.ncsu.edu/handle/1840.4/5244" target="_blank" rel="noopener">https://repository.lib.ncsu.edu/handle/1840.4/5244</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon footnote-icon"><path d="M177 159.7l136 136c9.4 9.4 9.4 24.6 0 33.9l-22.6 22.6c-9.4 9.4-24.6 9.4-33.9 0L160 255.9l-96.4 96.4c-9.4 9.4-24.6 9.4-33.9 0L7 329.7c-9.4-9.4-9.4-24.6 0-33.9l136-136c9.4-9.5 24.6-9.5 34-.1z"/></svg></a></p>
 </li>
 </ol>
-</section>
+</div>
 
             </div>
 
@@ -1008,7 +1008,7 @@ Par le passé j&rsquo;utilisais de petits algos observant la variation sur des l
             
     <footer id="footer" class="footer">
         <div class="footer-inner">
-            <div class="site-info">©&nbsp;2020–2021&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
+            <div class="site-info">©&nbsp;2020–2023&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
 
             
     

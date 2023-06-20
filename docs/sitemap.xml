@@ -1,159 +1,112 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
+    <loc>https://pittscraft.com/tags/android/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/categories/application-mobile/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/tags/architecture/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/categories/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/tags/ios/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/tags/kotlin/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/posts/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/posts/pragmatic-mobile-architecture/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/tags/swift/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
+    <loc>https://pittscraft.com/tags/</loc>
+    <lastmod>2023-06-18T20:38:09+01:00</lastmod>
+  </url><url>
     <loc>https://pittscraft.com/tags/ai/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/c-/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pittscraft.com/categories/</loc>
-    <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/deep-learning/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/game-theory/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/categories/game-theory/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/icm/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/ml/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/monte-carlo/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/mtt/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pittscraft.com/</loc>
-    <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/poker/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/poker_mtt_icm_cpp_code/</loc>
     <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pittscraft.com/posts/</loc>
-    <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pittscraft.com/tags/</loc>
-    <lastmod>2021-05-18T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/poker_mtt_icm_deep_learning/</loc>
     <lastmod>2021-04-21T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/poker_mtt_icm_monte_carlo/</loc>
     <lastmod>2021-03-31T08:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/poker_mtt_icm_calcul/</loc>
     <lastmod>2021-03-08T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/gamblers-ruin/</loc>
     <lastmod>2021-03-03T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/poker_mtt_icm_question/</loc>
     <lastmod>2021-03-03T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/about/</loc>
     <lastmod>2021-02-23T23:32:13+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pittscraft.com/categories/application-mobile/</loc>
-    <lastmod>2020-12-10T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/combine/</loc>
     <lastmod>2020-12-10T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://pittscraft.com/tags/ios/</loc>
-    <lastmod>2020-12-10T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/swiftui/</loc>
     <lastmod>2020-12-10T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/swiftui_combine2/</loc>
     <lastmod>2020-12-10T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/swiftui_combine1/</loc>
     <lastmod>2020-12-09T14:14:35+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/posts/attestation-ios/</loc>
     <lastmod>2020-11-09T20:38:09+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/confinement/</loc>
     <lastmod>2020-11-09T20:38:09+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/tags/covid/</loc>
     <lastmod>2020-11-09T20:38:09+01:00</lastmod>
-  </url>
-  
-  <url>
+  </url><url>
     <loc>https://pittscraft.com/visio/</loc>
   </url>
-  
 </urlset>

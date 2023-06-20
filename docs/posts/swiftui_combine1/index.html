@@ -3,7 +3,7 @@
     <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
     <meta charset="UTF-8" />
 
-    <meta name="generator" content="Hugo 0.80.0" /><meta name="theme-color" content="#fff" />
+    <meta name="generator" content="Hugo 0.111.3"><meta name="theme-color" content="#fff" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
@@ -18,7 +18,7 @@
 
     
     
-        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.2e8cecdb28365acb51546c474e04cc3d1566d483eb8370d97ec4daebeaec1398.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.df5774dfbc8c32f95f1e03a29130311c1115372bb1bc63afed540e1308393896.js"></script>
 
     
 
@@ -264,108 +264,108 @@
 Le <a href="https://fr.wikipedia.org/wiki/Mod%C3%A8le-vue-vue_mod%C3%A8le" target="_blank" rel="noopener">MVVM</a> est tout à fait indiqué pour un cloisonnement minimal, et en l&rsquo;occurence ça ressemblait à ça</p>
 <p><img src="/images/swiftui1/MVVM.png" alt="Image description"></p>
 <p>Avec des injection par construction et donc cette instanciation initiale :</p>
-<pre><code>let store = Store(context: moContext)
+<pre tabindex="0"><code>let store = Store(context: moContext)
 let model = MainViewModel(store: store, router: Router())
 return MainView(model: model)
 </code></pre><p>On peut remarquer le petit <code>Router</code> qui s&rsquo;est avéré fort utile pour éviter trop de plomberie. Son rôle est juste de publier des propriétés destinées à contrôler et rendre compte de la navigation. Il ne fait donc clairement pas partie du modèle ni des vues, et j&rsquo;ai du mal à le considérer comme un modèle de vue étant donnée sa nature transverse.</p>
 <p>Tant qu&rsquo;il ne dépasse pas ce rôle de navigation, ne stocke qu&rsquo;un minimum de données transitoires au besoin (immuables de préférence, la struct d&rsquo;une personne à éditer par exemple), ça reste très lisible et on évite les chaînages de <code>@Published</code> orthodoxes.</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">enum</span> <span class="nc">ActiveSheet</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="n">attestationPresentation</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">),</span> <span class="n">addPerson</span><span class="p">,</span> <span class="n">edit</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kd">enum</span> <span class="nc">ActiveAlert</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="n">confirmAttestation</span><span class="p">,</span> <span class="n">detail</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="n">Reason</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kd">class</span> <span class="nc">Router</span><span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-    
-    <span class="p">@</span><span class="n">Published</span>
-    <span class="kd">var</span> <span class="nv">showSheet</span> <span class="p">=</span> <span class="kc">false</span>
-    <span class="p">@</span><span class="n">Published</span>
-    <span class="kd">var</span> <span class="nv">showAlert</span> <span class="p">=</span> <span class="kc">false</span>
-    
-    <span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">activeSheet</span> <span class="p">=</span> <span class="n">ActiveSheet</span><span class="p">.</span><span class="n">addPerson</span>
-    <span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">activeAlert</span> <span class="p">=</span> <span class="n">ActiveAlert</span><span class="p">.</span><span class="n">confirmAttestation</span>
-    
-    <span class="kd">func</span> <span class="nf">showAttestationCreationAlert</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">activeAlert</span> <span class="p">=</span> <span class="p">.</span><span class="n">confirmAttestation</span>
-        <span class="n">showAlert</span> <span class="p">=</span> <span class="kc">true</span>
-    <span class="p">}</span>
-    
-    <span class="kd">func</span> <span class="nf">startAddPerson</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">activeSheet</span> <span class="p">=</span> <span class="p">.</span><span class="n">addPerson</span>
-        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">true</span>
-    <span class="p">}</span>
-    
-    <span class="kd">func</span> <span class="nf">startEdit</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">activeSheet</span> <span class="p">=</span> <span class="p">.</span><span class="n">edit</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)</span>
-        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">true</span>
-    <span class="p">}</span>
-    
-    <span class="kd">func</span> <span class="nf">showReasonDetail</span><span class="p">(</span><span class="kc">_</span> <span class="n">reason</span><span class="p">:</span> <span class="n">Reason</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">activeAlert</span> <span class="p">=</span> <span class="p">.</span><span class="n">detail</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="n">reason</span><span class="p">)</span>
-        <span class="n">showAlert</span> <span class="p">=</span> <span class="kc">true</span>
-    <span class="p">}</span>
-    
-    <span class="kd">func</span> <span class="nf">showAttestationView</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">activeSheet</span> <span class="p">=</span> <span class="p">.</span><span class="n">attestationPresentation</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)</span>
-        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">true</span>
-    <span class="p">}</span>
-    
-    <span class="kd">func</span> <span class="nf">closeSheet</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">false</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Plutôt concis, ça vaut clairement le coup plutôt que de perdre ces quelques variables dans des chemins trop tortueux.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">enum</span> <span class="nc">ActiveSheet</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">attestationPresentation</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">),</span> <span class="n">addPerson</span><span class="p">,</span> <span class="n">edit</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">enum</span> <span class="nc">ActiveAlert</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="n">confirmAttestation</span><span class="p">,</span> <span class="n">detail</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="n">Reason</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Router</span><span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">showSheet</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">showAlert</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">activeSheet</span> <span class="p">=</span> <span class="n">ActiveSheet</span><span class="p">.</span><span class="n">addPerson</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">activeAlert</span> <span class="p">=</span> <span class="n">ActiveAlert</span><span class="p">.</span><span class="n">confirmAttestation</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">showAttestationCreationAlert</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">activeAlert</span> <span class="p">=</span> <span class="p">.</span><span class="n">confirmAttestation</span>
+</span></span><span class="line"><span class="cl">        <span class="n">showAlert</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">startAddPerson</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">activeSheet</span> <span class="p">=</span> <span class="p">.</span><span class="n">addPerson</span>
+</span></span><span class="line"><span class="cl">        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">startEdit</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">activeSheet</span> <span class="p">=</span> <span class="p">.</span><span class="n">edit</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">showReasonDetail</span><span class="p">(</span><span class="kc">_</span> <span class="n">reason</span><span class="p">:</span> <span class="n">Reason</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">activeAlert</span> <span class="p">=</span> <span class="p">.</span><span class="n">detail</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="n">reason</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">showAlert</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">showAttestationView</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">PersonStruct</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">activeSheet</span> <span class="p">=</span> <span class="p">.</span><span class="n">attestationPresentation</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">closeSheet</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">showSheet</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Plutôt concis, ça vaut clairement le coup plutôt que de perdre ces quelques variables dans des chemins trop tortueux.</p>
 <p>Tous mes proches le savent, les enums Swift <a href="https://www.dailymotion.com/video/x2xl6r8" target="_blank" rel="noopener">c&rsquo;est ma grande passion</a>. Et ceux du petit routeur ci-dessus me permettent de faire des fonctions SwiftUI bien compactes :</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift">    <span class="kd">func</span> <span class="nf">alert</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="n">Alert</span> <span class="p">{</span>
-        <span class="k">switch</span> <span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">activeAlert</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="p">.</span><span class="n">confirmAttestation</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Alert</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="n">coldFeetTitle</span><span class="p">,</span>
-                         <span class="n">message</span><span class="p">:</span> <span class="n">coldFeetMessage</span><span class="p">,</span>
-                         <span class="n">primaryButton</span><span class="p">:</span> <span class="p">.</span><span class="k">default</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="s">&#34;Je certifie&#34;</span><span class="p">))</span> <span class="p">{</span>
-                <span class="n">vm</span><span class="p">.</span><span class="n">generateNewAttestation</span><span class="p">()</span>
-            <span class="p">},</span> <span class="n">secondaryButton</span><span class="p">:</span> <span class="p">.</span><span class="n">cancel</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="s">&#34;Annuler&#34;</span><span class="p">)))</span>
-        <span class="k">case</span> <span class="p">.</span><span class="n">detail</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="kd">let</span> <span class="nv">reason</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">Alert</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="n">Text</span><span class="p">(</span><span class="n">reason</span><span class="p">.</span><span class="n">niceString</span><span class="p">),</span>
-                         <span class="n">message</span><span class="p">:</span> <span class="n">Text</span><span class="p">(</span><span class="n">reason</span><span class="p">.</span><span class="n">detail</span><span class="p">),</span>
-                         <span class="n">dismissButton</span><span class="p">:</span> <span class="p">.</span><span class="k">default</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="s">&#34;Ok&#34;</span><span class="p">)))</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    
-    <span class="kd">func</span> <span class="nf">sheet</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="n">AnyView</span> <span class="p">{</span>
-        <span class="k">switch</span> <span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">activeSheet</span> <span class="p">{</span>
-        <span class="k">case</span> <span class="p">.</span><span class="n">attestationPresentation</span><span class="p">(</span><span class="kd">let</span> <span class="nv">person</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">AnyView</span><span class="p">(</span><span class="n">AttestationView</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">attestationViewModel</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)))</span>
-        <span class="k">case</span> <span class="p">.</span><span class="n">addPerson</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">AnyView</span><span class="p">(</span><span class="n">AddOrEditPersonSheet</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">addPersonViewModel</span><span class="p">))</span>
-        <span class="k">case</span> <span class="p">.</span><span class="n">edit</span><span class="p">(</span><span class="kd">let</span> <span class="nv">person</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">AnyView</span><span class="p">(</span><span class="n">AddOrEditPersonSheet</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">editPersonViewModel</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)))</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-</code></pre></div><p>Et enfin, le <code>body</code> de ma <code>View</code> principale sera très concis :</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
-        <span class="n">NavigationView</span> <span class="p">{</span>
-            <span class="n">VStack</span><span class="p">(</span><span class="n">alignment</span><span class="p">:</span> <span class="p">.</span><span class="n">center</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
-                <span class="n">MainListsView</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">mainListsViewModel</span><span class="p">).</span><span class="n">environment</span><span class="p">(</span><span class="err">\</span><span class="p">.</span><span class="n">editMode</span><span class="p">,</span> <span class="err">$</span><span class="n">editMode</span><span class="p">)</span>
-                <span class="n">BottomMenu</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">bottomMenuViewModel</span><span class="p">)</span>
-            <span class="p">}</span>
-            <span class="p">.</span><span class="n">sheet</span><span class="p">(</span><span class="n">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">showSheet</span><span class="p">,</span> <span class="n">onDismiss</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">vm</span><span class="p">.</span><span class="n">checkShouldShowPinnedAttestation</span><span class="p">()</span>
-            <span class="p">},</span> <span class="n">content</span><span class="p">:</span> <span class="n">sheet</span><span class="p">)</span>
-						<span class="p">.</span><span class="n">navigationBarTitle</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">,</span> <span class="n">displayMode</span><span class="p">:</span> <span class="p">.</span><span class="n">inline</span><span class="p">)</span>
-            <span class="p">.</span><span class="n">navigationBarItems</span><span class="p">(</span><span class="n">leading</span><span class="p">:</span> <span class="n">navigationBarLeadingItem</span><span class="p">,</span> <span class="n">trailing</span><span class="p">:</span> <span class="n">EditButton</span><span class="p">(</span><span class="n">editMode</span><span class="p">:</span> <span class="err">$</span><span class="n">editMode</span><span class="p">))</span>            
-        <span class="p">}</span>
-        <span class="p">.</span><span class="n">alert</span><span class="p">(</span><span class="n">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">showAlert</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">alert</span><span class="p">)</span>
-    <span class="p">}</span>
-</code></pre></div><p>(<a href="https://stackoverflow.com/questions/58837007/multiple-sheetispresented-doesnt-work-in-swiftui" target="_blank" rel="noopener">on peut comprendre</a> d&rsquo;ailleurs pourquoi je sépare le <code>showSheet</code> et <code>showAlert</code> des enums, au lieu de déclarer des <code>.none</code>)</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">alert</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="n">Alert</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">switch</span> <span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">activeAlert</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="p">.</span><span class="n">confirmAttestation</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">Alert</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="n">coldFeetTitle</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">message</span><span class="p">:</span> <span class="n">coldFeetMessage</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">primaryButton</span><span class="p">:</span> <span class="p">.</span><span class="k">default</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="s">&#34;Je certifie&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">vm</span><span class="p">.</span><span class="n">generateNewAttestation</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span> <span class="n">secondaryButton</span><span class="p">:</span> <span class="p">.</span><span class="n">cancel</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="s">&#34;Annuler&#34;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="p">.</span><span class="n">detail</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="kd">let</span> <span class="nv">reason</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">Alert</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="n">Text</span><span class="p">(</span><span class="n">reason</span><span class="p">.</span><span class="n">niceString</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">message</span><span class="p">:</span> <span class="n">Text</span><span class="p">(</span><span class="n">reason</span><span class="p">.</span><span class="n">detail</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">                         <span class="n">dismissButton</span><span class="p">:</span> <span class="p">.</span><span class="k">default</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="s">&#34;Ok&#34;</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">func</span> <span class="nf">sheet</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="n">AnyView</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">switch</span> <span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">activeSheet</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="p">.</span><span class="n">attestationPresentation</span><span class="p">(</span><span class="kd">let</span> <span class="nv">person</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">AnyView</span><span class="p">(</span><span class="n">AttestationView</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">attestationViewModel</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="p">.</span><span class="n">addPerson</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">AnyView</span><span class="p">(</span><span class="n">AddOrEditPersonSheet</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">addPersonViewModel</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="p">.</span><span class="n">edit</span><span class="p">(</span><span class="kd">let</span> <span class="nv">person</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">AnyView</span><span class="p">(</span><span class="n">AddOrEditPersonSheet</span><span class="p">(</span><span class="n">vm</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">editPersonViewModel</span><span class="p">(</span><span class="n">person</span><span class="p">:</span> <span class="n">person</span><span class="p">)))</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>Et enfin, le <code>body</code> de ma <code>View</code> principale sera très concis :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">NavigationView</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">VStack</span><span class="p">(</span><span class="n">alignment</span><span class="p">:</span> <span class="p">.</span><span class="n">center</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">MainListsView</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">mainListsViewModel</span><span class="p">).</span><span class="n">environment</span><span class="p">(</span><span class="err">\</span><span class="p">.</span><span class="n">editMode</span><span class="p">,</span> <span class="err">$</span><span class="n">editMode</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">BottomMenu</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">vm</span><span class="p">.</span><span class="n">bottomMenuViewModel</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">sheet</span><span class="p">(</span><span class="n">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">showSheet</span><span class="p">,</span> <span class="n">onDismiss</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">vm</span><span class="p">.</span><span class="n">checkShouldShowPinnedAttestation</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="p">},</span> <span class="n">content</span><span class="p">:</span> <span class="n">sheet</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">						<span class="p">.</span><span class="n">navigationBarTitle</span><span class="p">(</span><span class="s">&#34;&#34;</span><span class="p">,</span> <span class="n">displayMode</span><span class="p">:</span> <span class="p">.</span><span class="n">inline</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="p">.</span><span class="n">navigationBarItems</span><span class="p">(</span><span class="n">leading</span><span class="p">:</span> <span class="n">navigationBarLeadingItem</span><span class="p">,</span> <span class="n">trailing</span><span class="p">:</span> <span class="n">EditButton</span><span class="p">(</span><span class="n">editMode</span><span class="p">:</span> <span class="err">$</span><span class="n">editMode</span><span class="p">))</span>            
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">alert</span><span class="p">(</span><span class="n">isPresented</span><span class="p">:</span> <span class="err">$</span><span class="n">vm</span><span class="p">.</span><span class="n">router</span><span class="p">.</span><span class="n">showAlert</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">alert</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><p>(<a href="https://stackoverflow.com/questions/58837007/multiple-sheetispresented-doesnt-work-in-swiftui" target="_blank" rel="noopener">on peut comprendre</a> d&rsquo;ailleurs pourquoi je sépare le <code>showSheet</code> et <code>showAlert</code> des enums, au lieu de déclarer des <code>.none</code>)</p>
 <p>La vue principale est la principale consommatrice du routeur, cependant de multiples vues viennent agir dessus.</p>
 <p>Evidemment, cette architecture est adaptée à ce projet particulier, ne cherchez pas à reproduire ça à la maison.</p>
 <h1 id="les-petits-trucs-pénibles"><a href="#les-petits-trucs-pénibles" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Les petits trucs pénibles</h1>
 <h2 id="type-erasure"><a href="#type-erasure" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Type erasure</h2>
 <p>Ci-dessus, vous pouvez voir que j&rsquo;utilise <code>AnyView(...)</code> pour renvoyer un type consistant de <code>View</code>. Pour tous ceux qui ont joué un peu en profondeur avec les protocoles et génériques en Swift, on atteint vite des obstacles mystérieux particulièrement brainboiling.</p>
 <p>Heureusement on observe un effort de type erasure dans les bibliothèques système avec ces <code>AnyView</code>, <code>AnyCancellable</code>&hellip;</p>
-<p><img src="/images/swiftui1/Capture-decran-2020-12-09-a-15.35.03.png" alt="Complétion sur &ldquo;Any&rdquo; dans XCode"></p>
+<p><img src="/images/swiftui1/Capture-decran-2020-12-09-a-15.35.03.png" alt="Complétion sur &amp;ldquo;Any&amp;rdquo; dans XCode"></p>
 <p>Ainsi que de nouveaux mots clé mystérieux comme <code>some</code> qui est la réponse directe à la sentence :</p>
 <blockquote>
 <p>Protocols &lsquo;WouldBeSoNice&rsquo; can only be used as a generic constraint because it has Self or associated type requirements</p>
@@ -374,11 +374,11 @@ return MainView(model: model)
 <p>Ceci-dit, même si ça disparaît vite, je pense que c&rsquo;est un frein assez considérable notamment pour des débutants.</p>
 <h2 id="observer-des-objets-imbriqués"><a href="#observer-des-objets-imbriqués" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Observer des objets imbriqués</h2>
 <p>Un <code>ViewModel</code> en mode Combine doit avoir cette allure :</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-	<span class="p">@</span><span class="n">Published</span>
-	<span class="kd">var</span> <span class="nv">someProperty</span> <span class="p">=</span> <span class="s">&#34;Coucou copaing !&#34;</span>
-<span class="p">}</span>
-</code></pre></div><p>Le wrapper <code>@Published</code> est tout à fait adaptée aux structs puisque toute mutation d&rsquo;une struct est un changement de valeur. Mais les classes si elles sont faites pour être mutées ne remonteront point l&rsquo;évènement au wrapper.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nv">someProperty</span> <span class="p">=</span> <span class="s">&#34;Coucou copaing !&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Le wrapper <code>@Published</code> est tout à fait adaptée aux structs puisque toute mutation d&rsquo;une struct est un changement de valeur. Mais les classes si elles sont faites pour être mutées ne remonteront point l&rsquo;évènement au wrapper.</p>
 <p>Or pour observer une propriété imbriquée au deuxième niveau dans SwiftUI, comme <code>.sheet(isPresented: $vm.router.showSheet) {…}</code>, on peut essayer :</p>
 <ul>
 <li>d&rsquo;observer le routeur qui serait une <strong>struct</strong> et de prendre sa valeur <code>showSheet</code></li>
@@ -387,83 +387,83 @@ return MainView(model: model)
 <p>Eh bien aucune des deux options ne fonctionne directement depuis une vue SwiftUI.
 Ce petit <code>$</code> qui désigne la <code>projectedValue</code> d&rsquo;une propriété encapsulée par un <code>@Published</code> ou un <code>@State</code> n&rsquo;est pas magique, et ça ne fonctionne qu&rsquo;au premier niveau, c&rsquo;est à dire un <code>@Published</code> propriété d&rsquo;un <code>ObservableObject</code>.</p>
 <p>Et la feinte officielle n&rsquo;est pas bien glorieuse :</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-	<span class="p">@</span><span class="n">Published</span>
-	<span class="kd">var</span> <span class="nv">router</span> <span class="p">=</span> <span class="n">Router</span>
-	
-	<span class="kd">private</span> <span class="kd">var</span> <span class="nv">cancellables</span> <span class="p">=</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">AnyCancellable</span><span class="p">&gt;()</span>
-	
-	<span class="kd">init</span><span class="p">(</span><span class="n">router</span><span class="p">:</span> <span class="n">Router</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kc">self</span><span class="p">.</span><span class="n">router</span> <span class="p">=</span> <span class="n">router</span>
-        <span class="n">router</span><span class="p">.</span><span class="n">objectWillChange</span><span class="p">.</span><span class="n">sink</span> <span class="p">{</span> <span class="p">[</span><span class="kr">weak</span> <span class="kc">self</span><span class="p">]</span> <span class="kc">_</span> <span class="k">in</span>
-            <span class="kc">self</span><span class="p">?.</span><span class="n">objectWillChange</span><span class="p">.</span><span class="n">send</span><span class="p">()</span>
-        <span class="p">}.</span><span class="n">store</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="p">&amp;</span><span class="n">cancellables</span><span class="p">)</span>
-    <span class="p">}</span>
-		
-	<span class="kd">deinit</span> <span class="p">{</span>
-        <span class="n">cancellables</span><span class="p">.</span><span class="n">forEach</span><span class="p">({</span> <span class="nv">$0</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span> <span class="p">})</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Il-y-a des variantes plus concises au prix de sacrifices discutables, mais voilà le principe. A chaque fois que le routeur va changer, on va propager l&rsquo;évènement pour indiquer à l&rsquo;UI de se rafraîchir. C&rsquo;est un peu large, un peu &ldquo;Mario fait du Combine&rdquo;, mais ne soyons pas obtus, si ça roule après tout&hellip;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">var</span> <span class="nv">router</span> <span class="p">=</span> <span class="n">Router</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kd">private</span> <span class="kd">var</span> <span class="nv">cancellables</span> <span class="p">=</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">AnyCancellable</span><span class="p">&gt;()</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kd">init</span><span class="p">(</span><span class="n">router</span><span class="p">:</span> <span class="n">Router</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kc">self</span><span class="p">.</span><span class="n">router</span> <span class="p">=</span> <span class="n">router</span>
+</span></span><span class="line"><span class="cl">        <span class="n">router</span><span class="p">.</span><span class="n">objectWillChange</span><span class="p">.</span><span class="n">sink</span> <span class="p">{</span> <span class="p">[</span><span class="kr">weak</span> <span class="kc">self</span><span class="p">]</span> <span class="kc">_</span> <span class="k">in</span>
+</span></span><span class="line"><span class="cl">            <span class="kc">self</span><span class="p">?.</span><span class="n">objectWillChange</span><span class="p">.</span><span class="n">send</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}.</span><span class="n">store</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="p">&amp;</span><span class="n">cancellables</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">	<span class="kd">deinit</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cancellables</span><span class="p">.</span><span class="n">forEach</span><span class="p">({</span> <span class="nv">$0</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Il-y-a des variantes plus concises au prix de sacrifices discutables, mais voilà le principe. A chaque fois que le routeur va changer, on va propager l&rsquo;évènement pour indiquer à l&rsquo;UI de se rafraîchir. C&rsquo;est un peu large, un peu &ldquo;Mario fait du Combine&rdquo;, mais ne soyons pas obtus, si ça roule après tout&hellip;</p>
 <p>Une bonne alternative est de mettre tout ça à plat dans la vue :</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">struct</span> <span class="nc">MyView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
-    
-    <span class="p">@</span><span class="n">ObservedObject</span>
-    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">vm</span><span class="p">:</span> <span class="n">MainViewModel</span>
-		
-		<span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{...}</span>
-<span class="p">}</span>
-</code></pre></div><p>deviendrait</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">struct</span> <span class="nc">MyView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
-    
-    <span class="p">@</span><span class="n">ObservedObject</span>
-    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">vm</span><span class="p">:</span> <span class="n">MyViewModel</span>
-		
-    <span class="p">@</span><span class="n">ObservedObject</span>
-    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">router</span><span class="p">:</span> <span class="n">Router</span>
-		
-		<span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{...}</span>
-<span class="p">}</span>
-</code></pre></div><p>C&rsquo;est plus élégant je trouve, mais imaginons que j&rsquo;ai 8 entités un peu complexes à embarquer dans mon VM, ça commence alors à foisonner plus que de raison.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">MyView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">ObservedObject</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">vm</span><span class="p">:</span> <span class="n">MainViewModel</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{...}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>deviendrait</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">struct</span> <span class="nc">MyView</span><span class="p">:</span> <span class="n">View</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">ObservedObject</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">vm</span><span class="p">:</span> <span class="n">MyViewModel</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">    <span class="p">@</span><span class="n">ObservedObject</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">var</span> <span class="nv">router</span><span class="p">:</span> <span class="n">Router</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="kd">var</span> <span class="nv">body</span><span class="p">:</span> <span class="n">some</span> <span class="n">View</span> <span class="p">{...}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>C&rsquo;est plus élégant je trouve, mais imaginons que j&rsquo;ai 8 entités un peu complexes à embarquer dans mon VM, ça commence alors à foisonner plus que de raison.</p>
 <p>Autre point en passant, impossible de sécuriser l&rsquo;instance embarquée du routeur dans le view-model avec un <code>private(set)</code> modifier dans la première version. C&rsquo;est de l&rsquo;ordre du TOC - c&rsquo;est bien d&rsquo;en être conscient - mais ça me gène 😅</p>
 <h2 id="propager-des-published-model---vm---view"><a href="#propager-des-published-model---vm---view" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Propager des @Published, Model -&gt; VM -&gt; View</h2>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="nc">Store</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-	<span class="p">@</span><span class="n">Published</span>
-	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
-<span class="p">}</span>
-
-<span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-	<span class="p">@</span><span class="n">Published</span>
-	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
-	
-	<span class="kd">init</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">Store</span><span class="p">)</span> <span class="p">{</span>
-		<span class="n">store</span><span class="p">.</span><span class="err">$</span><span class="n">someUrl</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="o">&amp;</span><span class="err">$</span><span class="n">someUrl</span><span class="p">)</span>
-	<span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>Mais c&rsquo;est très raisonnable, super ! Oui mais iOS14+ seulement.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Store</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kd">init</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">Store</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">store</span><span class="p">.</span><span class="err">$</span><span class="n">someUrl</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="o">&amp;</span><span class="err">$</span><span class="n">someUrl</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Mais c&rsquo;est très raisonnable, super ! Oui mais iOS14+ seulement.</p>
 <p>Et voici la version iOS 13 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="nc">Store</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-	<span class="p">@</span><span class="n">Published</span>
-	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
-<span class="p">}</span>
-
-<span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
-	<span class="p">@</span><span class="n">Published</span>
-	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
-	
-	<span class="kd">private</span> <span class="kd">var</span> <span class="nv">cancellables</span> <span class="p">=</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">AnyCancellable</span><span class="p">&gt;()</span>
-	
-	<span class="kd">init</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">Store</span><span class="p">)</span> <span class="p">{</span>
-		<span class="n">store</span><span class="p">.</span><span class="err">$</span><span class="n">someUrl</span><span class="p">.</span><span class="n">sink</span> <span class="p">{</span> <span class="p">[</span><span class="kr">weak</span> <span class="kc">self</span><span class="p">]</span> <span class="n">url</span> <span class="k">in</span>
-			<span class="kc">self</span><span class="p">?.</span><span class="n">someUrl</span> <span class="p">=</span> <span class="n">url</span>
-		<span class="p">}.</span><span class="n">store</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="p">&amp;</span><span class="n">cancellables</span><span class="p">)</span>
-	<span class="p">}</span>
-	
-	<span class="kd">deinit</span> <span class="p">{</span>
-        <span class="n">cancellables</span><span class="p">.</span><span class="n">forEach</span><span class="p">({</span> <span class="nv">$0</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span> <span class="p">})</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p>* <em>whip sound</em> *</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-swift" data-lang="swift"><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">Store</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">class</span> <span class="nc">MyViewModel</span> <span class="p">:</span> <span class="n">ObservableObject</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="p">@</span><span class="n">Published</span>
+</span></span><span class="line"><span class="cl">	<span class="kd">private</span><span class="p">(</span><span class="kr">set</span><span class="p">)</span> <span class="kd">var</span> <span class="nv">someUrl</span><span class="p">:</span> <span class="n">URL</span><span class="p">?</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kd">private</span> <span class="kd">var</span> <span class="nv">cancellables</span> <span class="p">=</span> <span class="n">Set</span><span class="p">&lt;</span><span class="n">AnyCancellable</span><span class="p">&gt;()</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kd">init</span><span class="p">(</span><span class="n">store</span><span class="p">:</span> <span class="n">Store</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">store</span><span class="p">.</span><span class="err">$</span><span class="n">someUrl</span><span class="p">.</span><span class="n">sink</span> <span class="p">{</span> <span class="p">[</span><span class="kr">weak</span> <span class="kc">self</span><span class="p">]</span> <span class="n">url</span> <span class="k">in</span>
+</span></span><span class="line"><span class="cl">			<span class="kc">self</span><span class="p">?.</span><span class="n">someUrl</span> <span class="p">=</span> <span class="n">url</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}.</span><span class="n">store</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="p">&amp;</span><span class="n">cancellables</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="kd">deinit</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cancellables</span><span class="p">.</span><span class="n">forEach</span><span class="p">({</span> <span class="nv">$0</span><span class="p">.</span><span class="n">cancel</span><span class="p">()</span> <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>* <em>whip sound</em> *</p>
 <p>Pas mal hein ?</p>
 <p>* <em>whip sound</em> *</p>
 <h2 id="sink-twice"><a href="#sink-twice" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>Sink twice</h2>
@@ -575,6 +575,10 @@ Ce petit <code>$</code> qui désigne la <code>projectedValue</code> d&rsquo;une 
                         <a href="/posts/attestation-ios/" class="related-link">Attestation 2s iOS</a>
                     </li>
                 
+                    <li class="related-item">
+                        <a href="/posts/pragmatic-mobile-architecture/" class="related-link">Pragmatic Mobile Architecture</a>
+                    </li>
+                
             </ul>
         </div>
     
@@ -660,7 +664,7 @@ Ce petit <code>$</code> qui désigne la <code>projectedValue</code> d&rsquo;une 
             
     <footer id="footer" class="footer">
         <div class="footer-inner">
-            <div class="site-info">©&nbsp;2020–2021&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
+            <div class="site-info">©&nbsp;2020–2023&nbsp;Pitt</div><div class="site-copyright"></div><div class="custom-footer">Little Pouillé EURL</div>
 
             
     
