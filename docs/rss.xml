@@ -21,7 +21,7 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Wed, 21 Jun 2023 10:10:16 &#43;0200</lastBuildDate>
+        <lastBuildDate>Wed, 21 Jun 2023 10:22:26 &#43;0200</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
@@ -41,9 +41,13 @@
 &lt;p&gt;&lt;strong&gt;It’s not supposed to create a new shiny big-brained architecture abstraction, but it rather aims to explicit practical design advices that should bring clarity and reliability to your app’s business.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;This article’s scope is wide but I tried to make it concise enough. It’s addressed to developers and architects of intermediary to expert level. It’s also deeply anchored in my own experience, including all the biases it can carry.&lt;/p&gt;
 &lt;h1 id=&#34;tldr&#34;&gt;TL;DR&lt;/h1&gt;
-&lt;p&gt;Here you go:
-&lt;img src=&#34;https://pittscraft.com/images/pragmatic-mobile-architecture/archi.png&#34; alt=&#34;Mobile Archi.drawio.png&#34;&gt;
-Not all subtleties can fit in this diagram, I engage you to read the rest of this article before you form an opinion.&lt;/p&gt;
+&lt;p&gt;⚠️ The diagram below can look like a new annoying architecture claiming to be the state of the art.&lt;/p&gt;
+&lt;p&gt;Well it&amp;rsquo;s not.&lt;/p&gt;
+&lt;p&gt;Further you&amp;rsquo;ll see multiple mitigations, for example about the need of some Repositories.
+Also, I do &lt;em&gt;not&lt;/em&gt; introduce new layers or too strict data paths (like VIPER does) that lock you in a specific paradigm.&lt;/p&gt;
+&lt;p&gt;This article is about practice and pragmatism, and the balance to avoid both spaghetti code and over-engineering.&lt;/p&gt;
+&lt;p&gt;Still, this is a &amp;ldquo;TL;DR&amp;rdquo; so here you go!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://pittscraft.com/images/pragmatic-mobile-architecture/archi.png&#34; alt=&#34;Mobile Archi.drawio.png&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;i-model-and-repositories-concepts-in-architecture-patterns&#34;&gt;I. Model and Repositories concepts in architecture patterns&lt;/h1&gt;
 &lt;p&gt;Mobile devs often mistake Model for “data model”.&lt;/p&gt;
 &lt;p&gt;Here is the Wikipedia’s schematic of MVVM:&lt;/p&gt;

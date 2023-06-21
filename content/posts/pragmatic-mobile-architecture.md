@@ -20,9 +20,19 @@ This article digs into these problems and offers concrete directions on the arch
 This article’s scope is wide but I tried to make it concise enough. It’s addressed to developers and architects of intermediary to expert level. It’s also deeply anchored in my own experience, including all the biases it can carry.
 
 # TL;DR
-Here you go:
+
+⚠️ The diagram below can look like a new annoying architecture claiming to be the state of the art.
+
+Well it's not.
+
+Further you'll see multiple mitigations, for example about the need of some Repositories.
+Also, I do _not_ introduce new layers or too strict data paths (like VIPER does) that lock you in a specific paradigm.
+
+This article is about practice and pragmatism, and the balance to avoid both spaghetti code and over-engineering.
+
+Still, this is a "TL;DR" so here you go!
+
 ![Mobile Archi.drawio.png](/images/pragmatic-mobile-architecture/archi.png)
-Not all subtleties can fit in this diagram, I engage you to read the rest of this article before you form an opinion.
 
 # I. Model and Repositories concepts in architecture patterns
 
