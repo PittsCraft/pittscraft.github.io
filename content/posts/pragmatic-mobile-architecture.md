@@ -15,14 +15,14 @@ Over the dozen mobile missions I worked on, the main caveats of codebases I face
 
 This article digs into these problems and offers concrete directions on the architectural level, as well as some advices on the implementation level.
 
-It’s not supposed to create a new shiny big-brained architecture abstraction, but it rather aims to explicit practical design advices that should bring clarity and reliability to your app’s business.
+**It’s not supposed to create a new shiny big-brained architecture abstraction, but it rather aims to explicit practical design advices that should bring clarity and reliability to your app’s business.**
 
 This article’s scope is wide but I tried to make it concise enough. It’s addressed to developers and architects of intermediary to expert level. It’s also deeply anchored in my own experience, including all the biases it can carry.
 
 # TL;DR
 Here you go:
 ![Mobile Archi.drawio.png](/images/pragmatic-mobile-architecture/archi.png)
-Not all subtleties can fit in this diagram, I engage you to read the rest of this article before you form an informed opinion.
+Not all subtleties can fit in this diagram, I engage you to read the rest of this article before you form an opinion.
 
 # I. Model and Repositories concepts in architecture patterns
 
@@ -72,7 +72,7 @@ But in most cases the terminology is:
 
 # II. The Problem
 
-MVC, MVP, MVI, MVVM… There are many paradigms helping you bind your business logic to your actual UI implementation. But in the end, none of them is meant to help your with your actual business logic implementation.
+MVC, MVP, MVI, MVVM… There are many paradigms helping you bind your business logic to your actual UI implementation. But in the end, none of them is meant to help your with your actual business logic implementation. Well there's VIPER and friends, but I'm trying to **avoid over-engineering** here.
 
 **The first step in dealing with this issue** is usually to identify the model to the repositories. What you get when your apps starts growing, is often ViewModels reuse: ViewModels are not always tight to one specific View because you need some business logic that it implements in some other part of your app. And then you start carrying extra business logic to many Views because you needed a piece of it, and your architecture becomes fuzzy.
 
@@ -162,11 +162,20 @@ There aren’t many alternatives in the mobile world anyway, but mainly if your 
 
 Should you decide to use MVVM, MVI or TCA, all of them don’t define your model. But they might shape your model output: Do you better store a global reactive state or divide it by feature, by flow?
 
-### c. The repositories natures
+### d. The repositories natures
 
 A RESTFul API, a reactive NoSQL storage (like Firestore), a local relational DB with an ORM, an IoT SDK… Each kind of repository has specific constraints: it may be asynchronous or not, online or not, and expose specific paradigms that may impact greatly how the entire app should work.
 
 I’m not saying we shouldn’t abstract many specificities of the repositories, but that some of them sometimes shape at least a bit their abstraction anyway.
+
+## 3. What your Model feels like
+
+I think that there are three great criteria to judge if your Model is well written.
+
+1. If you take a look at your Services interfaces / protocols and your entities, you should see a satisfying representation of your domain. Don't think about the implementation, don't think about UI details: do you *see* your domain while reading your Model?
+2. If you think about binding your Model to the UI you're supposed to build, are the bindings obvious?
+3. If you think about using your Repositories to create these Services, does it make sense?
+
 
 # V. Quick parenthesis: Clean Architecture
 
@@ -185,7 +194,7 @@ About that, let’s take a step backward.
 # VI. Pragmatic Mobile Architecture
 
 I drawn a concise representation of the architecture I use in all my mobile jobs and missions.
-Don't ignore the text in it, it's not decorative but really part of the architecture.
+Don't ignore the text in it, it's not decorative but really part of the architecture. Else it's just totally similar to UseCase/Interactor architectures (except for the naming).
 
 ![Mobile Archi.drawio.png](/images/pragmatic-mobile-architecture/archi.png)
 
@@ -200,6 +209,8 @@ Another point hidden in the text, is that Services form an oriented graph. To ex
 is totally valid. I know it can be tempting to have explicit Service layers and to apply isolation rules between them, but in practice I’m convinced it’s terribly counter-productive. I’d say we’re stepping in the overengineering area.
 
 Note that an obvious golden rule is to never-ever let UI use Repositories directly. If you do so, you’re missing modeling. Also, even if it can be a local reasonable shortcut, it will make precedence and you’ll soon be back in the spaghetti hell we’re trying to escape from.
+
+On the opposite, sometimes it does not make sense to create some Repositories.
 
 I also just materialized what I wrote earlier about entities: I happily let them flow from Repositories to UI when it’s relevant.
 
@@ -271,14 +282,25 @@ The issue with inheritance is that it’s a bit hard to design properly, impleme
 
 As usual, stay pragmatic. If you see a real benefit to inheritance and the alternatives are overkill, then use inheritance.
 
-## 5. Split your Model
+## 5. Do you really need this Repository?
+
+Don't be systematic in your architectural approach on this point. A great example is user preferences (`UserDefaults` in iOS, `SharedPreferences` in Android).
+If you have a simple utility function that takes a key and allows to build a `get / set / reactive-stream` property from it, using it inside your Service directly is way simpler than grouping unrelated explicit properties in some store.
+
+In this case, ideally, don't write a store interface and implementation. 
+
+Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it inside the Service responsible for its feature.
+
+Opportunistic ad: for iOS I engage you to try my neat reactive [PDefaults property wrapper](https://github.com/PittsCraft/PDefaults) 😁
+
+## 6. Split your Model
 
 You can read many advices about files and function lengths, and you should absolutely apply them to your Services. Your Model should evolve as the implementation clarifies the technical constraints. The business layer is the layer where you shouldn’t make compromises and let technical debt settle.
 As soon as a Service is too big or its responsibility seems a bit fuzzy, take a step back and draw a variation of your Model. It should often lead to splitting a Service, but sometimes you can also centralize in a new Service responsibility dispatched in multiple others.
 
 Still remember: **don’t atomize your Model!**
 
-## 6. Services naming
+## 7. Services naming
 
 **Name interfaces, not implementations**. **Don’t** implement a Service named `MyService` and name its interface `MyServiceItf`. Because **the default representation of your Service across the app should be its interface** (and you should try to write it first!). If you don’t have any clever name for your implementation, then just use a suffix: `MyServiceImpl`.
 
@@ -288,7 +310,7 @@ But thinking about newcomers, flagging your interfaces with their nature as a su
 
 Also, if your Model is not well defined at some time (because specs are fuzzy, as it happens like always), allow yourself to temporarily have vague responsibility services. `BookService` is ok **as long as you take care of splitting it to properly scoped Services as it grows**. And if it doesn’t grow or evolve enough to be worth splitting, then no big deal. It’s readable and takes care of everything related to books: that’s a good enough name and Model!
 
-## 7. Untested proposal: name Services that are exposed to UI differently
+## 8. Untested proposal: name Services that are exposed to UI differently
 
 I know I wrote the opposite earlier (don’t split the Model into multiple layers). But identifying by name Services that UI devs are supposed to use or not may prove itself useful. Indeed, even if they don’t bypass the golden rule and use repositories directly, I already saw confusion between well defined Services. This happens because developers that focus mainly on the UI just don’t know the Model on their fingertips, and we shouldn’t expect them to do so.
 
@@ -299,7 +321,7 @@ I would suggest to name “UX Services” using the `UXService`suffix, simply ke
 
 # VIII. Conclusion
 
-As you saw, above are pretty general considerations and no sample code. I have doubts about the very wide ambition of this article. In the end, everything I wanted to write down is. And I skipped many crucial topics that are directly related: Dependencies Injection, Testing (UTs, UI Tests, previews), Declarative UI practices… But this would have been too much for sure.
+As you saw, above are pretty general considerations and no sample code. I still have doubts about the very wide ambition of this article. But in the end, everything I wanted to write down is. And I skipped many crucial topics that are directly related: Dependencies Injection, Testing (UTs, UI Tests, previews), Declarative UI practices… This would have been too much for sure.
 
 I hope some of you will reach this conclusion and benefit from what I wrote.
 
