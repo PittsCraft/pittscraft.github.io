@@ -303,6 +303,13 @@ Sometimes the store is needed. Well in that case, make it expose generic accesse
 
 Opportunistic ad: for iOS I engage you to try my neat reactive [PDefaults property wrapper](https://github.com/PittsCraft/PDefaults) 😁
 
+A rightful objection: _"Isn't it the same for APIs? Why should I expose all endpoints in one place but dispatch the preferences in the Services?"_. There are two main differences between an API client implementation and a preferences access system:
+
+- an API client has dynamic behaviors and is rarely stateless: authentication token, retry mechanisms... A good preferences system has none of these (or shouldn't).
+- an API client uses and exposes a backend model. It is (or should be) structured, and its list of endpoints can be an entry point in reading your business code. This backend model structure is a constraining input that deserves to be explicit. Preferences are just a persistence mean used in limited conditions.
+
+So yeah, not the same at all.
+
 ## 6. Split your Model
 
 You can read many advices about files and function lengths, and you should absolutely apply them to your Services. Your Model should evolve as the implementation clarifies the technical constraints. The business layer is the layer where you shouldn’t make compromises and let technical debt settle.
@@ -320,7 +327,27 @@ But thinking about newcomers, flagging your interfaces with their nature as a su
 
 Also, if your Model is not well defined at some time (because specs are fuzzy, as it happens like always), allow yourself to temporarily have vague responsibility services. `BookService` is ok **as long as you take care of splitting it to properly scoped Services as it grows**. And if it doesn’t grow or evolve enough to be worth splitting, then no big deal. It’s readable and takes care of everything related to books: that’s a good enough name and Model!
 
-## 8. Untested proposal: name Services that are exposed to UI differently
+## 8. Don't dispatch your code
+
+I'll start with an example. My personal taste leads me to declare:
+
+- a Service interface on top of its file
+- the Service's specific entities right after
+- then the Service's implementation
+- and its mock at the bottom
+
+Because the most important thing to expose when someone looks at your Service is its interface.
+Entities should not be far in order to get what's used in its interface.
+
+Of course if a file becomes too large and splitting the Service is not relevant then I extract the parts in the reversed order. Also I then try to keep their files together.
+
+Systematically separating things by nature is a storage organization reflex that deteriorates readability and maintainability.
+It's easier to forget about an entity becoming an orphan when you refactor a Service when it's stored in a huge folder grouping all your business entities.
+That's also the reason why UI is often organized in ducks: Views close to their ViewModels.
+
+Group inside a file or group in the folders hierarchy: there are many possible practices and choices around this consideration, up to you to find yours.
+
+## 9. Untested proposal: name Services that are exposed to UI differently
 
 I know I wrote the opposite earlier (don’t split the Model into multiple layers). But identifying by name Services that UI devs are supposed to use or not may prove itself useful. Indeed, even if they don’t bypass the golden rule and use repositories directly, I already saw confusion between well defined Services. This happens because developers that focus mainly on the UI just don’t know the Model on their fingertips, and we shouldn’t expect them to do so.
 

@@ -4,7 +4,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="fr">
     <title type="text">Pitt&#39;s Craft</title>
     <subtitle type="html">Blog professionnel d&#39;un algorithmicien et architecte logiciel indépendant.</subtitle>
-    <updated>2023-06-21T10:27:49&#43;02:00</updated>
+    <updated>2023-06-21T16:18:08&#43;02:00</updated>
     <id>https://pittscraft.com/</id>
     <link rel="alternate" type="text/html" href="https://pittscraft.com/" />
     <link rel="self" type="application/atom&#43;xml" href="https://pittscraft.com/atom.xml" />
@@ -203,6 +203,12 @@ If you have a simple utility function that takes a key and allows to build a &lt
 &lt;p&gt;In this case, ideally, don&amp;rsquo;t write a store interface and implementation.&lt;/p&gt;
 &lt;p&gt;Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it is inside the Service responsible for its feature.&lt;/p&gt;
 &lt;p&gt;Opportunistic ad: for iOS I engage you to try my neat reactive &lt;a href=&#34;https://github.com/PittsCraft/PDefaults&#34;&gt;PDefaults property wrapper&lt;/a&gt; 😁&lt;/p&gt;
+&lt;p&gt;A rightful objection: &lt;em&gt;&amp;ldquo;Isn&amp;rsquo;t it the same for APIs? Why should I expose all endpoints in one place but dispatch the preferences in the Services?&amp;rdquo;&lt;/em&gt;. There are two main differences between an API client implementation and a preferences access system:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;an API client has dynamic behaviors and is rarely stateless: authentication token, retry mechanisms&amp;hellip; A good preferences system has none of these (or shouldn&amp;rsquo;t).&lt;/li&gt;
+&lt;li&gt;an API client uses and exposes a backend model. It is (or should be) structured, and its list of endpoints can be an entry point in reading your business code. This backend model structure is a constraining input that deserves to be explicit. Preferences are just a persistence mean used in limited conditions.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So yeah, not the same at all.&lt;/p&gt;
 &lt;h2 id=&#34;6-split-your-model&#34;&gt;6. Split your Model&lt;/h2&gt;
 &lt;p&gt;You can read many advices about files and function lengths, and you should absolutely apply them to your Services. Your Model should evolve as the implementation clarifies the technical constraints. The business layer is the layer where you shouldn’t make compromises and let technical debt settle.
 As soon as a Service is too big or its responsibility seems a bit fuzzy, take a step back and draw a variation of your Model. It should often lead to splitting a Service, but sometimes you can also centralize in a new Service responsibility dispatched in multiple others.&lt;/p&gt;
@@ -212,7 +218,22 @@ As soon as a Service is too big or its responsibility seems a bit fuzzy, take a 
 &lt;p&gt;There are many advices around the importance of naming worth reading. A great advice is to avoid generic suffixes like &lt;code&gt;Manager&lt;/code&gt;. Indeed it can lead to classes like &lt;code&gt;BookManager&lt;/code&gt; whose responsibility is to manage everything about books, and that’s clearly a bad scope definition. So we should find the right words to describe this class’s responsibility. &lt;code&gt;BookOrderValidator&lt;/code&gt;, &lt;code&gt;BookLendingMonitor&lt;/code&gt;&amp;hellip;&lt;/p&gt;
 &lt;p&gt;But thinking about newcomers, flagging your interfaces with their nature as a suffix has value as it increases architecture’s readability. So here’s my unpopular opinion: enforce your classes (or interfaces) nature readability at least by using &lt;code&gt;Service&lt;/code&gt; suffixes. The layers of the architecture and its shape will be quicker to grasp.&lt;/p&gt;
 &lt;p&gt;Also, if your Model is not well defined at some time (because specs are fuzzy, as it happens like always), allow yourself to temporarily have vague responsibility services. &lt;code&gt;BookService&lt;/code&gt; is ok &lt;strong&gt;as long as you take care of splitting it to properly scoped Services as it grows&lt;/strong&gt;. And if it doesn’t grow or evolve enough to be worth splitting, then no big deal. It’s readable and takes care of everything related to books: that’s a good enough name and Model!&lt;/p&gt;
-&lt;h2 id=&#34;8-untested-proposal-name-services-that-are-exposed-to-ui-differently&#34;&gt;8. Untested proposal: name Services that are exposed to UI differently&lt;/h2&gt;
+&lt;h2 id=&#34;8-dont-dispatch-your-code&#34;&gt;8. Don&amp;rsquo;t dispatch your code&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;ll start with an example. My personal taste leads me to declare:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a Service interface on top of its file&lt;/li&gt;
+&lt;li&gt;the Service&amp;rsquo;s specific entities right after&lt;/li&gt;
+&lt;li&gt;then the Service&amp;rsquo;s implementation&lt;/li&gt;
+&lt;li&gt;and its mock at the bottom&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Because the most important thing to expose when someone looks at your Service is its interface.
+Entities should not be far in order to get what&amp;rsquo;s used in its interface.&lt;/p&gt;
+&lt;p&gt;Of course if a file becomes too large and splitting the Service is not relevant then I extract the parts in the reversed order. Also I then try to keep their files together.&lt;/p&gt;
+&lt;p&gt;Systematically separating things by nature is a storage organization reflex that deteriorates readability and maintainability.
+It&amp;rsquo;s easier to forget about an entity becoming an orphan when you refactor a Service when it&amp;rsquo;s stored in a huge folder grouping all your business entities.
+That&amp;rsquo;s also the reason why UI is often organized in ducks: Views close to their ViewModels.&lt;/p&gt;
+&lt;p&gt;Group inside a file or group in the folders hierarchy: there are many possible practices and choices around this consideration, up to you to find yours.&lt;/p&gt;
+&lt;h2 id=&#34;9-untested-proposal-name-services-that-are-exposed-to-ui-differently&#34;&gt;9. Untested proposal: name Services that are exposed to UI differently&lt;/h2&gt;
 &lt;p&gt;I know I wrote the opposite earlier (don’t split the Model into multiple layers). But identifying by name Services that UI devs are supposed to use or not may prove itself useful. Indeed, even if they don’t bypass the golden rule and use repositories directly, I already saw confusion between well defined Services. This happens because developers that focus mainly on the UI just don’t know the Model on their fingertips, and we shouldn’t expect them to do so.&lt;/p&gt;
 &lt;p&gt;I think this distinction could also bring some overall clarity.
 I would suggest to name “UX Services” using the &lt;code&gt;UXService&lt;/code&gt;suffix, simply keeping &lt;code&gt;Service&lt;/code&gt; suffix for “Business Only Services”.&lt;/p&gt;
