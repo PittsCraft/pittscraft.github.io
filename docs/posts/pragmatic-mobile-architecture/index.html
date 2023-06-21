@@ -18,7 +18,7 @@
 
     
     
-        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.df5774dfbc8c32f95f1e03a29130311c1115372bb1bc63afed540e1308393896.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.stemmer.support.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/lunr-languages@1.4.0/min/lunr.fr.min.js" defer></script><script src="/js/meme.min.edcfdefd90449c12ac1b5445e4b9e8f6dd482d4d135eb02084261636806b640a.js"></script>
 
     
 
@@ -61,7 +61,7 @@ This article digs into these problems and offers concrete directions on the arch
         "description": "Over the dozen mobile missions I worked on, the main caveats of codebases I faced were that the Model is unclear and disseminated, and data paths and behaviors are hardly readable.\nThis article digs into these problems and offers concrete directions on the architectural level, as well as some advices on the implementation level.",
         "inLanguage" : "fr",
         "articleSection": "posts",
-        "wordCount":  3709 ,
+        "wordCount":  3710 ,
         "image": ["https://pittscraft.com/images/pragmatic-mobile-architecture/archi.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Untitled.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Untitled%201.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Untitled%202.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Untitled%203.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Capture_decran_2023-06-19_a_09.43.49.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Untitled%204.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Mobile_Archi.drawio_%281%29.png","https://pittscraft.com/images/pragmatic-mobile-architecture/Mobile_Archi.drawio8.png"],
         "author": {
             "@type": "Person",
@@ -246,7 +246,7 @@ This article digs into these problems and offers concrete directions on the arch
     
     
         
-        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;3709</span>
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;3710</span>
     
     
         
@@ -430,7 +430,7 @@ The issue with inheritance is that it’s a bit hard to design properly, impleme
 <p>Don&rsquo;t be systematic in your architectural approach on this point. A great example is user preferences (<code>UserDefaults</code> in iOS, <code>SharedPreferences</code> in Android).
 If you have a simple utility function that takes a key and allows to build a <code>get / set / reactive-stream</code> property from it, using it inside your Service directly is way simpler than grouping unrelated explicit properties in some store.</p>
 <p>In this case, ideally, don&rsquo;t write a store interface and implementation.</p>
-<p>Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it inside the Service responsible for its feature.</p>
+<p>Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it is inside the Service responsible for its feature.</p>
 <p>Opportunistic ad: for iOS I engage you to try my neat reactive <a href="https://github.com/PittsCraft/PDefaults" target="_blank" rel="noopener">PDefaults property wrapper</a> 😁</p>
 <h2 id="6-split-your-model"><a href="#6-split-your-model" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>6. Split your Model</h2>
 <p>You can read many advices about files and function lengths, and you should absolutely apply them to your Services. Your Model should evolve as the implementation clarifies the technical constraints. The business layer is the layer where you shouldn’t make compromises and let technical debt settle.

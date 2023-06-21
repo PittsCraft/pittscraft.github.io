@@ -299,7 +299,7 @@ If you have a simple utility function that takes a key and allows to build a `ge
 
 In this case, ideally, don't write a store interface and implementation. 
 
-Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it inside the Service responsible for its feature.
+Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it is inside the Service responsible for its feature.
 
 Opportunistic ad: for iOS I engage you to try my neat reactive [PDefaults property wrapper](https://github.com/PittsCraft/PDefaults) 😁
 

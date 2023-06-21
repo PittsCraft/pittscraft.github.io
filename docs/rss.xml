@@ -21,7 +21,7 @@
             <webMaster>pitt@pittscraft.com (Pitt)</webMaster>
         
         
-        <lastBuildDate>Wed, 21 Jun 2023 10:22:26 &#43;0200</lastBuildDate>
+        <lastBuildDate>Wed, 21 Jun 2023 10:27:49 &#43;0200</lastBuildDate>
         
             <atom:link rel="self" type="application/rss&#43;xml" href="https://pittscraft.com/rss.xml" />
         
@@ -207,7 +207,7 @@ The issue with inheritance is that it’s a bit hard to design properly, impleme
 &lt;p&gt;Don&amp;rsquo;t be systematic in your architectural approach on this point. A great example is user preferences (&lt;code&gt;UserDefaults&lt;/code&gt; in iOS, &lt;code&gt;SharedPreferences&lt;/code&gt; in Android).
 If you have a simple utility function that takes a key and allows to build a &lt;code&gt;get / set / reactive-stream&lt;/code&gt; property from it, using it inside your Service directly is way simpler than grouping unrelated explicit properties in some store.&lt;/p&gt;
 &lt;p&gt;In this case, ideally, don&amp;rsquo;t write a store interface and implementation.&lt;/p&gt;
-&lt;p&gt;Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it inside the Service responsible for its feature.&lt;/p&gt;
+&lt;p&gt;Sometimes the store is needed. Well in that case, make it expose generic accesses and declare your actual properties in your Service. After all, each preference property is part of your domain and the best place to expose it is inside the Service responsible for its feature.&lt;/p&gt;
 &lt;p&gt;Opportunistic ad: for iOS I engage you to try my neat reactive &lt;a href=&#34;https://github.com/PittsCraft/PDefaults&#34;&gt;PDefaults property wrapper&lt;/a&gt; 😁&lt;/p&gt;
 &lt;h2 id=&#34;6-split-your-model&#34;&gt;6. Split your Model&lt;/h2&gt;
 &lt;p&gt;You can read many advices about files and function lengths, and you should absolutely apply them to your Services. Your Model should evolve as the implementation clarifies the technical constraints. The business layer is the layer where you shouldn’t make compromises and let technical debt settle.
